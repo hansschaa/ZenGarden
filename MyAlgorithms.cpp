@@ -84,7 +84,6 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard, int showPath){
             Statistics::totalNodesExpanded = Utils::CLOSE.size();
             if(showPath)
                 ShowMoves(currentBoard);
-            ShowMoves(currentBoard);
         }
 
         Utils::CLOSE.insert(currentBoard);

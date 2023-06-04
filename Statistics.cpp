@@ -11,9 +11,10 @@ int Statistics::totalNodesExpanded = 0;
 std::chrono::high_resolution_clock::time_point Statistics::start;
 std::chrono::high_resolution_clock::time_point Statistics::end;
 
-void Statistics::Print(){
+void Statistics::Print(string algorithmName){
     cout << Utils::INFO << endl;
 
+    cout<<"Algorithm: "<< algorithmName<<endl;
     cout<<"VISITED: "<<totalNodesExpanded<< endl;
     cout<<"LENGTH: "<<solutionLength<< endl;
     cout<<"FOUND in "<<((end-start).count()/1000000.0)<<"ms" << endl;
