@@ -25,7 +25,7 @@ unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::neighbours;
 unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::visited;
 unordered_map<ZenBoard, ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::map;
 
-unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::OPEN;
+unordered_map<ZenBoard, int, Utils::GetHashCode,  Utils::Equals> Utils::OPEN;
 unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::CLOSE;
 
 void Utils::GetNeighbours(ZenBoard zenBoard){

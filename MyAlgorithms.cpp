@@ -77,7 +77,7 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard, int showPath){
 
         // Si el nodo estaba en la lista cerrada con un f menor me lo salto
         auto entry = Utils::CLOSE.find(currentBoard);
-        if(entry != Utils::OPEN.end()){
+        if(entry != Utils::CLOSE.end()){
             if((entry->g+entry->h) < currentBoard.GetF())
                 continue;
         }
@@ -102,42 +102,59 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard, int showPath){
             int newG = currentBoard.g+1;
 
             //Si está en open o closed y el que habia tiene mejor g,continuar
-            auto entry = Utils::OPEN.find(neigbour);
-            if(entry != Utils::OPEN.end()){
-                if(entry->g <= newG){
+            auto entryOpen = Utils::OPEN.find(neigbour);
+            if(entryOpen != Utils::OPEN.end()){
+                if(entryOpen->second <= newG)
                     continue;
-                }
+                /*}
+                else{
+                    entryOpen->second = newG;
+                }*/
             }
+            /*else{
+                Utils::OPEN.insert({neigbour, newG});
+            }*/
 
-            entry = Utils::CLOSE.find(neigbour);
-            if(entry != Utils::CLOSE.end()){
-                if(entry->g <= newG){
+            auto entryClose = Utils::CLOSE.find(neigbour);
+            if(entryClose != Utils::CLOSE.end()){
+                if(entryClose->g <= newG){
                     continue;
                 }
+                else
+                    Utils::CLOSE.erase(neigbour);
             }
 
             neigbour.g = newG;
             neigbour.h = neigbour.CompH();
 
-            //Remove from close
-            if(entry != Utils::CLOSE.end()){
-                //Reopen 
-                Utils::CLOSE.erase(neigbour);
-            }
-
             //Fast, duplicates?
             openQueue.push(neigbour);
+
+            //Update OPEN
+            Utils::OPEN.insert_or_assign(neigbour, newG);
             
+            //Update g in open
+            /*if (Utils::OPEN.find(neigbour) != Utils::OPEN.end()){
+                if(entryOpen->second < neigbour.g){
+
+                }
+            }
+
+            //Guarda los g
+            //Utils::OPEN.insert(entryOpen, entryOpen->second);
+
             //Insert or edit in OPEN
-            entry = Utils::OPEN.find(neigbour);
-            if(entry != Utils::OPEN.end()){
+            if(entryOpen != Utils::OPEN.end()){
+
+                if(entryOpen->second)
+
                 ZenBoard openZenBoard = *entry;
                 openZenBoard.g = neigbour.g;
                 Utils::OPEN.erase(neigbour);
                 Utils::OPEN.insert(openZenBoard);
             }
-            else
-                Utils::OPEN.insert(neigbour);
+            else*/
+                
 
         }
 
