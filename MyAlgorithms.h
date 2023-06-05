@@ -12,6 +12,7 @@ class MyAlgorithms{
     public:
         static void BFS(ZenBoard& zenBoard, int showPath);
         static void AStar(ZenBoard& zenBoard, int showPath);
+        static void IDAStar(ZenBoard& zenBoard, int showPath);
         static void ShowMoves(ZenBoard zenBoard);
 };
 

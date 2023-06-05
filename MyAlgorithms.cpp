@@ -2,6 +2,7 @@
 #include <iostream>
 #include <chrono>
 #include <stack>
+#include <limits.h>
 #include "Statistics.h"
 #include "MyAlgorithms.h"
 #include "Utils.h"
@@ -10,7 +11,7 @@ using namespace std;
 
 void MyAlgorithms::BFS(ZenBoard& zenBoard, int showPath){
     
-    cout << "Empezando BFS" << endl;
+    cout << "-> Empezando BFS" << endl;
     Statistics::start = std::chrono::high_resolution_clock::now();
     queue<ZenBoard> queue;     
     queue.push(zenBoard);                 
@@ -46,7 +47,7 @@ void MyAlgorithms::BFS(ZenBoard& zenBoard, int showPath){
 
 void MyAlgorithms::AStar(ZenBoard& zenBoard, int showPath){
     
-    cout << "Empezando AStar.." << endl;
+    cout << "-> Empezando AStar.." << endl;
     Statistics::start = std::chrono::high_resolution_clock::now();
 
     //Sort ascendent
@@ -73,6 +74,13 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard, int showPath){
         //Get the min value in priority queue
         auto currentBoard = openQueue.top();
 		openQueue.pop();
+
+        // Si el nodo estaba en la lista cerrada con un f menor me lo salto
+        auto entry = Utils::CLOSE.find(currentBoard);
+        if(entry != Utils::OPEN.end()){
+            if((entry->g+entry->h) < currentBoard.GetF())
+                continue;
+        }
 
         //Check if current board is a win board
         if(Utils::IsWin(currentBoard)){
@@ -115,13 +123,14 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard, int showPath){
 
             //Remove from close
             if(entry != Utils::CLOSE.end()){
+                //Reopen 
                 Utils::CLOSE.erase(neigbour);
             }
 
             //Fast, duplicates?
             openQueue.push(neigbour);
 
-            entry = Utils::OPEN.find(neigbour);
+            /*entry = Utils::OPEN.find(neigbour);
             if(entry != Utils::OPEN.end()){
                 ZenBoard openZenBoard = *entry;
                 openZenBoard.g = neigbour.g;
@@ -129,9 +138,33 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard, int showPath){
                 Utils::OPEN.insert(openZenBoard);
             }
             else
-                Utils::OPEN.insert(neigbour);
+                Utils::OPEN.insert(neigbour);*/
 
         }
+    }
+}
+
+void MyAlgorithms::IDAStar(ZenBoard& zenBoard, int showPath){
+    
+    //int maxDeph = 100;
+    zenBoard.CompH();
+    int bound = zenBoard.h;
+    std::vector<ZenBoard> path;
+    path.push_back(zenBoard);
+    int t;
+
+    while (true) {
+        //TODO
+        //dfs
+        if (t == -1) {
+            cout << "Solution founded..." << endl;
+            break;
+        }
+        if (t == INT_MAX) {
+            cout << "Not solution..." << endl;
+            break;
+        }
+        bound = t;
     }
 }
 
@@ -143,7 +176,6 @@ void MyAlgorithms::ShowMoves(ZenBoard zenBoard){
     ZenBoard currentZenBoard = zenBoard;
    
     while(Utils::map[currentZenBoard].garden != currentZenBoard.garden){
-        //Utils::PrintBoard(currentZenBoard);
         stack.push(currentZenBoard);
         currentZenBoard = Utils::map[currentZenBoard];
     }
