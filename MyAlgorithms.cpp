@@ -87,14 +87,12 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard, int showPath){
 
             Statistics::end = std::chrono::high_resolution_clock::now();
 
-            cout << "Solution founded...asasa"<< endl;
+            cout << "Solution founded..."<< endl;
 
             Statistics::totalNodesExpanded = Utils::CLOSE.size();
             if(showPath)
                 ShowMoves(currentBoard);
         }
-
-        Utils::CLOSE.insert(currentBoard);
 
         // Obtener los vecinos del estado actual
         Utils::GetNeighbours(currentBoard);  
@@ -129,8 +127,9 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard, int showPath){
 
             //Fast, duplicates?
             openQueue.push(neigbour);
-
-            /*entry = Utils::OPEN.find(neigbour);
+            
+            //Insert or edit in OPEN
+            entry = Utils::OPEN.find(neigbour);
             if(entry != Utils::OPEN.end()){
                 ZenBoard openZenBoard = *entry;
                 openZenBoard.g = neigbour.g;
@@ -138,9 +137,11 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard, int showPath){
                 Utils::OPEN.insert(openZenBoard);
             }
             else
-                Utils::OPEN.insert(neigbour);*/
+                Utils::OPEN.insert(neigbour);
 
         }
+
+        Utils::CLOSE.insert(currentBoard);
     }
 }
 
