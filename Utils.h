@@ -57,6 +57,7 @@ public:
     static unordered_set<ZenBoard, GetHashCode, Equals> neighbours;
     static unordered_set<ZenBoard, GetHashCode, Equals> visited;
     static unordered_map<ZenBoard, ZenBoard, GetHashCode, Equals> map;
+    static unordered_map<ZenBoard, ZenBoard, GetHashCode, Equals> aStarCache;
 
     static unordered_map<ZenBoard,int, Utils::GetHashCode,  Utils::Equals> OPEN;
     static unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> CLOSE;

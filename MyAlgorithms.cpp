@@ -26,7 +26,7 @@ void MyAlgorithms::BFS(ZenBoard& zenBoard){
             Statistics::end = std::chrono::high_resolution_clock::now();
             cout << "Solution founded..."<< endl;
             if(Utils::showPath)
-                ShowMoves(currentBoard);
+                ShowMoves(currentBoard, Utils::map);
             break;
         }
 
@@ -59,12 +59,16 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard){
     };
 
     priority_queue<ZenBoard, vector<ZenBoard>, ZenBoardComparator> openQueue;
+    
 
     zenBoard.g = 0;
     zenBoard.CompH();
 
     //For parents
-    Utils::map.insert({zenBoard, zenBoard});  
+    //Utils::map.insert({zenBoard, zenBoard}); 
+    Utils::aStarCache.insert({zenBoard, zenBoard}); 
+
+
     //Insert root node in open priority queue
     openQueue.push(zenBoard);
    
@@ -72,7 +76,7 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard){
     while(!openQueue.empty()){
 
         //Get the min value in priority queue
-        auto currentBoard = openQueue.top();
+        ZenBoard currentBoard = openQueue.top();
 		openQueue.pop();
 
         // Si el nodo estaba en la lista cerrada con un f menor me lo salto
@@ -91,8 +95,16 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard){
 
             Statistics::totalNodesExpanded = Utils::CLOSE.size();
 
-            if(Utils::showPath)
-                ShowMoves(currentBoard);
+            if(Utils::showPath){
+                
+
+                /*Utils::PrintBoard(currentBoard);
+                Utils::PrintBoard(Utils::aStarCache[currentBoard]);
+                Utils::PrintBoard(Utils::aStarCache[Utils::aStarCache[currentBoard]]);
+                Utils::PrintBoard(Utils::aStarCache[Utils::aStarCache[Utils::aStarCache[currentBoard]]]);*/
+                ShowMoves(currentBoard, Utils::aStarCache);
+            }
+
             return;
         }
 
@@ -129,6 +141,8 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard){
             //Update OPEN
             Utils::OPEN.insert_or_assign(neigbour, newG);
 
+            //Update path cache
+            Utils::aStarCache.insert_or_assign(neigbour, currentBoard);
         }
 
         Utils::CLOSE.insert(currentBoard);
@@ -177,7 +191,7 @@ int MyAlgorithms::Search(vector<ZenBoard>& path, int g, int bound) {
     if (Utils::IsWin(node)){
         Statistics::end = std::chrono::high_resolution_clock::now();
         if(Utils::showPath)
-            ShowMoves(node);
+            ShowMoves(node, Utils::map);
         return -1;
     }
         
@@ -206,22 +220,58 @@ int MyAlgorithms::Search(vector<ZenBoard>& path, int g, int bound) {
     return min;
 }
 
-
-void MyAlgorithms::ShowMoves(ZenBoard zenBoard){
+void MyAlgorithms::ShowMoves(ZenBoard zenBoard, unordered_map<ZenBoard, ZenBoard, Utils::GetHashCode, Utils::Equals>& map){
 
     cout << Utils::ERROR << "-> Show moves" << Utils::NORMAL<< endl;
 
     stack<ZenBoard> stack;
     ZenBoard currentZenBoard = zenBoard;
-   
-    while(Utils::map[currentZenBoard].garden != currentZenBoard.garden){
+    auto element = map.find(currentZenBoard);
+
+    stack.push(zenBoard);
+
+    //while(map[currentZenBoard].garden != currentZenBoard.garden){
+    while(((element->first.player == element->second.player) && 
+            (element->first.garden == element->second.garden)) != 1){
+        
+        element = map.find(currentZenBoard);
+
+        /*if(cont == 14){
+            cout << "es 15" << endl;
+            cout << "Current board: " << endl;
+            Utils::PrintBoard(parent->first);
+            cout << "Su padre: " << endl;
+            Utils::PrintBoard(parent->second);
+            
+            cout << "Son iguales?" << endl;
+
+            cout << ((parent->first.player == parent->second.player) && 
+            (parent->first.garden == parent->second.garden))<< endl;
+
+            getchar();
+        }*/
+
+        
+
+         /*cout << ((parent->first.player == parent->second.player) && 
+            (parent->first.garden == parent->second.garden))<< endl;
+        getchar();*/
+
         //Utils::PrintBoard(currentZenBoard);
-        stack.push(currentZenBoard);
-        currentZenBoard = Utils::map[currentZenBoard];
+        stack.push(element->second);
+        currentZenBoard = map[currentZenBoard];
     }
 
     //getchar();
-    stack.push(currentZenBoard);
+
+    /*cout << "padre -1" << endl;
+    Utils::PrintBoard(Utils::map[currentZenBoard]);
+
+    cout << "padre -2" << endl;
+    Utils::PrintBoard(Utils::map[currentZenBoard]);
+    getchar();*/
+    
+    //stack.push(currentZenBoard);
 
     Statistics::solutionLength = stack.size();
 

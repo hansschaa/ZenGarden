@@ -23,7 +23,9 @@ using namespace std;
 
 unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::neighbours;
 unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::visited;
-unordered_map<ZenBoard, ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::map;
+unordered_map<ZenBoard, ZenBoard, Utils::GetHashCode, Utils::Equals> Utils::map;
+unordered_map<ZenBoard, ZenBoard, Utils::GetHashCode, Utils::Equals> Utils::aStarCache;
+
 
 unordered_map<ZenBoard, int, Utils::GetHashCode,  Utils::Equals> Utils::OPEN;
 unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::CLOSE;
