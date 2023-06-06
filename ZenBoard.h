@@ -21,10 +21,12 @@ public:
         return h+g;
     }
 
-    //Count empty spaces
+    //Count spaces whit 1s
     void CompH(){
         //h = 0;
-        h = garden.size()-garden.count();
+        h = garden.count();
+
+        
     }
 
     bool operator==(const ZenBoard& other) const {

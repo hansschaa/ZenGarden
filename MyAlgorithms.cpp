@@ -54,7 +54,7 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard){
     struct ZenBoardComparator {
         bool operator()(const ZenBoard& zenBoard1, const ZenBoard& zenBoard2) const {
             // Orden ascendente basado en la variable f
-            return zenBoard1.g + zenBoard1.h > zenBoard2.g + zenBoard2.h;
+            return zenBoard1.g + zenBoard1.h < zenBoard2.g + zenBoard2.h;
         }
     };
 
@@ -68,7 +68,6 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard){
 
     //Insert root node in open priority queue
     openQueue.push(zenBoard);
-   
 
     while(!openQueue.empty()){
 
@@ -79,7 +78,7 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard){
         // Si el nodo estaba en la lista cerrada con un f menor me lo salto
         auto entry = Utils::CLOSE.find(currentBoard);
         if(entry != Utils::CLOSE.end()){
-            if((entry->g+entry->h) < currentBoard.GetF())
+            if((entry->g + entry->h) < currentBoard.GetF())
                 continue;
         }
 
@@ -106,24 +105,26 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard){
             int newG = currentBoard.g+1;
 
             //Si está en open o closed y el que habia tiene mejor g,continuar
+            //Open es un map de valores g, permite acceder al vlaor ya que la 
+            //priority queue no 
             auto entryOpen = Utils::OPEN.find(neigbour);
             if(entryOpen != Utils::OPEN.end()){
                 if(entryOpen->second <= newG)
                     continue;
             }
 
-
             auto entryClose = Utils::CLOSE.find(neigbour);
             if(entryClose != Utils::CLOSE.end()){
-                if(entryClose->g <= newG){
+                if(entryClose->g <= newG)
                     continue;
-                }
-                else
-                    Utils::CLOSE.erase(neigbour);
             }
 
             neigbour.g = newG;
             neigbour.CompH();
+
+            entryClose = Utils::CLOSE.find(neigbour);
+            if(entryClose != Utils::CLOSE.end())
+                Utils::CLOSE.erase(neigbour);
 
             //Fast, duplicates?
             openQueue.push(neigbour);
