@@ -31,7 +31,9 @@ void DoManualMove(ZenBoard& ZenBoard, int currentIndex, Vector2<int> dir);
 bool MoveIsOut(int index, Vector2<int> direction);
 
 
-
+/*Ex:  
+./zen level2.txt 1 2 1
+*/
 
 int main(int argc, char* argv[]) {
 
