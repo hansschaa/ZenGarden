@@ -61,7 +61,7 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard, int showPath){
     priority_queue<ZenBoard, vector<ZenBoard>, ZenBoardComparator> openQueue;
 
     zenBoard.g = 0;
-    zenBoard.h = zenBoard.CompH();
+    zenBoard.CompH();
 
     //For parents
     Utils::map.insert({zenBoard, zenBoard});  
@@ -90,8 +90,11 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard, int showPath){
             cout << "Solution founded..."<< endl;
 
             Statistics::totalNodesExpanded = Utils::CLOSE.size();
+
+            //getchar();
             if(showPath)
                 ShowMoves(currentBoard);
+            return;
         }
 
         // Obtener los vecinos del estado actual
@@ -106,14 +109,8 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard, int showPath){
             if(entryOpen != Utils::OPEN.end()){
                 if(entryOpen->second <= newG)
                     continue;
-                /*}
-                else{
-                    entryOpen->second = newG;
-                }*/
             }
-            /*else{
-                Utils::OPEN.insert({neigbour, newG});
-            }*/
+
 
             auto entryClose = Utils::CLOSE.find(neigbour);
             if(entryClose != Utils::CLOSE.end()){
@@ -125,36 +122,13 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard, int showPath){
             }
 
             neigbour.g = newG;
-            neigbour.h = neigbour.CompH();
+            neigbour.CompH();
 
             //Fast, duplicates?
             openQueue.push(neigbour);
 
             //Update OPEN
             Utils::OPEN.insert_or_assign(neigbour, newG);
-            
-            //Update g in open
-            /*if (Utils::OPEN.find(neigbour) != Utils::OPEN.end()){
-                if(entryOpen->second < neigbour.g){
-
-                }
-            }
-
-            //Guarda los g
-            //Utils::OPEN.insert(entryOpen, entryOpen->second);
-
-            //Insert or edit in OPEN
-            if(entryOpen != Utils::OPEN.end()){
-
-                if(entryOpen->second)
-
-                ZenBoard openZenBoard = *entry;
-                openZenBoard.g = neigbour.g;
-                Utils::OPEN.erase(neigbour);
-                Utils::OPEN.insert(openZenBoard);
-            }
-            else*/
-                
 
         }
 
@@ -164,16 +138,18 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard, int showPath){
 
 void MyAlgorithms::IDAStar(ZenBoard& zenBoard, int showPath){
     
-    //int maxDeph = 100;
     zenBoard.CompH();
     int bound = zenBoard.h;
-    std::vector<ZenBoard> path;
+    
+    vector<ZenBoard> path;
     path.push_back(zenBoard);
+    Utils::map.insert({zenBoard, zenBoard}); 
+
     int t;
 
     while (true) {
         //TODO
-        //dfs
+        t = Search(path, 0, bound);
         if (t == -1) {
             cout << "Solution founded..." << endl;
             break;
@@ -185,6 +161,47 @@ void MyAlgorithms::IDAStar(ZenBoard& zenBoard, int showPath){
         bound = t;
     }
 }
+
+int MyAlgorithms::Search(vector<ZenBoard>& path, int g, int bound) {
+
+    //Get last node in path
+    ZenBoard& node = path.back(); 
+
+    //Compute h node
+    node.CompH();
+    int f = node.GetF();
+    if (f > bound)
+        return f;
+    if (Utils::IsWin(node)){
+        ShowMoves(node);
+        return -1;
+    }
+        
+    int min = INT_MAX;
+    // get neighbours
+    Utils::GetNeighbours(node);
+
+    for (ZenBoard neighbour : Utils::neighbours) {
+
+        if (find(path.begin(), path.end(), neighbour) == path.end()) {
+            
+            path.push_back(neighbour);
+
+            int t = Search(path, g + 1, bound);
+            if (t == -1)
+                return -1;
+
+            //Update min val
+            if (t < min)
+                min = t; 
+
+            path.pop_back();
+        }
+    }
+
+    return min;
+}
+
 
 void MyAlgorithms::ShowMoves(ZenBoard zenBoard){
 
@@ -207,5 +224,6 @@ void MyAlgorithms::ShowMoves(ZenBoard zenBoard){
         Utils::PrintBoard(topElement);
         stack.pop();
     }
-
 }
+
+

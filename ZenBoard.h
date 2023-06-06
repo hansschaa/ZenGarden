@@ -21,10 +21,16 @@ public:
         return h+g;
     }
 
-    int CompH(){
-        return garden.size()-garden.count();
+    //Count empty spaces
+    void CompH(){
+        h = garden.size()-garden.count();
     }
 
+    bool operator==(const ZenBoard& other) const {
+        //auto equals = (garden &~ other.garden).none(); 
+        auto equals = (garden == other.garden) && (player == other.player); 
+        return equals;
+    }
 };
 
 #endif //ZEN_ZENBOARD_H

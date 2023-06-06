@@ -47,9 +47,9 @@ public:
     struct Equals {
         bool operator()(const ZenBoard& x, const ZenBoard& y) const {
 
-            bool areEquals = (x.garden &~ y.garden).none();
-
-            return areEquals;
+            //bool equals = (x.garden &~ y.garden).none(); //&& (x.player &~ y.player).none();
+            auto equals = (x.garden == y.garden) && (x.player == y.player); 
+            return equals;
         }
     };
 

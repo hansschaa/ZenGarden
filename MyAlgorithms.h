@@ -14,6 +14,7 @@ class MyAlgorithms{
         static void AStar(ZenBoard& zenBoard, int showPath);
         static void IDAStar(ZenBoard& zenBoard, int showPath);
         static void ShowMoves(ZenBoard zenBoard);
+        static int Search(vector<ZenBoard>& path, int g, int bound);
 };
 
 

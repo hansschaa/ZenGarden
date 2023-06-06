@@ -110,6 +110,10 @@ void IAPlay(ZenBoard& zenBoard, GameConfig gameConfig){
             MyAlgorithms::AStar(zenBoard, gameConfig.showPath);
             Statistics::Print("AStar");
             break;
+        case 2:
+            MyAlgorithms::IDAStar(zenBoard, gameConfig.showPath);
+            Statistics::Print("IDAStar");
+            break;
         default:
             break;
     }
