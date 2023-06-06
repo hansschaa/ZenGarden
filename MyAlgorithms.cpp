@@ -147,16 +147,17 @@ void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
 
     zenBoard.CompH();
     int bound = zenBoard.h;
-    
-    vector<ZenBoard> path;
-    path.push_back(zenBoard);
+    cout << "Bound inicial " << bound <<endl;
+    deque<ZenBoard> path;
+    path.push_front(zenBoard);
     Utils::map.insert({zenBoard, zenBoard}); 
 
-    int t;
+    int t = 0;
 
     while (true) {
-        //TODO
+
         t = Search(path, 0, bound);
+
         if (t == -1) {
             cout << "Solution founded..." << endl;
             break;
@@ -169,10 +170,10 @@ void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
     }
 }
 
-int MyAlgorithms::Search(vector<ZenBoard>& path, int g, int bound) {
+int MyAlgorithms::Search(deque<ZenBoard>& path, int g, int bound) {
 
     //Get last node in path
-    ZenBoard& node = path.back(); 
+    ZenBoard node = path.back(); 
 
     //Compute h node
     node.CompH();
@@ -180,6 +181,7 @@ int MyAlgorithms::Search(vector<ZenBoard>& path, int g, int bound) {
     if (f > bound)
         return f;
     if (Utils::IsWin(node)){
+       
         Statistics::end = std::chrono::high_resolution_clock::now();
         if(Utils::showPath)
             ShowMoves(node, Utils::map);
@@ -187,15 +189,14 @@ int MyAlgorithms::Search(vector<ZenBoard>& path, int g, int bound) {
     }
         
     int min = INT_MAX;
-    // get neighbours
+
     Utils::GetNeighbours(node);
 
     for (ZenBoard neighbour : Utils::neighbours) {
-
         if (find(path.begin(), path.end(), neighbour) == path.end()) {
-            
+           
             path.push_back(neighbour);
-
+            
             int t = Search(path, g + 1, bound);
             if (t == -1)
                 return -1;
@@ -204,7 +205,7 @@ int MyAlgorithms::Search(vector<ZenBoard>& path, int g, int bound) {
             if (t < min)
                 min = t; 
 
-            path.pop_back();
+            path.pop_front();
         }
     }
 
