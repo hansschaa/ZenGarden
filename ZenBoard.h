@@ -23,6 +23,7 @@ public:
 
     //Count empty spaces
     void CompH(){
+        //h = 0;
         h = garden.size()-garden.count();
     }
 

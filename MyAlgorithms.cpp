@@ -60,14 +60,11 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard){
 
     priority_queue<ZenBoard, vector<ZenBoard>, ZenBoardComparator> openQueue;
     
-
     zenBoard.g = 0;
     zenBoard.CompH();
 
     //For parents
-    //Utils::map.insert({zenBoard, zenBoard}); 
     Utils::aStarCache.insert({zenBoard, zenBoard}); 
-
 
     //Insert root node in open priority queue
     openQueue.push(zenBoard);
@@ -95,15 +92,8 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard){
 
             Statistics::totalNodesExpanded = Utils::CLOSE.size();
 
-            if(Utils::showPath){
-                
-
-                /*Utils::PrintBoard(currentBoard);
-                Utils::PrintBoard(Utils::aStarCache[currentBoard]);
-                Utils::PrintBoard(Utils::aStarCache[Utils::aStarCache[currentBoard]]);
-                Utils::PrintBoard(Utils::aStarCache[Utils::aStarCache[Utils::aStarCache[currentBoard]]]);*/
+            if(Utils::showPath)
                 ShowMoves(currentBoard, Utils::aStarCache);
-            }
 
             return;
         }
@@ -226,52 +216,17 @@ void MyAlgorithms::ShowMoves(ZenBoard zenBoard, unordered_map<ZenBoard, ZenBoard
 
     stack<ZenBoard> stack;
     ZenBoard currentZenBoard = zenBoard;
-    auto element = map.find(currentZenBoard);
 
+    //Push solution
+    auto element = map.find(currentZenBoard);
     stack.push(zenBoard);
 
-    //while(map[currentZenBoard].garden != currentZenBoard.garden){
-    while(((element->first.player == element->second.player) && 
-            (element->first.garden == element->second.garden)) != 1){
-        
-        element = map.find(currentZenBoard);
-
-        /*if(cont == 14){
-            cout << "es 15" << endl;
-            cout << "Current board: " << endl;
-            Utils::PrintBoard(parent->first);
-            cout << "Su padre: " << endl;
-            Utils::PrintBoard(parent->second);
-            
-            cout << "Son iguales?" << endl;
-
-            cout << ((parent->first.player == parent->second.player) && 
-            (parent->first.garden == parent->second.garden))<< endl;
-
-            getchar();
-        }*/
-
-        
-
-         /*cout << ((parent->first.player == parent->second.player) && 
-            (parent->first.garden == parent->second.garden))<< endl;
-        getchar();*/
-
-        //Utils::PrintBoard(currentZenBoard);
+    do{
         stack.push(element->second);
+        element = map.find(currentZenBoard);
         currentZenBoard = map[currentZenBoard];
-    }
-
-    //getchar();
-
-    /*cout << "padre -1" << endl;
-    Utils::PrintBoard(Utils::map[currentZenBoard]);
-
-    cout << "padre -2" << endl;
-    Utils::PrintBoard(Utils::map[currentZenBoard]);
-    getchar();*/
-    
-    //stack.push(currentZenBoard);
+    }while(((element->first.player == element->second.player) && 
+            (element->first.garden == element->second.garden)) != 1);
 
     Statistics::solutionLength = stack.size();
 
