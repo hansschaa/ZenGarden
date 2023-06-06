@@ -28,6 +28,8 @@ unordered_map<ZenBoard, ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::map
 unordered_map<ZenBoard, int, Utils::GetHashCode,  Utils::Equals> Utils::OPEN;
 unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::CLOSE;
 
+int Utils::showPath = 0; 
+
 void Utils::GetNeighbours(ZenBoard zenBoard){
 
     //Reset neigbords

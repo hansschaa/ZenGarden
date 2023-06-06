@@ -100,26 +100,25 @@ void ManualPlay(ZenBoard& zenBoard){
 
 void IAPlay(ZenBoard& zenBoard, GameConfig gameConfig){
 
+    Utils::showPath = gameConfig.showPath;
+
     switch (gameConfig.algorithmType)
     {
         case 0:
-            MyAlgorithms::BFS(zenBoard, gameConfig.showPath);
+            MyAlgorithms::BFS(zenBoard);
             Statistics::Print("BFS");
             break;
         case 1:
-            MyAlgorithms::AStar(zenBoard, gameConfig.showPath);
+            MyAlgorithms::AStar(zenBoard);
             Statistics::Print("AStar");
             break;
         case 2:
-            MyAlgorithms::IDAStar(zenBoard, gameConfig.showPath);
+            MyAlgorithms::IDAStar(zenBoard);
             Statistics::Print("IDAStar");
             break;
         default:
             break;
     }
-
-    
-
 }
 
 bool MoveIsOut(int index, Vector2<int> direction){

@@ -14,6 +14,7 @@ class Utils {
 
 public:
     static const int DIMENSION = 6;
+    static int showPath;
 
     //Colors
     static const string ERROR;

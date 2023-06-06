@@ -9,7 +9,7 @@
 
 using namespace std;
 
-void MyAlgorithms::BFS(ZenBoard& zenBoard, int showPath){
+void MyAlgorithms::BFS(ZenBoard& zenBoard){
     
     cout << "-> Empezando BFS" << endl;
     Statistics::start = std::chrono::high_resolution_clock::now();
@@ -25,7 +25,7 @@ void MyAlgorithms::BFS(ZenBoard& zenBoard, int showPath){
         if (Utils::IsWin(currentBoard)) {
             Statistics::end = std::chrono::high_resolution_clock::now();
             cout << "Solution founded..."<< endl;
-            if(showPath)
+            if(Utils::showPath)
                 ShowMoves(currentBoard);
             break;
         }
@@ -45,7 +45,7 @@ void MyAlgorithms::BFS(ZenBoard& zenBoard, int showPath){
     }
 }
 
-void MyAlgorithms::AStar(ZenBoard& zenBoard, int showPath){
+void MyAlgorithms::AStar(ZenBoard& zenBoard){
     
     cout << "-> Empezando AStar.." << endl;
     Statistics::start = std::chrono::high_resolution_clock::now();
@@ -91,8 +91,7 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard, int showPath){
 
             Statistics::totalNodesExpanded = Utils::CLOSE.size();
 
-            //getchar();
-            if(showPath)
+            if(Utils::showPath)
                 ShowMoves(currentBoard);
             return;
         }
@@ -136,8 +135,11 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard, int showPath){
     }
 }
 
-void MyAlgorithms::IDAStar(ZenBoard& zenBoard, int showPath){
-    
+void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
+
+    cout << "-> Empezando IDAStar.." << endl;
+    Statistics::start = std::chrono::high_resolution_clock::now();
+
     zenBoard.CompH();
     int bound = zenBoard.h;
     
@@ -173,7 +175,9 @@ int MyAlgorithms::Search(vector<ZenBoard>& path, int g, int bound) {
     if (f > bound)
         return f;
     if (Utils::IsWin(node)){
-        ShowMoves(node);
+        Statistics::end = std::chrono::high_resolution_clock::now();
+        if(Utils::showPath)
+            ShowMoves(node);
         return -1;
     }
         
@@ -211,10 +215,12 @@ void MyAlgorithms::ShowMoves(ZenBoard zenBoard){
     ZenBoard currentZenBoard = zenBoard;
    
     while(Utils::map[currentZenBoard].garden != currentZenBoard.garden){
+        //Utils::PrintBoard(currentZenBoard);
         stack.push(currentZenBoard);
         currentZenBoard = Utils::map[currentZenBoard];
     }
 
+    //getchar();
     stack.push(currentZenBoard);
 
     Statistics::solutionLength = stack.size();
