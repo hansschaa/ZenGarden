@@ -209,6 +209,7 @@ int MyAlgorithms::Search(deque<ZenBoard>& path, int g, int bound) {
         }
     }
 
+    Utils::PrintBoard(node);
     return min;
 }
 
