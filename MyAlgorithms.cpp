@@ -61,7 +61,7 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard){
         bool operator()(const ZenBoard& zenBoard1, const ZenBoard& zenBoard2) const {
 
             // Orden ascendente basado en la variable f
-            return zenBoard1.g + zenBoard1.h < zenBoard2.g + zenBoard2.h;
+            return zenBoard1.g + zenBoard1.h > zenBoard2.g + zenBoard2.h;
             //return false;
         }
     };

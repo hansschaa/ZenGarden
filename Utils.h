@@ -5,6 +5,7 @@
 #include <functional>
 #include <unordered_set>
 #include <fstream>
+#include <bitset>
 #include "ZenBoard.h"
 #include "Vector2.h"
 
@@ -85,6 +86,8 @@ public:
     static Vector2<int> GetDirection(ZenBoard zenBoard);
     static Vector2<int> GetDirectionFromEntry(int id);
     static Vector2<int> GetInitialIndex(int id);
+    static int CountSpaces(bitset<36>& gardenClone, int currentIndex, Vector2<int> direction, int step);
+    static void GardenPaint(bitset<36>& gardenClone, int currentIndex, int max, int step);  
 
 };
 

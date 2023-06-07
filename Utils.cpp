@@ -1,4 +1,5 @@
 #include <iostream>
+#include <bitset>
 #include <vector>
 #include "Utils.h"
 #include "ZenBoard.h"
@@ -238,11 +239,6 @@ void Utils::ManualPaint(ZenBoard& zenBoard, int currentIndex, Vector2<int> direc
 }
 
 void Utils::IAPaint(ZenBoard& zenBoard, int currentIndex, Vector2<int> direction, int step) {
-    
-    /*std::cout << "Dirección de memoria de newZenBoard: " << &newZenBoard << std::endl;
-    std::cout << "Dirección de memoria de zenBoards: " << &zenBoards << std::endl;
-
-    getchar();*/
 
     int index = currentIndex;
     int dirFactor = direction.i != 0 ? direction.i : direction.j;
@@ -277,6 +273,49 @@ void Utils::IAPaint(ZenBoard& zenBoard, int currentIndex, Vector2<int> direction
         zenBoard.lastDir = Vector2<int>(0,0);
     }
 }
+
+//For ZenBoard heuristic
+int Utils::CountSpaces(bitset<36>& gardenClone, int currentIndex, Vector2<int> direction, int step){
+    
+    //cout << "Count spaces" << endl;
+    
+    int index = currentIndex;
+    int dirFactor = 1;
+    int count = 0;
+
+    //GARDEN CHECK
+    do {
+        if (Utils::IsInside(index)) {
+            if (gardenClone[index] == 1) {
+
+                //cout << "Break: " << index << endl;
+                break;
+            }
+        }
+        
+        //gardenClone.set(index, 1);
+
+        index += step*dirFactor;
+        //cout << index << endl;
+        count++;
+    } while (Utils::GetEndPaintCondition(direction, index, step, dirFactor));
+
+    return count;
+}
+
+void Utils::GardenPaint(bitset<36>& gardenClone, int currentIndex, int max, int step) {
+
+    int index = currentIndex;
+    int dirFactor = 1;
+    int count = 0;
+    //GARDEN CHECK
+    do {
+        gardenClone.set(index, 1);
+        count++;
+        index += step;
+    } while (count < max);
+}
+
 
 bool Utils::CanMove(ZenBoard& zenBoard, int currentIndex, Vector2<int> direction, int step, bool isPlayerInsideBoard){
     
@@ -388,6 +427,7 @@ void Utils::PrintBitset(bitset<36> board) {
         cout << endl;
     }
 
+    cout << Utils::NORMAL;
     cout << "\n";
 }
 
@@ -466,6 +506,8 @@ Vector2<int> Utils::GetInitialIndex(int id){
 
 }
 
+
+
 int Utils::GetID(ZenBoard zenBoard){
     string opcion;
     int id = 0;
@@ -525,8 +567,8 @@ Vector2<int> Utils::GetDirectionFromEntry(int id){
 
 int Utils::GetCorrectIndex(int index){
 
-    int max = Utils::DIMENSION * Utils::DIMENSION;
-    index = max-index;
+    int max = GetMax();
+    index = max-index-1;
 
     return index;
 }
