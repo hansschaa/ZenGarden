@@ -78,6 +78,7 @@ public:
 
     static void ManualPaint(ZenBoard& zenBoard, int currentIndex, Vector2<int> direction, int step);
     static void IAPaint(ZenBoard& zenBoard, int currentIndex, Vector2<int> direction, int step);  
+    static void PaintChild(const ZenBoard& zenBoard, int currentIndex, Vector2<int> dir, int step);
     static bool GetEndPaintCondition(Vector2<int> direction, int index, int step, int dirFactor);
     static bool ManualGetEndPaintCondition(Vector2<int> direction, int index);
     static bool CanMove(ZenBoard& zenBoard,int currentIndex, Vector2<int> direction, int step, bool isPlayerInsideBoard);

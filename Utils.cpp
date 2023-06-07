@@ -46,49 +46,53 @@ void Utils::GetNeighbours(ZenBoard zenBoard){
 
         //Check up
         if(CanMove(zenBoard, currentIndex, up, Utils::DIMENSION, true)){
-            ZenBoard child = zenBoard;
+            /*ZenBoard child = zenBoard;
             //child.g++;
 
             IAPaint(child, currentIndex, up, Utils::DIMENSION);
             Utils::map.insert({child, zenBoard});
-            Utils::neighbours.insert(child);
+            Utils::neighbours.insert(child);*/
+
+            PaintChild(zenBoard, currentIndex, up, Utils::DIMENSION);
 
         }
 
         //Check down
         if(CanMove(zenBoard, currentIndex, down, Utils::DIMENSION, true)){
-            ZenBoard child = zenBoard;
+            /*ZenBoard child = zenBoard;
             //child.g++;
 
             IAPaint(child, currentIndex, down, Utils::DIMENSION);
             Utils::map.insert({child, zenBoard});
-            Utils::neighbours.insert(child);
+            Utils::neighbours.insert(child);*/
 
+            PaintChild(zenBoard, currentIndex, down, Utils::DIMENSION);
      
         }
         
         //check right
         if(CanMove(zenBoard, currentIndex, left, 1, true)){
-            ZenBoard child = zenBoard; 
+            /*ZenBoard child = zenBoard; 
             //child.g++;
 
             IAPaint(child, currentIndex, left, 1);
             Utils::map.insert({child, zenBoard});
-            Utils::neighbours.insert(child);
+            Utils::neighbours.insert(child);*/
 
+            PaintChild(zenBoard, currentIndex, left, 1);
            
         }
         
         //Check left
         if(CanMove(zenBoard, currentIndex, right, 1, true)){
-            ZenBoard child = zenBoard;
+            /*ZenBoard child = zenBoard;
             //child.g++;
 
             IAPaint(child, currentIndex, right, 1);
             Utils::map.insert({child, zenBoard});
-            Utils::neighbours.insert(child);
+            Utils::neighbours.insert(child);*/
 
-           
+            PaintChild(zenBoard, currentIndex, right, 1);
         }
     }
 
@@ -99,14 +103,12 @@ void Utils::GetNeighbours(ZenBoard zenBoard){
             Vector2<int> initialPoint = GetInitialIndex(i);
             int currentIndex = 35 - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, up, Utils::DIMENSION, false)){
-                ZenBoard child = zenBoard;
-                //child.g++;
-
+                /*ZenBoard child = zenBoard;
                 IAPaint(child, currentIndex, up, Utils::DIMENSION);
                 Utils::map.insert({child, zenBoard});
-                Utils::neighbours.insert(child);
+                Utils::neighbours.insert(child);*/
+                PaintChild(zenBoard, currentIndex, up, Utils::DIMENSION);
 
-             
             }
         }
 
@@ -115,49 +117,39 @@ void Utils::GetNeighbours(ZenBoard zenBoard){
             Vector2<int> initialPoint = GetInitialIndex(i);
             int currentIndex = 35 - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, down, Utils::DIMENSION, false)){
-                ZenBoard child = zenBoard;
-                //child.g++;
-
+                /*ZenBoard child = zenBoard;
                 IAPaint(child, currentIndex, down, Utils::DIMENSION);
                 Utils::map.insert({child, zenBoard});
-                Utils::neighbours.insert(child);
+                Utils::neighbours.insert(child); */
 
-               
+                PaintChild(zenBoard, currentIndex, down, Utils::DIMENSION);
             }
         }
-        
-        
         
         //Left
         for(int i = 7 ; i < 13; i++){
             Vector2<int> initialPoint = GetInitialIndex(i);
             int currentIndex = 35 - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, right, 1, false)){
-                ZenBoard child = zenBoard; 
-                //child.g++;
-
+                /*ZenBoard child = zenBoard; 
                 IAPaint(child, currentIndex, right, 1);
                 Utils::map.insert({child, zenBoard});
-                Utils::neighbours.insert(child);
-
-              
+                Utils::neighbours.insert(child);*/
+                PaintChild(zenBoard, currentIndex, right, 1);
             }
         }
-        
         
         //Right
         for(int i = 24 ; i >= 19; i--){
             Vector2<int> initialPoint = GetInitialIndex(i);
             int currentIndex = 35 - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, left, 1, false)){
-                ZenBoard child = zenBoard;
-                //child.g++;
-
+                /*ZenBoard child = zenBoard;
                 IAPaint(child, currentIndex, left, 1);
                 Utils::map.insert({child, zenBoard});
-                Utils::neighbours.insert(child);
+                Utils::neighbours.insert(child);*/
 
-               
+                PaintChild(zenBoard, currentIndex, left, 1);
             }
         }
     }
@@ -178,6 +170,13 @@ void Utils::GetNeighbours(ZenBoard zenBoard){
     cout << Utils::ERROR << "---------------------------" << Utils::NORMAL << endl;
 
     getchar();*/
+}
+
+void Utils::PaintChild(const ZenBoard& zenBoard, int currentIndex, Vector2<int> dir, int step) {
+    ZenBoard child = zenBoard;
+    IAPaint(child, currentIndex, dir, step);
+    Utils::map.insert({child, zenBoard});
+    Utils::neighbours.insert(child);
 }
 
 void Utils::DoManualMove(ZenBoard& zenBoard, int currentIndex, Vector2<int> dir){
