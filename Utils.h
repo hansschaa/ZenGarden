@@ -38,7 +38,7 @@ public:
             std::hash<std::bitset<36>> hash_fn81;
             unsigned long hash;
 
-            hash = hash_fn81(x.garden);
+            hash = hash_fn81(x.garden); //^ hash_fn81(x.player);
 
             return hash;
         }
@@ -63,6 +63,7 @@ public:
     static unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> CLOSE;
 
     static void PrintBoard(ZenBoard zenBoard);
+    static void PrintBitset(bitset<36> printBitset);
     static void PrintBoardWIndexs(ZenBoard zenBoard);
     static bool IsWin(ZenBoard& zenBoard);
     static bool IsPlayerOutside(ZenBoard zenBoard);

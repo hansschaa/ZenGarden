@@ -16,6 +16,7 @@ public:
     bitset<36> GetWholeBoard();
 
     int h,g;
+    Vector2<int> lastDir = Vector2<int>(0,0);
     
     int GetF(){
         return h+g;
@@ -23,10 +24,7 @@ public:
 
     //Count spaces whit 1s
     void CompH(){
-        //h = 0;
         h = garden.count();
-
-        
     }
 
     bool operator==(const ZenBoard& other) const {

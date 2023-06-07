@@ -19,6 +19,7 @@ const Vector2<int> Utils::right = Vector2<int>(0,1);
 const Vector2<int> Utils::down = Vector2<int>(-1,0);
 const Vector2<int> Utils::left = Vector2<int>(0,-1);
 
+
 using namespace std;
 
 unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::neighbours;
@@ -45,33 +46,48 @@ void Utils::GetNeighbours(ZenBoard zenBoard){
         //Check up
         if(CanMove(zenBoard, currentIndex, up, Utils::DIMENSION, true)){
             ZenBoard child = zenBoard;
+            //child.g++;
+
             IAPaint(child, currentIndex, up, Utils::DIMENSION);
             Utils::map.insert({child, zenBoard});
             Utils::neighbours.insert(child);
+
         }
 
         //Check down
         if(CanMove(zenBoard, currentIndex, down, Utils::DIMENSION, true)){
             ZenBoard child = zenBoard;
+            //child.g++;
+
             IAPaint(child, currentIndex, down, Utils::DIMENSION);
             Utils::map.insert({child, zenBoard});
             Utils::neighbours.insert(child);
+
+     
         }
         
         //check right
         if(CanMove(zenBoard, currentIndex, left, 1, true)){
             ZenBoard child = zenBoard; 
+            //child.g++;
+
             IAPaint(child, currentIndex, left, 1);
             Utils::map.insert({child, zenBoard});
             Utils::neighbours.insert(child);
+
+           
         }
         
         //Check left
         if(CanMove(zenBoard, currentIndex, right, 1, true)){
-           ZenBoard child = zenBoard;
-           IAPaint(child, currentIndex, right, 1);
-           Utils::map.insert({child, zenBoard});
-           Utils::neighbours.insert(child);
+            ZenBoard child = zenBoard;
+            //child.g++;
+
+            IAPaint(child, currentIndex, right, 1);
+            Utils::map.insert({child, zenBoard});
+            Utils::neighbours.insert(child);
+
+           
         }
     }
 
@@ -83,9 +99,13 @@ void Utils::GetNeighbours(ZenBoard zenBoard){
             int currentIndex = 35 - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, up, Utils::DIMENSION, false)){
                 ZenBoard child = zenBoard;
+                //child.g++;
+
                 IAPaint(child, currentIndex, up, Utils::DIMENSION);
                 Utils::map.insert({child, zenBoard});
                 Utils::neighbours.insert(child);
+
+             
             }
         }
 
@@ -95,9 +115,13 @@ void Utils::GetNeighbours(ZenBoard zenBoard){
             int currentIndex = 35 - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, down, Utils::DIMENSION, false)){
                 ZenBoard child = zenBoard;
+                //child.g++;
+
                 IAPaint(child, currentIndex, down, Utils::DIMENSION);
                 Utils::map.insert({child, zenBoard});
                 Utils::neighbours.insert(child);
+
+               
             }
         }
         
@@ -109,9 +133,13 @@ void Utils::GetNeighbours(ZenBoard zenBoard){
             int currentIndex = 35 - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, right, 1, false)){
                 ZenBoard child = zenBoard; 
+                //child.g++;
+
                 IAPaint(child, currentIndex, right, 1);
                 Utils::map.insert({child, zenBoard});
                 Utils::neighbours.insert(child);
+
+              
             }
         }
         
@@ -122,19 +150,33 @@ void Utils::GetNeighbours(ZenBoard zenBoard){
             int currentIndex = 35 - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, left, 1, false)){
                 ZenBoard child = zenBoard;
+                //child.g++;
+
                 IAPaint(child, currentIndex, left, 1);
                 Utils::map.insert({child, zenBoard});
                 Utils::neighbours.insert(child);
+
+               
             }
         }
     }
 
-    /*cout << Utils::ERROR << "--> Boards" << Utils::NORMAL << endl;
+    
+
+    /*cout << Utils::ERROR << "---------------------------" << Utils::NORMAL << endl;
+    cout << Utils::ERROR << "--> Boards" << Utils::NORMAL << endl;
+    cout << Utils::ERROR << "--> Padre" << Utils::NORMAL << endl;
+    Utils::PrintBoard(zenBoard);
     // Imprimir los valores del unordered_set
-    for (const ZenBoard estado : neigbords) {
+    for (const ZenBoard estado : Utils::neighbours) {
         // Acceder a los valores a través de los punteros
+         cout << "########################" << endl;
+        Utils::PrintBitset(estado.garden);
+        Utils::PrintBitset(estado.player);
         Utils::PrintBoard(estado);
+        cout << "########################" << endl;
     }
+    cout << Utils::ERROR << "---------------------------" << Utils::NORMAL << endl;
 
     getchar();*/
 }
@@ -225,17 +267,34 @@ void Utils::IAPaint(ZenBoard& zenBoard, int currentIndex, Vector2<int> direction
     if(nextToObstacle){
         zenBoard.player.reset();
         zenBoard.player.set(index - (step*dirFactor), 1);
+        zenBoard.lastDir = direction;
     }
 
     //El player no estaba, hay que verificar si el mov
     //Hizo que se quedara adentro
     else{
         zenBoard.player.reset();
+        zenBoard.lastDir = Vector2<int>(0,0);
     }
 }
 
 bool Utils::CanMove(ZenBoard& zenBoard, int currentIndex, Vector2<int> direction, int step, bool isPlayerInsideBoard){
     
+
+    if(direction.i != 0){
+        if(direction.i*-1 == zenBoard.lastDir.i){
+            //cout << "Queire volver por la misma dirección pasada"<< endl;
+            return false;
+        }
+    }
+
+    if(direction.j != 0){
+        if(direction.j*-1 == zenBoard.lastDir.j){
+            //cout << "Queire volver por la misma dirección pasada"<< endl;
+            return false;
+        }
+    }
+
     if(!isPlayerInsideBoard){
         if(zenBoard.garden[currentIndex] == 1) {
                 //cout << "1" << endl;
@@ -293,6 +352,32 @@ void Utils::PrintBoard(ZenBoard zenBoard) {
                 cout << Utils::FREE;
 
             else if (zenBoard.garden[index] == 1)
+                cout << Utils::BUSY;
+
+            else
+                cout << Utils::NORMAL;
+
+            cout << board[index] << " ";
+        }
+        cout << endl;
+    }
+
+    cout << "\n";
+}
+
+void Utils::PrintBitset(bitset<36> board) {
+
+    for (int row = Utils::DIMENSION - 1; row >= 0; row--) {
+        for (int col = Utils::DIMENSION - 1; col >= 0; col--) {
+            int index = row * Utils::DIMENSION + col;
+
+            if (board[index] == 1)
+                cout << Utils::PLAYER;
+
+            else if (board[index] == 1)
+                cout << Utils::FREE;
+
+            else if (board[index] == 1)
                 cout << Utils::BUSY;
 
             else

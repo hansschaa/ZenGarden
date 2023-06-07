@@ -103,7 +103,10 @@ void ManualPlay(ZenBoard& zenBoard){
 void IAPlay(ZenBoard& zenBoard, GameConfig gameConfig){
 
     Utils::showPath = gameConfig.showPath;
-
+    //Utils::PrintBoard(zenBoard);
+    //getchar();
+    //Utils::GetNeighbours(zenBoard);  
+    
     switch (gameConfig.algorithmType)
     {
         case 0:

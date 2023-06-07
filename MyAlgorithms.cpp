@@ -22,11 +22,17 @@ void MyAlgorithms::BFS(ZenBoard& zenBoard){
 
         ZenBoard currentBoard = queue.front();
         queue.pop();
+
         if (Utils::IsWin(currentBoard)) {
             Statistics::end = std::chrono::high_resolution_clock::now();
             cout << "Solution founded..."<< endl;
-            if(Utils::showPath)
+            if(Utils::showPath){
+                //Utils::PrintBoard(currentBoard);
+                //Utils::PrintBoard(Utils::map[currentBoard]);
+                //Utils::PrintBoard(Utils::map[Utils::map[currentBoard]]);
                 ShowMoves(currentBoard, Utils::map);
+            }
+               
             break;
         }
 
@@ -53,8 +59,10 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard){
     //Sort ascendent
     struct ZenBoardComparator {
         bool operator()(const ZenBoard& zenBoard1, const ZenBoard& zenBoard2) const {
+
             // Orden ascendente basado en la variable f
             return zenBoard1.g + zenBoard1.h < zenBoard2.g + zenBoard2.h;
+            //return false;
         }
     };
 
@@ -159,7 +167,7 @@ void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
         t = Search(path, 0, bound);
 
         if (t == -1) {
-            cout << "Solution founded..." << endl;
+            cout << "Solution found..." << endl;
             break;
         }
         if (t == INT_MAX) {
@@ -194,18 +202,17 @@ int MyAlgorithms::Search(deque<ZenBoard>& path, int g, int bound) {
 
     for (ZenBoard neighbour : Utils::neighbours) {
         if (find(path.begin(), path.end(), neighbour) == path.end()) {
-           
-            path.push_back(neighbour);
             
+            path.push_back(neighbour);
             int t = Search(path, g + 1, bound);
+            path.pop_back();
+
             if (t == -1)
                 return -1;
 
             //Update min val
             if (t < min)
                 min = t; 
-
-            path.pop_front();
         }
     }
 
@@ -222,12 +229,12 @@ void MyAlgorithms::ShowMoves(ZenBoard zenBoard, unordered_map<ZenBoard, ZenBoard
 
     //Push solution
     auto element = map.find(currentZenBoard);
-    stack.push(zenBoard);
+    stack.push(element->first);
 
     do{
         stack.push(element->second);
-        element = map.find(currentZenBoard);
         currentZenBoard = map[currentZenBoard];
+        element = map.find(currentZenBoard);
     }while(((element->first.player == element->second.player) && 
             (element->first.garden == element->second.garden)) != 1);
 
