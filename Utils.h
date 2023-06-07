@@ -39,7 +39,7 @@ public:
             std::hash<std::bitset<36>> hash_fn81;
             unsigned long hash;
 
-            hash = hash_fn81(x.garden); //^ hash_fn81(x.player);
+            hash = hash_fn81(x.garden) ^ hash_fn81(x.player);
 
             return hash;
         }

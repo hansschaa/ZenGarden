@@ -26,13 +26,10 @@ void MyAlgorithms::BFS(ZenBoard& zenBoard){
         if (Utils::IsWin(currentBoard)) {
             Statistics::end = std::chrono::high_resolution_clock::now();
             cout << "Solution founded..."<< endl;
-            if(Utils::showPath){
-                //Utils::PrintBoard(currentBoard);
-                //Utils::PrintBoard(Utils::map[currentBoard]);
-                //Utils::PrintBoard(Utils::map[Utils::map[currentBoard]]);
+
+            if(Utils::showPath)
                 ShowMoves(currentBoard, Utils::map);
-            }
-               
+    
             break;
         }
 
@@ -155,9 +152,10 @@ void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
 
     zenBoard.CompH();
     int bound = zenBoard.h;
-    cout << "Bound inicial " << bound <<endl;
-    deque<ZenBoard> path;
-    path.push_front(zenBoard);
+    stack<ZenBoard> path;
+    path.push(zenBoard);
+
+    Utils::visited.insert(zenBoard);
     Utils::map.insert({zenBoard, zenBoard}); 
 
     int t = 0;
@@ -178,16 +176,18 @@ void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
     }
 }
 
-int MyAlgorithms::Search(deque<ZenBoard>& path, int g, int bound) {
+int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
 
-    //Get last node in path
-    ZenBoard node = path.back(); 
+    Statistics::totalNodesExpanded++;
+    ZenBoard node = path.top();
 
     //Compute h node
     node.CompH();
     int f = node.GetF();
     if (f > bound)
         return f;
+
+    //Check win
     if (Utils::IsWin(node)){
        
         Statistics::end = std::chrono::high_resolution_clock::now();
@@ -198,14 +198,25 @@ int MyAlgorithms::Search(deque<ZenBoard>& path, int g, int bound) {
         
     int min = INT_MAX;
 
+    //Get neighbours
     Utils::GetNeighbours(node);
+    auto neighbourList = Utils::neighbours;
 
-    for (ZenBoard neighbour : Utils::neighbours) {
-        if (find(path.begin(), path.end(), neighbour) == path.end()) {
+    for (ZenBoard neighbour : neighbourList) {
+
+        //Update g
+        neighbour.g = g + 1;
+
+        //If visited not contains neighbour
+        if (Utils::visited.find(neighbour) == Utils::visited.end()) {
             
-            path.push_back(neighbour);
-            int t = Search(path, g + 1, bound);
-            path.pop_back();
+            path.push(neighbour);
+            Utils::visited.insert(neighbour);
+
+            int t = Search(path, neighbour.g, bound);
+
+            Utils::visited.erase(neighbour);
+            path.pop();
 
             if (t == -1)
                 return -1;
@@ -216,7 +227,6 @@ int MyAlgorithms::Search(deque<ZenBoard>& path, int g, int bound) {
         }
     }
 
-    Utils::PrintBoard(node);
     return min;
 }
 
