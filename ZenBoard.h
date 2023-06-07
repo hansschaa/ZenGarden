@@ -28,7 +28,6 @@ public:
     void Print();
 
     bool operator==(const ZenBoard& other) const {
-        //auto equals = (garden &~ other.garden).none(); 
         auto equals = (garden == other.garden) && (player == other.player); 
         return equals;
     }

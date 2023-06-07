@@ -162,8 +162,6 @@ void Utils::GetNeighbours(ZenBoard zenBoard){
         }
     }
 
-    
-
     /*cout << Utils::ERROR << "---------------------------" << Utils::NORMAL << endl;
     cout << Utils::ERROR << "--> Boards" << Utils::NORMAL << endl;
     cout << Utils::ERROR << "--> Padre" << Utils::NORMAL << endl;
@@ -277,26 +275,20 @@ void Utils::IAPaint(ZenBoard& zenBoard, int currentIndex, Vector2<int> direction
 //For ZenBoard heuristic
 int Utils::CountSpaces(bitset<36>& gardenClone, int currentIndex, Vector2<int> direction, int step){
     
-    //cout << "Count spaces" << endl;
-    
     int index = currentIndex;
     int dirFactor = 1;
     int count = 0;
 
-    //GARDEN CHECK
+    //Garden check
     do {
         if (Utils::IsInside(index)) {
             if (gardenClone[index] == 1) {
-
-                //cout << "Break: " << index << endl;
                 break;
             }
         }
         
-        //gardenClone.set(index, 1);
-
         index += step*dirFactor;
-        //cout << index << endl;
+
         count++;
     } while (Utils::GetEndPaintCondition(direction, index, step, dirFactor));
 
@@ -306,9 +298,9 @@ int Utils::CountSpaces(bitset<36>& gardenClone, int currentIndex, Vector2<int> d
 void Utils::GardenPaint(bitset<36>& gardenClone, int currentIndex, int max, int step) {
 
     int index = currentIndex;
-    int dirFactor = 1;
     int count = 0;
-    //GARDEN CHECK
+
+    //Garden paint
     do {
         gardenClone.set(index, 1);
         count++;
@@ -322,24 +314,22 @@ bool Utils::CanMove(ZenBoard& zenBoard, int currentIndex, Vector2<int> direction
 
     if(direction.i != 0){
         if(direction.i*-1 == zenBoard.lastDir.i){
-            //cout << "Queire volver por la misma dirección pasada"<< endl;
             return false;
         }
     }
 
     if(direction.j != 0){
         if(direction.j*-1 == zenBoard.lastDir.j){
-            //cout << "Queire volver por la misma dirección pasada"<< endl;
             return false;
         }
     }
 
     if(!isPlayerInsideBoard){
         if(zenBoard.garden[currentIndex] == 1) {
-                //cout << "1" << endl;
-                return false;
-            }
+            return false;
+        }
     }
+
     else{
 
        if( direction.i != 0){
@@ -365,6 +355,8 @@ bool Utils::GetEndPaintCondition(Vector2<int> direction, int index, int step, in
         return (index - (step*dirFactor))%Utils::DIMENSION != 0;
     else if(direction.j == 1)
         return index%Utils::DIMENSION != 0;
+    else
+        return false;
 }
 
 bool Utils::ManualGetEndPaintCondition(Vector2<int> direction, int index){
@@ -435,7 +427,6 @@ void Utils::PrintBoardWIndexs(ZenBoard zenBoard) {
 
     std::bitset<36> board(zenBoard.garden | zenBoard.player); 
 
-    //cout << "\t";
     int cont = 1;
     int cont2 = 7;
 
@@ -456,7 +447,7 @@ void Utils::PrintBoardWIndexs(ZenBoard zenBoard) {
     for (int row = Utils::DIMENSION - 1; row >= 0; row--) {
        
         cout << Utils::OTHER << (cont + row) << " " << Utils::NORMAL;
-        //cout << "\t";
+
         for (int col = Utils::DIMENSION - 1; col >= 0; col--) {
             int index = row * Utils::DIMENSION + col;
 
@@ -505,8 +496,6 @@ Vector2<int> Utils::GetInitialIndex(int id){
     else return Vector2(0, 0);
 
 }
-
-
 
 int Utils::GetID(ZenBoard zenBoard){
     string opcion;

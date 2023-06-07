@@ -8,10 +8,7 @@ bitset<36> ZenBoard::GetWholeBoard(){
 }
 
 void ZenBoard::CompH(){
-
-    //cout << "Comp H" << endl;
-
-    int value = 0;
+    h = 0;
 
     bitset<36> gardenClone = garden;
     int index;
@@ -29,9 +26,6 @@ void ZenBoard::CompH(){
                 int freeRight = Utils::CountSpaces(gardenClone, index, Utils::right, 1);
                 int freeBottom = Utils::CountSpaces(gardenClone, index, Utils::up, Utils::DIMENSION);
 
-                //cout << "freeRight es: " << freeRight << endl;
-                //cout << "freeBottom es: " << freeBottom << endl;
-
                 //check which is major
                 if(freeRight == 0 && freeBottom == 0)
                     continue;
@@ -41,20 +35,11 @@ void ZenBoard::CompH(){
                     else
                         Utils::GardenPaint(gardenClone, index, freeBottom, Utils::DIMENSION);
 
-                    //Utils::PrintBitset(gardenClone);
-                    //getchar();
-
-                    value++;
+                    h++;
                 }
             }
         }
     }
-
-    h = value;
-    //Print();
-    //cout << "H es: " << h << endl;
-    //getchar();
-
 }
 
 void ZenBoard::Print() {
