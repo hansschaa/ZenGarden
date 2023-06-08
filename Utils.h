@@ -6,6 +6,7 @@
 #include <unordered_set>
 #include <fstream>
 #include <bitset>
+#include <boost/dynamic_bitset.hpp>
 #include "ZenBoard.h"
 #include "Vector2.h"
 
@@ -64,7 +65,8 @@ public:
     static unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> CLOSE;
 
     static void PrintBoard(ZenBoard zenBoard);
-    static void PrintBitset(bitset<36> printBitset);
+    static void PrintBitset(bitset<36> printBitset);    
+    static void PrintDynamicBitset(boost::dynamic_bitset<> printBitset);
     static void PrintBoardWIndexs(ZenBoard zenBoard);
     static bool IsWin(ZenBoard& zenBoard);
     static bool IsPlayerOutside(ZenBoard zenBoard);

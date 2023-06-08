@@ -8,6 +8,7 @@
 #include <stack>
 #include <list>
 #include <fstream>
+#include <boost/dynamic_bitset.hpp>
 #include "Statistics.h"
 #include "ZenBoard.h"
 #include "Utils.h"
@@ -210,6 +211,12 @@ bool ProcessCommands(int argc, char* argv[], ZenBoard& zenBoard, GameConfig& gam
     gameConfig.gameMode = stoi(args[1]);
     gameConfig.algorithmType = stoi(args[2]);
     gameConfig.showPath = stoi(args[3]);
+
+
+    //test
+    boost::dynamic_bitset<> myBitset(gardenstr);
+    Utils::PrintDynamicBitset(myBitset);
+    
 
     return true;
 }

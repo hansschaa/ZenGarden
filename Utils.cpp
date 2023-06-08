@@ -1,6 +1,7 @@
 #include <iostream>
 #include <bitset>
 #include <vector>
+#include <boost/dynamic_bitset.hpp>
 #include "Utils.h"
 #include "ZenBoard.h"
 
@@ -46,52 +47,22 @@ void Utils::GetNeighbours(ZenBoard zenBoard){
 
         //Check up
         if(CanMove(zenBoard, currentIndex, up, Utils::DIMENSION, true)){
-            /*ZenBoard child = zenBoard;
-            //child.g++;
-
-            IAPaint(child, currentIndex, up, Utils::DIMENSION);
-            Utils::map.insert({child, zenBoard});
-            Utils::neighbours.insert(child);*/
-
             PaintChild(zenBoard, currentIndex, up, Utils::DIMENSION);
 
         }
 
         //Check down
         if(CanMove(zenBoard, currentIndex, down, Utils::DIMENSION, true)){
-            /*ZenBoard child = zenBoard;
-            //child.g++;
-
-            IAPaint(child, currentIndex, down, Utils::DIMENSION);
-            Utils::map.insert({child, zenBoard});
-            Utils::neighbours.insert(child);*/
-
             PaintChild(zenBoard, currentIndex, down, Utils::DIMENSION);
-     
         }
         
         //check right
         if(CanMove(zenBoard, currentIndex, left, 1, true)){
-            /*ZenBoard child = zenBoard; 
-            //child.g++;
-
-            IAPaint(child, currentIndex, left, 1);
-            Utils::map.insert({child, zenBoard});
-            Utils::neighbours.insert(child);*/
-
             PaintChild(zenBoard, currentIndex, left, 1);
-           
         }
         
         //Check left
         if(CanMove(zenBoard, currentIndex, right, 1, true)){
-            /*ZenBoard child = zenBoard;
-            //child.g++;
-
-            IAPaint(child, currentIndex, right, 1);
-            Utils::map.insert({child, zenBoard});
-            Utils::neighbours.insert(child);*/
-
             PaintChild(zenBoard, currentIndex, right, 1);
         }
     }
@@ -103,10 +74,6 @@ void Utils::GetNeighbours(ZenBoard zenBoard){
             Vector2<int> initialPoint = GetInitialIndex(i);
             int currentIndex = 35 - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, up, Utils::DIMENSION, false)){
-                /*ZenBoard child = zenBoard;
-                IAPaint(child, currentIndex, up, Utils::DIMENSION);
-                Utils::map.insert({child, zenBoard});
-                Utils::neighbours.insert(child);*/
                 PaintChild(zenBoard, currentIndex, up, Utils::DIMENSION);
 
             }
@@ -117,11 +84,6 @@ void Utils::GetNeighbours(ZenBoard zenBoard){
             Vector2<int> initialPoint = GetInitialIndex(i);
             int currentIndex = 35 - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, down, Utils::DIMENSION, false)){
-                /*ZenBoard child = zenBoard;
-                IAPaint(child, currentIndex, down, Utils::DIMENSION);
-                Utils::map.insert({child, zenBoard});
-                Utils::neighbours.insert(child); */
-
                 PaintChild(zenBoard, currentIndex, down, Utils::DIMENSION);
             }
         }
@@ -131,10 +93,6 @@ void Utils::GetNeighbours(ZenBoard zenBoard){
             Vector2<int> initialPoint = GetInitialIndex(i);
             int currentIndex = 35 - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, right, 1, false)){
-                /*ZenBoard child = zenBoard; 
-                IAPaint(child, currentIndex, right, 1);
-                Utils::map.insert({child, zenBoard});
-                Utils::neighbours.insert(child);*/
                 PaintChild(zenBoard, currentIndex, right, 1);
             }
         }
@@ -144,11 +102,6 @@ void Utils::GetNeighbours(ZenBoard zenBoard){
             Vector2<int> initialPoint = GetInitialIndex(i);
             int currentIndex = 35 - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, left, 1, false)){
-                /*ZenBoard child = zenBoard;
-                IAPaint(child, currentIndex, left, 1);
-                Utils::map.insert({child, zenBoard});
-                Utils::neighbours.insert(child);*/
-
                 PaintChild(zenBoard, currentIndex, left, 1);
             }
         }
@@ -175,7 +128,6 @@ void Utils::GetNeighbours(ZenBoard zenBoard){
 void Utils::PaintChild(const ZenBoard& zenBoard, int currentIndex, Vector2<int> dir, int step) {
     ZenBoard child = zenBoard;
     IAPaint(child, currentIndex, dir, step);
-    Utils::map.insert({child, zenBoard});
     Utils::neighbours.insert(child);
 }
 
@@ -396,6 +348,33 @@ void Utils::PrintBoard(ZenBoard zenBoard) {
 }
 
 void Utils::PrintBitset(bitset<36> board) {
+
+    for (int row = Utils::DIMENSION - 1; row >= 0; row--) {
+        for (int col = Utils::DIMENSION - 1; col >= 0; col--) {
+            int index = row * Utils::DIMENSION + col;
+
+            if (board[index] == 1)
+                cout << Utils::PLAYER;
+
+            else if (board[index] == 1)
+                cout << Utils::FREE;
+
+            else if (board[index] == 1)
+                cout << Utils::BUSY;
+
+            else
+                cout << Utils::NORMAL;
+
+            cout << board[index] << " ";
+        }
+        cout << endl;
+    }
+
+    cout << Utils::NORMAL;
+    cout << "\n";
+}
+
+void Utils::PrintDynamicBitset(boost::dynamic_bitset<> board) {
 
     for (int row = Utils::DIMENSION - 1; row >= 0; row--) {
         for (int col = Utils::DIMENSION - 1; col >= 0; col--) {

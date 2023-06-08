@@ -35,12 +35,12 @@ void MyAlgorithms::BFS(ZenBoard& zenBoard){
 
         // Obtener los vecinos del estado actual
         Utils::GetNeighbours(currentBoard);  
-        for (ZenBoard neigbord : Utils::neighbours) {
-
+        for (ZenBoard neighbour : Utils::neighbours) {
+            Utils::map.insert({neighbour, currentBoard}); 
             // Si el vecino no ha sido visitado anteriormente
-            if (Utils::visited.find(neigbord) == Utils::visited.end()) {
-                queue.push(neigbord);                               
-                Utils::visited.insert(neigbord);      
+            if (Utils::visited.find(neighbour) == Utils::visited.end()) {
+                queue.push(neighbour);                               
+                Utils::visited.insert(neighbour);      
             }
         }
 
@@ -104,7 +104,7 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard){
 
         // Obtener los vecinos del estado actual
         Utils::GetNeighbours(currentBoard);  
-        for (ZenBoard neigbour : Utils::neighbours) {
+        for (ZenBoard neighbour : Utils::neighbours) {
 
             //Considerer
             int newG = currentBoard.g+1;
@@ -112,33 +112,33 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard){
             //Si está en open o closed y el que habia tiene mejor g,continuar
             //Open es un map de valores g, permite acceder al vlaor ya que la 
             //priority queue no 
-            auto entryOpen = Utils::OPEN.find(neigbour);
+            auto entryOpen = Utils::OPEN.find(neighbour);
             if(entryOpen != Utils::OPEN.end()){
                 if(entryOpen->second <= newG)
                     continue;
             }
 
-            auto entryClose = Utils::CLOSE.find(neigbour);
+            auto entryClose = Utils::CLOSE.find(neighbour);
             if(entryClose != Utils::CLOSE.end()){
                 if(entryClose->g <= newG)
                     continue;
             }
 
-            neigbour.g = newG;
-            neigbour.CompH();
+            neighbour.g = newG;
+            neighbour.CompH();
 
-            entryClose = Utils::CLOSE.find(neigbour);
+            entryClose = Utils::CLOSE.find(neighbour);
             if(entryClose != Utils::CLOSE.end())
-                Utils::CLOSE.erase(neigbour);
+                Utils::CLOSE.erase(neighbour);
 
             //Fast, duplicates?
-            openQueue.push(neigbour);
+            openQueue.push(neighbour);
 
             //Update OPEN
-            Utils::OPEN.insert_or_assign(neigbour, newG);
+            Utils::OPEN.insert_or_assign(neighbour, newG);
 
             //Update path cache
-            Utils::aStarCache.insert_or_assign(neigbour, currentBoard);
+            Utils::aStarCache.insert_or_assign(neighbour, currentBoard);
         }
 
         Utils::CLOSE.insert(currentBoard);
@@ -203,6 +203,9 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
     auto neighbourList = Utils::neighbours;
 
     for (ZenBoard neighbour : neighbourList) {
+
+        //Update cache
+        Utils::map.insert({neighbour, node}); 
 
         //Update g
         neighbour.g = g + 1;
