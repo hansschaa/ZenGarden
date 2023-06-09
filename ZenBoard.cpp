@@ -1,16 +1,17 @@
 #include <bitset>
+#include <boost/dynamic_bitset.hpp>
 #include "ZenBoard.h"
 #include "Vector2.h"
 #include "Utils.h"
 
-bitset<36> ZenBoard::GetWholeBoard(){
+boost::dynamic_bitset<> ZenBoard::GetWholeBoard(){
     return garden | player;
 }
 
 void ZenBoard::CompH(){
     h = 0;
 
-    bitset<36> gardenClone = garden;
+    boost::dynamic_bitset<> gardenClone = garden;
     int index;
     //Count how many lines i can draw in the map
     for (int row = Utils::DIMENSION - 1; row >= 0; row--) {
@@ -44,7 +45,7 @@ void ZenBoard::CompH(){
 
 void ZenBoard::Print() {
 
-    std::bitset<36> board(garden | player); 
+    boost::dynamic_bitset<> board(garden | player); 
 
     for (int row = Utils::DIMENSION - 1; row >= 0; row--) {
         for (int col = Utils::DIMENSION - 1; col >= 0; col--) {

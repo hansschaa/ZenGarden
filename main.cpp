@@ -22,6 +22,7 @@ public:
     int gameMode;
     int algorithmType;
     int showPath;
+    int userLenght;
 };
 
 bool ProcessCommands(int argc, char* argv[], ZenBoard& zenBoard, GameConfig& gameConfig);
@@ -91,7 +92,7 @@ void ManualPlay(ZenBoard& zenBoard){
 
     else{
 
-        int index = zenBoard.player._Find_first();
+        int index = zenBoard.player.find_first();
 
         direction = Utils::GetDirection(zenBoard);
         if(MoveIsOut(index, direction))
@@ -103,11 +104,13 @@ void ManualPlay(ZenBoard& zenBoard){
 
 void IAPlay(ZenBoard& zenBoard, GameConfig gameConfig){
 
+    cout << "IAPlay" << endl;
+
     Utils::showPath = gameConfig.showPath;
     //Utils::PrintBoard(zenBoard);
     //getchar();
     //Utils::GetNeighbours(zenBoard);  
-    
+
     switch (gameConfig.algorithmType)
     {
         case 0:
@@ -199,24 +202,19 @@ bool ProcessCommands(int argc, char* argv[], ZenBoard& zenBoard, GameConfig& gam
     }
 
     //Set board
-    std::bitset<36> newGarden(gardenstr); 
-    std::bitset<36> newPlayer(playerstr); 
+    boost::dynamic_bitset<> newGarden(gardenstr); 
+    boost::dynamic_bitset<> newPlayer(playerstr); 
 
-    zenBoard.garden = newGarden;
-    zenBoard.player = newPlayer;
+    zenBoard.garden = boost::dynamic_bitset<> (gardenstr);
+    zenBoard.player = boost::dynamic_bitset<> (playerstr);
 
-    Utils::PrintBoardWIndexs(zenBoard);
-   
     //Others
     gameConfig.gameMode = stoi(args[1]);
     gameConfig.algorithmType = stoi(args[2]);
     gameConfig.showPath = stoi(args[3]);
+    gameConfig.userLenght = stoi(args[4]);
 
-
-    //test
-    boost::dynamic_bitset<> myBitset(gardenstr);
-    Utils::PrintDynamicBitset(myBitset);
-    
+    Utils::DIMENSION = gameConfig.userLenght;
 
     return true;
 }

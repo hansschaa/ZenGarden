@@ -20,9 +20,11 @@ void MyAlgorithms::BFS(ZenBoard& zenBoard){
 
     while (!queue.empty()) {
 
+        //cout << "-> sacar" << endl;
+
         ZenBoard currentBoard = queue.front();
         queue.pop();
-
+       
         if (Utils::IsWin(currentBoard)) {
             Statistics::end = std::chrono::high_resolution_clock::now();
             cout << "Solution founded..."<< endl;
@@ -35,10 +37,13 @@ void MyAlgorithms::BFS(ZenBoard& zenBoard){
 
         // Obtener los vecinos del estado actual
         Utils::GetNeighbours(currentBoard);  
+        //cout << "-> GetNeighbours out end" << endl;
         for (ZenBoard neighbour : Utils::neighbours) {
+            //cout << "-> Utils::map.insert" << endl;
             Utils::map.insert({neighbour, currentBoard}); 
             // Si el vecino no ha sido visitado anteriormente
             if (Utils::visited.find(neighbour) == Utils::visited.end()) {
+                //cout << "-> Utils::visited.find" << endl;
                 queue.push(neighbour);                               
                 Utils::visited.insert(neighbour);      
             }
