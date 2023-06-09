@@ -37,7 +37,7 @@ int Utils::showPath = 0;
 int Utils::DIMENSION = 0;
 
 void Utils::GetNeighbours(ZenBoard zenBoard){
-    //cout << "Get neighbours" << endl;
+    //cout << "Get neighbours begin" << endl;
     //Reset neigbords
     neighbours.clear();
 
@@ -72,7 +72,7 @@ void Utils::GetNeighbours(ZenBoard zenBoard){
         //Up
         for(int i = (Utils::DIMENSION*3) ; i >= ((Utils::DIMENSION*2)+1); i--){
             Vector2<int> initialPoint = GetInitialIndex(i);
-            int currentIndex = 35 - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
+            int currentIndex = (Utils::GetMax()-1) - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, up, Utils::DIMENSION, false)){
                 PaintChild(zenBoard, currentIndex, up, Utils::DIMENSION);
 
@@ -82,7 +82,7 @@ void Utils::GetNeighbours(ZenBoard zenBoard){
         //Down
         for(int i = 1 ; i < Utils::DIMENSION+1; i++){
             Vector2<int> initialPoint = GetInitialIndex(i);
-            int currentIndex = 35 - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
+            int currentIndex = (Utils::GetMax()-1)  - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, down, Utils::DIMENSION, false)){
                 PaintChild(zenBoard, currentIndex, down, Utils::DIMENSION);
             }
@@ -91,7 +91,7 @@ void Utils::GetNeighbours(ZenBoard zenBoard){
         //Left
         for(int i = Utils::DIMENSION+1 ; i < ((Utils::DIMENSION*2)+1); i++){
             Vector2<int> initialPoint = GetInitialIndex(i);
-            int currentIndex = 35 - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
+            int currentIndex = (Utils::GetMax()-1)  - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, right, 1, false)){
                 PaintChild(zenBoard, currentIndex, right, 1);
             }
@@ -115,8 +115,8 @@ void Utils::GetNeighbours(ZenBoard zenBoard){
     for (const ZenBoard estado : Utils::neighbours) {
         // Acceder a los valores a través de los punteros
          cout << "########################" << endl;
-        Utils::PrintBitset(estado.garden);
-        Utils::PrintBitset(estado.player);
+        Utils::PrintDynamicBitset(estado.garden);
+        Utils::PrintDynamicBitset(estado.player);
         Utils::PrintBoard(estado);
         cout << "########################" << endl;
     }
@@ -132,7 +132,7 @@ void Utils::PaintChild(const ZenBoard& zenBoard, int currentIndex, Vector2<int> 
 }
 
 void Utils::DoManualMove(ZenBoard& zenBoard, int currentIndex, Vector2<int> dir){
-    
+    cout << "Do Manual Move" << endl;
     //DOWN
     if(dir.i == -1)
         ManualPaint(zenBoard, currentIndex, dir, -Utils::DIMENSION);        
@@ -152,6 +152,8 @@ void Utils::DoManualMove(ZenBoard& zenBoard, int currentIndex, Vector2<int> dir)
 
 void Utils::ManualPaint(ZenBoard& zenBoard, int currentIndex, Vector2<int> direction, int step) {
     
+    cout << "Manual paint: " << currentIndex << endl;
+
     int i = 0;
     bool nextToObstacle = false;
 
@@ -168,6 +170,7 @@ void Utils::ManualPaint(ZenBoard& zenBoard, int currentIndex, Vector2<int> direc
         zenBoard.garden.set(i, 1);
 
         i += step;
+       
     } while (Utils::ManualGetEndPaintCondition(direction, i));
 
     if(direction.j == 1)
@@ -263,7 +266,7 @@ void Utils::GardenPaint(boost::dynamic_bitset<>& gardenClone, int currentIndex, 
 bool Utils::CanMove(ZenBoard& zenBoard, int currentIndex, Vector2<int> direction, int step, bool isPlayerInsideBoard){
     //cout << "CanMove" << endl;
     if(direction.i != 0){
-         //cout << "CanMove 1" << endl;
+        //cout << "CanMove 1" << endl;
         if(direction.i*-1 == zenBoard.lastDir.i){
             return false;
         }
@@ -279,8 +282,10 @@ bool Utils::CanMove(ZenBoard& zenBoard, int currentIndex, Vector2<int> direction
     if(!isPlayerInsideBoard){
         //cout << "CanMove 3: " << currentIndex << endl;
 
-        if(currentIndex < 0)
+        if(currentIndex < 0 || currentIndex >= Utils::GetMax())
             return false;
+
+     
 
         if(zenBoard.garden[currentIndex] == 1) {
             return false;
@@ -291,7 +296,7 @@ bool Utils::CanMove(ZenBoard& zenBoard, int currentIndex, Vector2<int> direction
 
         if( direction.i != 0){
             //cout << "CanMove 4" << endl;
-            if(currentIndex + (direction.i*step) < 0){
+            if(currentIndex + (direction.i*step) < 0 || currentIndex + (direction.i*step) >= Utils::GetMax()){
                 return false;
             }
 
@@ -301,9 +306,9 @@ bool Utils::CanMove(ZenBoard& zenBoard, int currentIndex, Vector2<int> direction
                 
         }
             
-        if( direction.j != 0){
+        if( direction.j != 0 ){
             //cout << "CanMove 5" << endl;
-            if(currentIndex + direction.j < 0){
+            if(currentIndex + direction.j < 0 || currentIndex + direction.j >= Utils::GetMax()){
                 return false;
             }
 
@@ -429,7 +434,7 @@ void Utils::PrintBoardWIndexs(ZenBoard zenBoard) {
     boost::dynamic_bitset<> board(zenBoard.garden | zenBoard.player); 
 
     int cont = 1;
-    int cont2 = 7;
+    int cont2 = Utils::DIMENSION+1;
 
     for(int i = 1; i <= Utils::DIMENSION ; i++){
         if(i == 1)
@@ -443,7 +448,7 @@ void Utils::PrintBoardWIndexs(ZenBoard zenBoard) {
 
     cout << "\n";
     
-    cont = 19;
+    cont = (Utils::DIMENSION*3)+1;
 
     for (int row = Utils::DIMENSION - 1; row >= 0; row--) {
        
@@ -475,7 +480,7 @@ void Utils::PrintBoardWIndexs(ZenBoard zenBoard) {
         cont2++;
     }
 
-    cont2 = 18;
+    cont2 = Utils::DIMENSION*3;
 
     for(int i = 1; i <= Utils::DIMENSION ; i++){
         if(i == 1)
@@ -506,7 +511,7 @@ int Utils::GetID(ZenBoard zenBoard){
         cin >> opcion;
         id = std::stoi(opcion);  
     }
-    while(id <1 || id > 24);
+    while(id <1 || id > Utils::DIMENSION*4);
 
     cout << endl;
 

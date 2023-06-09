@@ -11,10 +11,13 @@ class Statistics{
         static int totalNodesExpanded;
         static int turn;
         static int solutionLength;
+        static int isTimeOut;
+        static int maxMilliseconds;
         static std::chrono::high_resolution_clock::time_point start;
         static std::chrono::high_resolution_clock::time_point end;
 
         static void Print(string algorithmName);
+        static bool IsTimeOut();
 };
 
 

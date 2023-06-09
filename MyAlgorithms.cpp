@@ -25,16 +25,17 @@ void MyAlgorithms::BFS(ZenBoard& zenBoard){
        
         if (Utils::IsWin(currentBoard)) {
             Statistics::end = std::chrono::high_resolution_clock::now();
-            cout << "Solution founded..."<< endl;
+            cout << Utils::FREE << "Solution found..." << Utils::NORMAL << endl;
 
             if(Utils::showPath)
                 ShowMoves(currentBoard, Utils::map);
     
-            break;
+            return;
         }
 
         // Obtener los vecinos del estado actual
         Utils::GetNeighbours(currentBoard);  
+        //cout << "GetNeighbours end" << endl;
         for (ZenBoard neighbour : Utils::neighbours) {
             Utils::map.insert({neighbour, currentBoard}); 
             // Si el vecino no ha sido visitado anteriormente
@@ -46,6 +47,8 @@ void MyAlgorithms::BFS(ZenBoard& zenBoard){
 
         Statistics::totalNodesExpanded++;
     }
+
+    cout << Utils::ERROR << "Not solution..." << Utils::NORMAL << endl;
 }
 
 void MyAlgorithms::AStar(ZenBoard& zenBoard){
@@ -92,7 +95,7 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard){
 
             Statistics::end = std::chrono::high_resolution_clock::now();
 
-            cout << "Solution founded..."<< endl;
+            cout << Utils::FREE  << "Solution found..." << Utils::NORMAL << endl;
 
             Statistics::totalNodesExpanded = Utils::CLOSE.size();
 
@@ -165,13 +168,18 @@ void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
         t = Search(path, 0, bound);
 
         if (t == -1) {
-            cout << "Solution found..." << endl;
+            cout << Utils::FREE << "Solution found..." << Utils::NORMAL << endl;
             break;
         }
         if (t == INT_MAX) {
-            cout << "Not solution..." << endl;
+            cout << Utils::ERROR  << "Not solution..."<< Utils::NORMAL << endl;
             break;
         }
+        if(t == INT_MIN){
+            cout<<Utils::ERROR << "\nTime out!"<<Utils::NORMAL << endl;
+            break;
+        }
+
         bound = t;
     }
 }
@@ -179,11 +187,20 @@ void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
 int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
 
     Statistics::totalNodesExpanded++;
+    if(Statistics::totalNodesExpanded%1000==0 && !Statistics::isTimeOut){
+        Statistics::end = std::chrono::high_resolution_clock::now();
+        if( Statistics::IsTimeOut())
+        {
+            Statistics::isTimeOut = true;
+            return INT_MIN;
+        }
+    }
+
     ZenBoard node = path.top();
 
-    //Compute h node
-    node.CompH();
+    //Get node f
     int f = node.GetF();
+
     if (f > bound)
         return f;
 
@@ -191,11 +208,21 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
     if (Utils::IsWin(node)){
        
         Statistics::end = std::chrono::high_resolution_clock::now();
-        if(Utils::showPath)
-            ShowMoves(node, Utils::map);
+        if(Utils::showPath){
+            int cont = 0;
+            while (!path.empty()) {
+                ZenBoard topElement = path.top();
+                cont++;
+                Utils::PrintBoard(topElement);
+                path.pop();
+            }
+
+            Statistics::solutionLength = cont-1;
+        }
+
         return -1;
     }
-        
+
     int min = INT_MAX;
 
     //Get neighbours
@@ -204,22 +231,20 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
 
     for (ZenBoard neighbour : neighbourList) {
 
-        //Update cache
-        Utils::map.insert({neighbour, node}); 
-
-        //Update g
-        neighbour.g = g + 1;
-
         //If visited not contains neighbour
         if (Utils::visited.find(neighbour) == Utils::visited.end()) {
-            
+
+            //Update g and H
+            neighbour.g = g + 1;
+            neighbour.CompH();
+
             path.push(neighbour);
             Utils::visited.insert(neighbour);
 
             int t = Search(path, neighbour.g, bound);
 
-            Utils::visited.erase(neighbour);
-            path.pop();
+            if(Statistics::isTimeOut==1)
+                return INT_MIN;
 
             if (t == -1)
                 return -1;
@@ -227,6 +252,9 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
             //Update min val
             if (t < min)
                 min = t; 
+
+            path.pop();
+            Utils::visited.erase(neighbour);
         }
     }
 
@@ -235,7 +263,7 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
 
 void MyAlgorithms::ShowMoves(ZenBoard zenBoard, unordered_map<ZenBoard, ZenBoard, Utils::GetHashCode, Utils::Equals>& map){
 
-    cout << Utils::ERROR << "-> Show moves" << Utils::NORMAL<< endl;
+    cout << Utils::BUSY << "-> Show moves" << Utils::NORMAL<< endl;
 
     stack<ZenBoard> stack;
     ZenBoard currentZenBoard = zenBoard;
@@ -251,7 +279,7 @@ void MyAlgorithms::ShowMoves(ZenBoard zenBoard, unordered_map<ZenBoard, ZenBoard
     }while(((element->first.player == element->second.player) && 
             (element->first.garden == element->second.garden)) != 1);
 
-    Statistics::solutionLength = stack.size();
+    Statistics::solutionLength = stack.size()-1;
 
     while (!stack.empty()) {
         ZenBoard topElement = stack.top();

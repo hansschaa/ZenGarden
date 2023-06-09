@@ -68,8 +68,11 @@ void RunGame(ZenBoard& zenBoard, GameConfig& gameConfig){
     else
         IAPlay(zenBoard, gameConfig);
 
-    if(zenBoard.garden.all())
-        cout << Utils::ERROR << "Nivel completo!"<<Utils::NORMAL << endl;
+    if(zenBoard.garden.all()){
+        Utils::PrintBoard(zenBoard);
+        cout << Utils::BUSY << "Nivel completo!"<<Utils::NORMAL << endl;
+    }
+        
 }
 
 //Manual play process
@@ -85,7 +88,8 @@ void ManualPlay(ZenBoard& zenBoard){
 
         direction = Utils::GetDirectionFromEntry(id);
         Vector2<int> initialPoint = Utils::GetInitialIndex(id);
-        int index = 35 - (initialPoint.i* Utils::DIMENSION + initialPoint.j);
+        int index = (Utils::GetMax()-1) - (initialPoint.i* Utils::DIMENSION + initialPoint.j);
+
 
         Utils::DoManualMove(zenBoard, index, direction);
     }
@@ -210,6 +214,11 @@ bool ProcessCommands(int argc, char* argv[], ZenBoard& zenBoard, GameConfig& gam
     gameConfig.userLenght = stoi(args[4]);
 
     Utils::DIMENSION = gameConfig.userLenght;
+    Statistics::maxMilliseconds = stoi(args[5]);
+
+    cout << "Tablero ingresado: " << endl;
+    Utils::PrintBoard(zenBoard);
+
 
     return true;
 }
