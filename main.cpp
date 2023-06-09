@@ -104,12 +104,7 @@ void ManualPlay(ZenBoard& zenBoard){
 
 void IAPlay(ZenBoard& zenBoard, GameConfig gameConfig){
 
-    cout << "IAPlay" << endl;
-
     Utils::showPath = gameConfig.showPath;
-    //Utils::PrintBoard(zenBoard);
-    //getchar();
-    //Utils::GetNeighbours(zenBoard);  
 
     switch (gameConfig.algorithmType)
     {

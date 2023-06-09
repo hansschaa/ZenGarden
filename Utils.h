@@ -38,15 +38,17 @@ public:
     struct GetHashCode {
         size_t operator()(const ZenBoard& x) const {
 
-            /*std::hash<boost::dynamic_bitset<>> hash_fn81;
+            std::hash<boost::dynamic_bitset<>> hash_fn81;
             unsigned long hash;
 
-            hash = hash_fn81(x.garden) ^ hash_fn81(x.player);*/
+            hash = hash_fn81(x.garden) ^ hash_fn81(x.player);
 
-            std::size_t seed = 0;
+            return hash;
+
+            /*std::size_t seed = 0;
             boost::hash_combine(seed, x.garden ^ x.player);  // Combina el hash del bitset con el valor actual de 'seed'
 
-            return seed;
+            return seed;*/
         }
     };
 
