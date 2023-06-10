@@ -159,7 +159,6 @@ void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
     path.push(zenBoard);
 
     Utils::visited.insert(zenBoard);
-    Utils::map.insert({zenBoard, zenBoard}); 
 
     int t = 0;
 
