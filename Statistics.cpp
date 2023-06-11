@@ -13,7 +13,7 @@ int Statistics::maxMilliseconds = 0;
 std::chrono::high_resolution_clock::time_point Statistics::start;
 std::chrono::high_resolution_clock::time_point Statistics::end;
 
-//Print seach stats
+//Print search stats
 void Statistics::Print(string algorithmName){
     cout << Utils::INFO << endl;
 
