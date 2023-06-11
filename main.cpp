@@ -34,7 +34,7 @@ bool MoveIsOut(int index, Vector2<int> direction);
 
 
 /*Ex:  
-./zen level2.txt 1 2 1
+./zen boards/6x6/level1.txt 1 1 1 6 5000000
 */
 
 int main(int argc, char* argv[]) {
@@ -72,7 +72,6 @@ void RunGame(ZenBoard& zenBoard, GameConfig& gameConfig){
         Utils::PrintBoard(zenBoard);
         cout << Utils::BUSY << "Nivel completo!"<<Utils::NORMAL << endl;
     }
-        
 }
 
 //Manual play process
@@ -80,7 +79,7 @@ void ManualPlay(ZenBoard& zenBoard){
     int id;
     Vector2<int> direction = Vector2(0,0);
     
-    //If player is outside of the garden
+    //If player is outside of the board
     if(Utils::IsPlayerOutside(zenBoard)){
         do{
             id = Utils::GetID(zenBoard);
@@ -106,6 +105,7 @@ void ManualPlay(ZenBoard& zenBoard){
     }
 }
 
+//IA play
 void IAPlay(ZenBoard& zenBoard, GameConfig gameConfig){
 
     Utils::showPath = gameConfig.showPath;
@@ -129,6 +129,7 @@ void IAPlay(ZenBoard& zenBoard, GameConfig gameConfig){
     }
 }
 
+//Method for check is index is outside
 bool MoveIsOut(int index, Vector2<int> direction){
 
     if(direction.i !=0){

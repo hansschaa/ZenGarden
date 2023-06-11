@@ -8,6 +8,7 @@ boost::dynamic_bitset<> ZenBoard::GetWholeBoard(){
     return garden | player;
 }
 
+//Compute H, compute the minimum lines contained in the board
 void ZenBoard::CompH(){
     h = 0;
 
@@ -43,6 +44,7 @@ void ZenBoard::CompH(){
     }
 }
 
+//Print board
 void ZenBoard::Print() {
 
     boost::dynamic_bitset<> board(garden | player); 

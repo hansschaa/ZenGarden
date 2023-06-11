@@ -13,6 +13,7 @@ int Statistics::maxMilliseconds = 0;
 std::chrono::high_resolution_clock::time_point Statistics::start;
 std::chrono::high_resolution_clock::time_point Statistics::end;
 
+//Print seach stats
 void Statistics::Print(string algorithmName){
     cout << Utils::INFO << endl;
 
@@ -21,7 +22,7 @@ void Statistics::Print(string algorithmName){
     cout<<"LENGTH: "<<solutionLength<< endl;
     cout<<"FOUND in "<<((end-start).count()/1000000.0)<<"ms" << endl;
 
-    cout << ((end-start).count()/1000000.0) << "," << totalNodesExpanded << "," << solutionLength<< endl; 
+    //cout << ((end-start).count()/1000000.0) << "," << totalNodesExpanded << "," << solutionLength<< endl; 
 }
 
 bool Statistics::IsTimeOut(){

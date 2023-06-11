@@ -9,20 +9,27 @@
 
 using namespace std;
 
+//BFS Algorithm
 void MyAlgorithms::BFS(ZenBoard& zenBoard){
     
-    cout << "-> Empezando BFS" << endl;
+    cout << "-> Empezando BFS..." << endl;
     Statistics::start = std::chrono::high_resolution_clock::now();
     queue<ZenBoard> queue;     
-    queue.push(zenBoard);                 
-    Utils::visited.insert(zenBoard); 
+    queue.push(zenBoard);    
+
+    //Update visited nodes whit root             
+    Utils::visited.insert(zenBoard);
+
+    //Parents cache 
     Utils::map.insert({zenBoard, zenBoard});    
 
+    //Check nodes
     while (!queue.empty()) {
 
         ZenBoard currentBoard = queue.front();
         queue.pop();
        
+        //Check if currentBoard is a win state
         if (Utils::IsWin(currentBoard)) {
             Statistics::end = std::chrono::high_resolution_clock::now();
             cout << Utils::FREE << "Solution found..." << Utils::NORMAL << endl;
@@ -33,12 +40,11 @@ void MyAlgorithms::BFS(ZenBoard& zenBoard){
             return;
         }
 
-        // Obtener los vecinos del estado actual
+        // Get neighbours 
         Utils::GetNeighbours(currentBoard);  
-        //cout << "GetNeighbours end" << endl;
+
         for (ZenBoard neighbour : Utils::neighbours) {
             Utils::map.insert({neighbour, currentBoard}); 
-            // Si el vecino no ha sido visitado anteriormente
             if (Utils::visited.find(neighbour) == Utils::visited.end()) {
                 queue.push(neighbour);                               
                 Utils::visited.insert(neighbour);      
@@ -51,6 +57,7 @@ void MyAlgorithms::BFS(ZenBoard& zenBoard){
     cout << Utils::ERROR << "Not solution..." << Utils::NORMAL << endl;
 }
 
+//AStar algorithm
 void MyAlgorithms::AStar(ZenBoard& zenBoard){
     
     cout << "-> Empezando AStar.." << endl;
@@ -62,7 +69,6 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard){
 
             // Orden ascendente basado en la variable f
             return zenBoard1.g + zenBoard1.h > zenBoard2.g + zenBoard2.h;
-            //return false;
         }
     };
 
@@ -148,6 +154,7 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard){
     }
 }
 
+//IDASTar
 void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
 
     cout << "-> Empezando IDAStar.." << endl;
@@ -182,6 +189,7 @@ void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
         bound = t;
     }
 }
+
 
 int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
 
@@ -233,7 +241,7 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
         //If visited not contains neighbour
         if (Utils::visited.find(neighbour) == Utils::visited.end()) {
 
-            //Update g and H
+            //Update g and h
             neighbour.g = g + 1;
             neighbour.CompH();
 
@@ -245,6 +253,7 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
             if(Statistics::isTimeOut==1)
                 return INT_MIN;
 
+            //Has a solution
             if (t == -1)
                 return -1;
 
@@ -260,6 +269,7 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
     return min;
 }
 
+//Show moves for A* and BFS
 void MyAlgorithms::ShowMoves(ZenBoard zenBoard, unordered_map<ZenBoard, ZenBoard, Utils::GetHashCode, Utils::Equals>& map){
 
     cout << Utils::BUSY << "-> Show moves" << Utils::NORMAL<< endl;

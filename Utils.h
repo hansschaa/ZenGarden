@@ -44,11 +44,6 @@ public:
             hash = hash_fn81(x.garden) ^ hash_fn81(x.player);
 
             return hash;
-
-            /*std::size_t seed = 0;
-            boost::hash_combine(seed, x.garden ^ x.player);  // Combina el hash del bitset con el valor actual de 'seed'
-
-            return seed;*/
         }
     };
 

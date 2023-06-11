@@ -36,8 +36,9 @@ unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::CLOSE;
 int Utils::showPath = 0; 
 int Utils::DIMENSION = 0;
 
+//Get Neighbours from a zenBoard
 void Utils::GetNeighbours(ZenBoard zenBoard){
-    //cout << "Get neighbours begin" << endl;
+
     //Reset neigbords
     neighbours.clear();
 
@@ -75,7 +76,6 @@ void Utils::GetNeighbours(ZenBoard zenBoard){
             int currentIndex = (Utils::GetMax()-1) - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, up, Utils::DIMENSION, false)){
                 PaintChild(zenBoard, currentIndex, up, Utils::DIMENSION);
-
             }
         }
 
@@ -106,33 +106,17 @@ void Utils::GetNeighbours(ZenBoard zenBoard){
             }
         }
     }
-
-    /*cout << Utils::ERROR << "---------------------------" << Utils::NORMAL << endl;
-    cout << Utils::ERROR << "--> Boards" << Utils::NORMAL << endl;
-    cout << Utils::ERROR << "--> Padre" << Utils::NORMAL << endl;
-    Utils::PrintBoard(zenBoard);
-    // Imprimir los valores del unordered_set
-    for (const ZenBoard estado : Utils::neighbours) {
-        // Acceder a los valores a través de los punteros
-         cout << "########################" << endl;
-        Utils::PrintDynamicBitset(estado.garden);
-        Utils::PrintDynamicBitset(estado.player);
-        Utils::PrintBoard(estado);
-        cout << "########################" << endl;
-    }
-    cout << Utils::ERROR << "---------------------------" << Utils::NORMAL << endl;
-
-    getchar();*/
 }
 
+//Create a new succesor from zenBoard whit the new move
 void Utils::PaintChild(const ZenBoard& zenBoard, int currentIndex, Vector2<int> dir, int step) {
     ZenBoard child = zenBoard;
     IAPaint(child, currentIndex, dir, step);
     Utils::neighbours.insert(child);
 }
 
+//Move for not move player
 void Utils::DoManualMove(ZenBoard& zenBoard, int currentIndex, Vector2<int> dir){
-    cout << "Do Manual Move" << endl;
     //DOWN
     if(dir.i == -1)
         ManualPaint(zenBoard, currentIndex, dir, -Utils::DIMENSION);        
@@ -150,10 +134,8 @@ void Utils::DoManualMove(ZenBoard& zenBoard, int currentIndex, Vector2<int> dir)
         ManualPaint(zenBoard, currentIndex, dir, -1);     
 }
 
+//Paint for not IA player
 void Utils::ManualPaint(ZenBoard& zenBoard, int currentIndex, Vector2<int> direction, int step) {
-    
-    cout << "Manual paint: " << currentIndex << endl;
-
     int i = 0;
     bool nextToObstacle = false;
 
@@ -249,6 +231,7 @@ int Utils::CountSpaces(boost::dynamic_bitset<>& gardenClone, int currentIndex, V
     return count;
 }
 
+//Garden paint for heuristic
 void Utils::GardenPaint(boost::dynamic_bitset<>& gardenClone, int currentIndex, int max, int step) {
 
     int index = currentIndex;
@@ -262,25 +245,22 @@ void Utils::GardenPaint(boost::dynamic_bitset<>& gardenClone, int currentIndex, 
     } while (count < max);
 }
 
-
+//Check if new move is legal
 bool Utils::CanMove(ZenBoard& zenBoard, int currentIndex, Vector2<int> direction, int step, bool isPlayerInsideBoard){
-    //cout << "CanMove" << endl;
+
     if(direction.i != 0){
-        //cout << "CanMove 1" << endl;
         if(direction.i*-1 == zenBoard.lastDir.i){
             return false;
         }
     }
 
     if(direction.j != 0){
-        //cout << "CanMove 2" << endl;
         if(direction.j*-1 == zenBoard.lastDir.j){
             return false;
         }
     }
 
     if(!isPlayerInsideBoard){
-        //cout << "CanMove 3: " << currentIndex << endl;
 
         if(currentIndex < 0 || currentIndex >= Utils::GetMax())
             return false;
@@ -295,7 +275,6 @@ bool Utils::CanMove(ZenBoard& zenBoard, int currentIndex, Vector2<int> direction
     else{
 
         if( direction.i != 0){
-            //cout << "CanMove 4" << endl;
             if(currentIndex + (direction.i*step) < 0 || currentIndex + (direction.i*step) >= Utils::GetMax()){
                 return false;
             }
@@ -307,7 +286,6 @@ bool Utils::CanMove(ZenBoard& zenBoard, int currentIndex, Vector2<int> direction
         }
             
         if( direction.j != 0 ){
-            //cout << "CanMove 5" << endl;
             if(currentIndex + direction.j < 0 || currentIndex + direction.j >= Utils::GetMax()){
                 return false;
             }
@@ -337,6 +315,7 @@ bool Utils::GetEndPaintCondition(Vector2<int> direction, int index, int step, in
     }
        
 }
+
 
 bool Utils::ManualGetEndPaintCondition(Vector2<int> direction, int index){
     if(direction.i == 1)  
@@ -430,7 +409,7 @@ void Utils::PrintDynamicBitset(boost::dynamic_bitset<> board) {
 }
 
 void Utils::PrintBoardWIndexs(ZenBoard zenBoard) {
-    //cout << "-> PrintBoardWIndexs" << endl;
+
     boost::dynamic_bitset<> board(zenBoard.garden | zenBoard.player); 
 
     int cont = 1;
@@ -494,6 +473,7 @@ void Utils::PrintBoardWIndexs(ZenBoard zenBoard) {
     cout << "\n";
 }
 
+//Get direction based in the column or row index
 Vector2<int> Utils::GetInitialIndex(int id){
     if(id >= 1 && id <=Utils::DIMENSION) return Vector2(0,id-1);
     else if(id >= (Utils::DIMENSION+1) && id <= (Utils::DIMENSION*2)) return Vector2(abs((Utils::DIMENSION+1)-id), (Utils::DIMENSION-1));
@@ -518,6 +498,7 @@ int Utils::GetID(ZenBoard zenBoard){
     return id;
 }
 
+//Get direction input
 Vector2<int> Utils::GetDirection(ZenBoard zenBoard){
     string opcion;
     
@@ -560,6 +541,7 @@ Vector2<int> Utils::GetDirectionFromEntry(int id){
      else return Vector2(0,0);
 }
 
+//Get correct index, invert the index for proccess board
 int Utils::GetCorrectIndex(int index){
 
     int max = GetMax();
@@ -568,6 +550,7 @@ int Utils::GetCorrectIndex(int index){
     return index;
 }
 
+//Get correct index, invert the index for proccess board
 int Utils::GetCorrectIndex(Vector2<int> entry){
 
     int max = GetMax();
@@ -577,18 +560,22 @@ int Utils::GetCorrectIndex(Vector2<int> entry){
     return index;
 }
 
+//Check if player is outside
 bool Utils::IsPlayerOutside(ZenBoard zenBoard){
     return zenBoard.player.none();
 }
 
+//Get max index
 int Utils::GetMax(){
     return Utils::DIMENSION * Utils::DIMENSION;
 }
 
+//Check if board is a win state
 bool Utils::IsWin(ZenBoard& zenBoard){
     return zenBoard.garden.all();
 }
 
+//Check if index is legal
 bool Utils::IsInside(int index){
     return index >= 0 && index < Utils::GetMax();
 }
