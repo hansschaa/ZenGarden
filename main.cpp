@@ -55,13 +55,19 @@ int main(int argc, char* argv[]) {
 void RunGame(ZenBoard& zenBoard, GameConfig& gameConfig){
 
     if(gameConfig.gameMode==0){
+
+        ZenBoard lastZenBoard;
+
         while(!Utils::IsWin(zenBoard)){
             
-            Statistics::turn+=1;
+            if(!(lastZenBoard == zenBoard))
+                Statistics::turn+=1;
+                
             cout << Utils::INFO << "\n==== MENU DE JUEGO ==========================" << Utils::NORMAL << endl;
             cout <<Utils::ERROR << "Turn: " << Statistics::turn << Utils::NORMAL<< endl<<endl;
-
+            lastZenBoard = zenBoard;
             ManualPlay(zenBoard);
+            
         }
     }
 
