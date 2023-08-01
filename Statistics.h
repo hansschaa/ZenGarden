@@ -16,6 +16,11 @@ class Statistics{
         static std::chrono::high_resolution_clock::time_point start;
         static std::chrono::high_resolution_clock::time_point end;
 
+        //H Time
+        static std::chrono::high_resolution_clock::time_point h_start;
+        static std::chrono::high_resolution_clock::time_point h_end;
+        static double h_total;
+
         static void Print(string algorithmName);
         static bool IsTimeOut();
 };
