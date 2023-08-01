@@ -17,6 +17,10 @@ class MyAlgorithms{
         static void IDAStar(ZenBoard& zenBoard);
         static void ShowMoves(ZenBoard zenBoard, unordered_map<ZenBoard, ZenBoard, Utils::GetHashCode, Utils::Equals>& map);
         static int Search(stack<ZenBoard>& path, int g, int bound);
+
+        //Enhancements
+        
+
 };
 
 

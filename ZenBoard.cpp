@@ -10,6 +10,7 @@ boost::dynamic_bitset<> ZenBoard::GetWholeBoard(){
 
 //Compute H, compute the minimum lines contained in the board
 void ZenBoard::CompH(){
+
     h = 0;
 
     boost::dynamic_bitset<> gardenClone = garden;

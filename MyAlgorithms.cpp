@@ -198,6 +198,7 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
         Statistics::end = std::chrono::high_resolution_clock::now();
         if( Statistics::IsTimeOut())
         {
+            Statistics::end = std::chrono::high_resolution_clock::now();
             Statistics::isTimeOut = true;
             return INT_MIN;
         }
@@ -208,8 +209,10 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
     //Get node f
     int f = node.GetF();
 
-    if (f > bound)
+    if (f > bound){
         return f;
+    }
+        
 
     //Check win
     if (Utils::IsWin(node)){
@@ -237,33 +240,26 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
     auto neighbourList = Utils::neighbours;
 
     for (ZenBoard neighbour : neighbourList) {
+        //Update g and h
+        neighbour.g = g + 1;
+        neighbour.CompH();
 
-        //If visited not contains neighbour
-        if (Utils::visited.find(neighbour) == Utils::visited.end()) {
+        path.push(neighbour);
 
-            //Update g and h
-            neighbour.g = g + 1;
-            neighbour.CompH();
+        int t = Search(path, neighbour.g, bound);
 
-            path.push(neighbour);
-            Utils::visited.insert(neighbour);
+        if(Statistics::isTimeOut==1)
+            return INT_MIN;
 
-            int t = Search(path, neighbour.g, bound);
+        //Has a solution
+        if (t == -1)
+            return -1;
 
-            if(Statistics::isTimeOut==1)
-                return INT_MIN;
+        //Update min val
+        if (t < min)
+            min = t; 
 
-            //Has a solution
-            if (t == -1)
-                return -1;
-
-            //Update min val
-            if (t < min)
-                min = t; 
-
-            path.pop();
-            Utils::visited.erase(neighbour);
-        }
+        path.pop();
     }
 
     return min;
