@@ -246,22 +246,24 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
     Utils::GetNeighbours(node);
     auto neighbourList = Utils::neighbours;
     
+    //Sort nodes
+    
     
     for (ZenBoard neighbour : neighbourList) {
         //Update g and h
         neighbour.g = g + 1;
 
         //Check h
-        auto it = Utils::transpositionTable.find(neighbour);
+        /*auto it = Utils::transpositionTable.find(neighbour);
         if (it != Utils::transpositionTable.end()) {
             neighbour.h = it->second;
         }
         else{
             neighbour.CompH();
             Utils::transpositionTable.insert({neighbour, neighbour.h});
-        }
+        }*/
             
-        //neighbour.CompH();
+        neighbour.CompH();
 
         path.push(neighbour);
 
