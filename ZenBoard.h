@@ -19,7 +19,7 @@ public:
     
     void CompH();
     void Print();
-    void PrintBitset(boost::dynamic_bitset<> board);
+    void PrintBitset();
     boost::dynamic_bitset<> GetWholeBoard();
 
     int GetF(){

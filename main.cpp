@@ -49,6 +49,22 @@ int main(int argc, char* argv[]) {
 
     RunGame(zenBoard, gameConfig);
 
+    /*Utils::GetNeighbours(zenBoard);
+    int cont = 0;
+    for (const auto& board : Utils::neighbours) {
+        cont++;
+        // Aquí accedemos a los miembros de cada elemento de ZenBoard y los imprimimos
+        // Supongamos que hay un miembro llamado "value" en ZenBoard
+        cout << cont << endl;
+        Utils::PrintBoard(board);
+        cout << "Rocas" << endl;
+        Utils::PrintDynamicBitset(board.garden);
+        cout << "Player" << endl;
+        Utils::PrintDynamicBitset(board.player);
+        cout << endl;
+    }*/
+
+
     return 0;
 }   
 

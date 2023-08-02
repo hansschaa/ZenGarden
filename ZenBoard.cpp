@@ -55,25 +55,27 @@ void ZenBoard::CompH(){
 
 }
 
-void ZenBoard::PrintBitset(boost::dynamic_bitset<> board) {
+void ZenBoard::PrintBitset() {
+
+   
 
     for (int row = Utils::DIMENSION - 1; row >= 0; row--) {
         for (int col = Utils::DIMENSION - 1; col >= 0; col--) {
             int index = row * Utils::DIMENSION + col;
 
-            if (board[index] == 1)
+            if (garden[index] == 1)
                 cout << Utils::PLAYER;
 
-            else if (board[index] == 1)
+            else if (garden[index] == 1)
                 cout << Utils::FREE;
 
-            else if (board[index] == 1)
+            else if (garden[index] == 1)
                 cout << Utils::BUSY;
 
             else
                 cout << Utils::NORMAL;
 
-            cout << board[index] << " ";
+            cout << garden[index] << " ";
         }
         cout << endl;
     }

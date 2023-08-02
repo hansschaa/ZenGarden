@@ -187,12 +187,16 @@ void Utils::IAPaint(ZenBoard& zenBoard, int currentIndex, Vector2<int> direction
     //GARDEN CHECK
     do {
         if (Utils::IsInside(index)) {
-            if ((zenBoard.garden &~ zenBoard.player)[index] == 1) {
+            if ((zenBoard.garden)[index] == 1) {
+                zenBoard.garden.set(index - step*dirFactor, 0);
+                //Utils::PrintDynamicBitset(zenBoard.garden);
+                //getchar();
+
                 nextToObstacle = true;
                 break;
             }
         }
-        
+
         zenBoard.garden.set(index, 1);
 
         index += step*dirFactor;
