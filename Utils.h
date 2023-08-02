@@ -10,6 +10,7 @@
 #include <boost/functional/hash.hpp>
 #include "ZenBoard.h"
 #include "Vector2.h"
+#include "Statistics.h"
 #define BOOST_DYNAMIC_BITSET_DONT_USE_FRIENDS
 using namespace std;
 

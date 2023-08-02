@@ -12,7 +12,7 @@ boost::dynamic_bitset<> ZenBoard::GetWholeBoard(){
 //Compute H, compute the minimum lines contained in the board
 void ZenBoard::CompH(){
 
-    //Statistics::h_start = std::chrono::high_resolution_clock::now();
+    Statistics::h_start = std::chrono::high_resolution_clock::now();
 
     h = 0;
 
@@ -50,8 +50,8 @@ void ZenBoard::CompH(){
     //PrintBitset(garden);
     //PrintBitset(player);
     //getchar();
-    //Statistics::h_end = std::chrono::high_resolution_clock::now();
-    //Statistics::h_total += ((Statistics::h_end-Statistics::h_start).count()/1000000.0);
+    Statistics::h_end = std::chrono::high_resolution_clock::now();
+    Statistics::h_total += ((Statistics::h_end-Statistics::h_start).count()/1000000.0);
 
 }
 

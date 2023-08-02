@@ -39,6 +39,8 @@ int Utils::DIMENSION = 0;
 //Get Neighbours from a zenBoard
 void Utils::GetNeighbours(ZenBoard zenBoard){
 
+    Statistics::gen_start = std::chrono::high_resolution_clock::now();
+
     //Reset neigbords
     neighbours.clear();
 
@@ -106,6 +108,9 @@ void Utils::GetNeighbours(ZenBoard zenBoard){
             }
         }
     }
+
+    Statistics::gen_end = std::chrono::high_resolution_clock::now();
+    Statistics::gen_total += ((Statistics::gen_end-Statistics::gen_start).count()/1000000.0);
 }
 
 //Create a new succesor from zenBoard whit the new move
