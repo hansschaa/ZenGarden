@@ -152,6 +152,8 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard){
 
         Utils::CLOSE.insert(currentBoard);
     }
+
+    cout << "Not solution" << endl;
 }
 
 //IDASTar
@@ -164,8 +166,6 @@ void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
     int bound = zenBoard.h;
     stack<ZenBoard> path;
     path.push(zenBoard);
-
-    Utils::visited.insert(zenBoard);
 
     int t = 0;
 
@@ -187,6 +187,7 @@ void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
         }
 
         bound = t;
+        Utils::visited.clear();
     }
 }
 
@@ -208,13 +209,21 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
 
     //Get node f
     int f = node.GetF();
+    if (f > bound) return f;
 
-    if (f > bound){
-        return f;
+    int min = INT_MAX;
+
+    //Check visited nodes
+    auto it = Utils::visited.find(node);
+    if (it != Utils::visited.end() && it->g+it->h <= f) {
+        return min;
     }
         
+    else {
+        Utils::visited.insert(node);
+    }
 
-    //Check win
+        //Check win
     if (Utils::IsWin(node)){
        
         Statistics::end = std::chrono::high_resolution_clock::now();
@@ -233,16 +242,26 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
         return -1;
     }
 
-    int min = INT_MAX;
-
     //Get neighbours
     Utils::GetNeighbours(node);
     auto neighbourList = Utils::neighbours;
-
+    
+    
     for (ZenBoard neighbour : neighbourList) {
         //Update g and h
         neighbour.g = g + 1;
-        neighbour.CompH();
+
+        //Check h
+        auto it = Utils::transpositionTable.find(neighbour);
+        if (it != Utils::transpositionTable.end()) {
+            neighbour.h = it->second;
+        }
+        else{
+            neighbour.CompH();
+            Utils::transpositionTable.insert({neighbour, neighbour.h});
+        }
+            
+        //neighbour.CompH();
 
         path.push(neighbour);
 

@@ -19,6 +19,7 @@ public:
     
     void CompH();
     void Print();
+    void PrintBitset(boost::dynamic_bitset<> board);
     boost::dynamic_bitset<> GetWholeBoard();
 
     int GetF(){
@@ -26,8 +27,7 @@ public:
     }
 
     bool operator==(const ZenBoard& other) const {
-        auto equals = (garden == other.garden) && (player == other.player); 
-        return equals;
+        return garden == other.garden && player == other.player;
     }
 };
 

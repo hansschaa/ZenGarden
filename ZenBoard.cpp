@@ -12,7 +12,7 @@ boost::dynamic_bitset<> ZenBoard::GetWholeBoard(){
 //Compute H, compute the minimum lines contained in the board
 void ZenBoard::CompH(){
 
-    Statistics::h_start = std::chrono::high_resolution_clock::now();
+    //Statistics::h_start = std::chrono::high_resolution_clock::now();
 
     h = 0;
 
@@ -46,10 +46,42 @@ void ZenBoard::CompH(){
             }
         }
     }
-    Statistics::h_end = std::chrono::high_resolution_clock::now();
-    Statistics::h_total += ((Statistics::h_end-Statistics::h_start).count()/1000000.0);
+
+    //PrintBitset(garden);
+    //PrintBitset(player);
+    //getchar();
+    //Statistics::h_end = std::chrono::high_resolution_clock::now();
+    //Statistics::h_total += ((Statistics::h_end-Statistics::h_start).count()/1000000.0);
 
 }
+
+void ZenBoard::PrintBitset(boost::dynamic_bitset<> board) {
+
+    for (int row = Utils::DIMENSION - 1; row >= 0; row--) {
+        for (int col = Utils::DIMENSION - 1; col >= 0; col--) {
+            int index = row * Utils::DIMENSION + col;
+
+            if (board[index] == 1)
+                cout << Utils::PLAYER;
+
+            else if (board[index] == 1)
+                cout << Utils::FREE;
+
+            else if (board[index] == 1)
+                cout << Utils::BUSY;
+
+            else
+                cout << Utils::NORMAL;
+
+            cout << board[index] << " ";
+        }
+        cout << endl;
+    }
+
+    cout << Utils::NORMAL;
+    cout << "\n";
+}
+
 
 //Print board
 void ZenBoard::Print() {

@@ -37,33 +37,29 @@ public:
     // Get hashcode from ZenBoard
     struct GetHashCode {
         size_t operator()(const ZenBoard& x) const {
-
             std::hash<boost::dynamic_bitset<>> hash_fn81;
-            unsigned long hash;
-
-            hash = hash_fn81(x.garden) ^ hash_fn81(x.player);
-
-            return hash;
+            return hash_fn81(x.garden) ^ hash_fn81(x.player);
         }
     };
 
     //  Get equals value between two ZenBoards
     struct Equals {
         bool operator()(const ZenBoard& x, const ZenBoard& y) const {
-
-            //bool equals = (x.garden &~ y.garden).none(); //&& (x.player &~ y.player).none();
-            auto equals = (x.garden == y.garden) && (x.player == y.player); 
-            return equals;
+            return (x.garden == y.garden) && (x.player == y.player);
         }
     };
 
     static unordered_set<ZenBoard, GetHashCode, Equals> neighbours;
     static unordered_set<ZenBoard, GetHashCode, Equals> visited;
     static unordered_map<ZenBoard, ZenBoard, GetHashCode, Equals> map;
+    
+    //A*
+    static unordered_map<ZenBoard,int, GetHashCode, Equals> OPEN;
+    static unordered_set<ZenBoard, GetHashCode, Equals> CLOSE;
     static unordered_map<ZenBoard, ZenBoard, GetHashCode, Equals> aStarCache;
 
-    static unordered_map<ZenBoard,int, Utils::GetHashCode,  Utils::Equals> OPEN;
-    static unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> CLOSE;
+    //Transposition table
+    static unordered_map<ZenBoard, int, GetHashCode, Equals> transpositionTable;
 
     static void PrintBoard(ZenBoard zenBoard);
     static void PrintBitset(bitset<36> printBitset);    

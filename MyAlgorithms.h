@@ -5,6 +5,8 @@
 #include <queue>
 #include <unordered_set>
 #include <unordered_map>
+#include <boost/functional/hash.hpp>
+#include <boost/dynamic_bitset.hpp>
 #include "ZenBoard.h"
 #include "Utils.h"
 using namespace std;
@@ -16,11 +18,7 @@ class MyAlgorithms{
         static void AStar(ZenBoard& zenBoard);
         static void IDAStar(ZenBoard& zenBoard);
         static void ShowMoves(ZenBoard zenBoard, unordered_map<ZenBoard, ZenBoard, Utils::GetHashCode, Utils::Equals>& map);
-        static int Search(stack<ZenBoard>& path, int g, int bound);
-
-        //Enhancements
-        
-
+        static int Search(stack<ZenBoard>& path, int g, int bound);       
 };
 
 
