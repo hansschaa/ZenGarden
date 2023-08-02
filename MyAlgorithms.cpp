@@ -191,19 +191,12 @@ void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
     }
 }
 
+// Función de comparación para ordenar los nodos según su variable x
+bool compareNodes(const ZenBoard& a, const ZenBoard& b) {
+    return a.h < b.h;
+}
 
 int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
-
-    Statistics::totalNodesExpanded++;
-    if(Statistics::totalNodesExpanded%1000==0 && !Statistics::isTimeOut){
-        Statistics::end = std::chrono::high_resolution_clock::now();
-        if( Statistics::IsTimeOut())
-        {
-            Statistics::end = std::chrono::high_resolution_clock::now();
-            Statistics::isTimeOut = true;
-            return INT_MIN;
-        }
-    }
 
     ZenBoard node = path.top();
 
@@ -223,7 +216,18 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
         Utils::visited.insert(node);
     }
 
-        //Check win
+    Statistics::totalNodesExpanded++;
+    if(Statistics::totalNodesExpanded%1000==0 && !Statistics::isTimeOut){
+        Statistics::end = std::chrono::high_resolution_clock::now();
+        if( Statistics::IsTimeOut())
+        {
+            Statistics::end = std::chrono::high_resolution_clock::now();
+            Statistics::isTimeOut = true;
+            return INT_MIN;
+        }
+    }
+
+    //Check win
     if (Utils::IsWin(node)){
        
         Statistics::end = std::chrono::high_resolution_clock::now();
@@ -244,26 +248,16 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
 
     //Get neighbours
     Utils::GetNeighbours(node);
-    auto neighbourList = Utils::neighbours;
-    
-    //Sort nodes
-    
-    
-    for (ZenBoard neighbour : neighbourList) {
-        //Update g and h
-        neighbour.g = g + 1;
+    //auto neig = Utils::neighbours;
 
-        //Check h
-        /*auto it = Utils::transpositionTable.find(neighbour);
-        if (it != Utils::transpositionTable.end()) {
-            neighbour.h = it->second;
-        }
-        else{
-            neighbour.CompH();
-            Utils::transpositionTable.insert({neighbour, neighbour.h});
-        }*/
-            
-        neighbour.CompH();
+    //Sort neighbours
+    std::vector<ZenBoard> nodesVector(Utils::neighbours.begin(), Utils::neighbours.end());
+    std::sort(nodesVector.begin(), nodesVector.end(), compareNodes);
+    
+    for (ZenBoard neighbour : nodesVector) {
+
+        //Update g
+        neighbour.g = g + 1;
 
         path.push(neighbour);
 

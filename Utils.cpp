@@ -112,6 +112,7 @@ void Utils::GetNeighbours(ZenBoard zenBoard){
 void Utils::PaintChild(const ZenBoard& zenBoard, int currentIndex, Vector2<int> dir, int step) {
     ZenBoard child = zenBoard;
     IAPaint(child, currentIndex, dir, step);
+    child.CompH();
     Utils::neighbours.insert(child);
 }
 
