@@ -585,3 +585,10 @@ bool Utils::IsWin(ZenBoard& zenBoard){
 bool Utils::IsInside(int index){
     return index >= 0 && index < Utils::GetMax();
 }
+
+bool Utils::IsDeadlock(){
+
+    //Detect tunnels
+
+    return false;
+}

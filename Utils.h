@@ -90,6 +90,8 @@ public:
     static int CountSpaces(boost::dynamic_bitset<>& gardenClone, int currentIndex, Vector2<int> direction, int step);
     static void GardenPaint(boost::dynamic_bitset<>& gardenClone, int currentIndex, int max, int step);  
 
+    //Enhancements
+    static bool IsDeadlock();
 };
 
 #endif //ZEN_UTILS_H

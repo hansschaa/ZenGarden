@@ -211,6 +211,11 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
     if (it != Utils::visited.end() && it->g+it->h <= f) {
         return min;
     }
+
+    //Check if a deadlock state
+    if(Utils::IsDeadlock()){
+        return min;
+    }
         
     else {
         Utils::visited.insert(node);
