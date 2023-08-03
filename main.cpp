@@ -15,6 +15,7 @@
 #include "Vector2.h"
 #include "MyAlgorithms.h"
 #include "GameConfig.h"
+#include "Deadlock.h"
 
 using namespace std;
 
@@ -42,7 +43,10 @@ int main(int argc, char* argv[]) {
         return 0;
     }
 
-    RunGame(zenBoard, gameConfig);
+    //RunGame(zenBoard, gameConfig);
+
+    Deadlock::HasTunnel(gameConfig);
+
 
     /*Utils::GetNeighbours(zenBoard);
     int cont = 0;

@@ -3,6 +3,7 @@
 
 #include <chrono>
 #include <string>
+#include <boost/dynamic_bitset.hpp>
 #include "GameConfig.h"
 
 
@@ -11,6 +12,7 @@ using namespace std;
 class Deadlock{
     public:
         static bool HasTunnel(GameConfig gameConfig);
+        static bool CheckTunnel(GameConfig gameConfig, boost::dynamic_bitset<> bitset, int iGap, int jGap, int iJump, int jJump);
         static void Reset();
         /*static int totalNodesExpanded;
         static int turn;
