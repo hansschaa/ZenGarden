@@ -12,7 +12,8 @@ using namespace std;
 class Deadlock{
     public:
         static bool HasTunnel(GameConfig gameConfig);
-        static bool CheckTunnel(GameConfig gameConfig, boost::dynamic_bitset<> bitset, int iGap, int jGap, int iJump, int jJump);
+        static bool CheckTunnel(GameConfig gameConfig, boost::dynamic_bitset<> bitset, 
+        int iGap, int jGap, int iJump, int jJump, int emptyIndex);
         static void Reset();
         /*static int totalNodesExpanded;
         static int turn;

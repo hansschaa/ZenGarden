@@ -6,6 +6,7 @@
 
 using namespace std;
 
+
 boost::dynamic_bitset<> u_TunnelHead = 
 boost::dynamic_bitset<> (string("010000101000000000000000000000000000"));
 boost::dynamic_bitset<> r_TunnelHead = 
@@ -15,39 +16,50 @@ boost::dynamic_bitset<> (string("101000010000000000000000000000000000"));
 boost::dynamic_bitset<> l_TunnelHead = 
 boost::dynamic_bitset<> (string("010000100000010000000000000000000000"));
 
+
 bool Deadlock::HasTunnel(GameConfig gameConfig){
 
     bool hasTunnel = false;
 
-    hasTunnel = CheckTunnel(gameConfig, u_TunnelHead, 1,2,2,1);
+    hasTunnel = CheckTunnel(gameConfig, u_TunnelHead, 1,2,2,1, Utils::GetMax()-8);
     if(hasTunnel) return true;
 
-    hasTunnel = CheckTunnel(gameConfig, r_TunnelHead, 2,1,1,1);
+    hasTunnel = CheckTunnel(gameConfig, r_TunnelHead, 2,1,1,1,  Utils::GetMax()-7);
+    if(hasTunnel) return true;
+    
+    hasTunnel = CheckTunnel(gameConfig, d_TunnelHead, 1,2,2,1, Utils::GetMax()-2);
     if(hasTunnel) return true;
 
-    hasTunnel = CheckTunnel(gameConfig, d_TunnelHead, 1,2,2,1);
-    if(hasTunnel) return true;
-
-    hasTunnel = CheckTunnel(gameConfig, l_TunnelHead, 2,1,1,1);
+    hasTunnel = CheckTunnel(gameConfig, l_TunnelHead, 2,1,1,1, Utils::GetMax()-8);
     if(hasTunnel) return true;
 
     return false;
 }
 
 
-bool Deadlock::CheckTunnel(GameConfig gameConfig, boost::dynamic_bitset<> bitset, int iGap, int jGap, int iJump, int jJump){
+bool Deadlock::CheckTunnel(GameConfig gameConfig, boost::dynamic_bitset<> bitset, int iGap, 
+int jGap, int iJump, int jJump, int emptyIndex){
     for(int i = 0 ; i < gameConfig.userLenght-iGap; i++){
         for(int j = 0 ; j < gameConfig.userLenght-jGap; j++){
 
+            //bitset.set(emptyIndex,1);
+
             //Check
+
+
             //Utils::PrintDynamicBitset(bitset);
+            //bitset.set(emptyIndex,0);
 
             //next
             bitset >>= jJump;
             
+            emptyIndex-=jJump;
+
             //getchar();
+            
         }
         bitset >>= iJump;
+        emptyIndex-=iJump;
     }
 
     return false;
