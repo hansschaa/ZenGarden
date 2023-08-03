@@ -14,16 +14,11 @@
 #include "Utils.h"
 #include "Vector2.h"
 #include "MyAlgorithms.h"
+#include "GameConfig.h"
 
 using namespace std;
 
-struct GameConfig{
-public:
-    int gameMode;
-    int algorithmType;
-    int showPath;
-    int userLenght;
-};
+
 
 bool ProcessCommands(int argc, char* argv[], ZenBoard& zenBoard, GameConfig& gameConfig);
 void RunGame(ZenBoard& zenBoard, GameConfig& gameConfig);
