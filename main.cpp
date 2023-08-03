@@ -36,17 +36,17 @@ bool MoveIsOut(int index, Vector2<int> direction);
 int main(int argc, char* argv[]) {
 
     ZenBoard zenBoard;
-    GameConfig gameConfig;
+    
 
-    if(!ProcessCommands(argc, argv, zenBoard, gameConfig)){
+    if(!ProcessCommands(argc, argv, zenBoard, Utils::gameConfig)){
         cout << Utils::ERROR << "Problemas con el ingreso de parámetros!" << Utils::NORMAL << endl;
         return 0;
     }
 
-    //RunGame(zenBoard, gameConfig);
+    RunGame(zenBoard, Utils::gameConfig);
 
-    Deadlock::HasTunnel(gameConfig);
-
+    //auto hasTunnel = Deadlock::HasTunnel(Utils::gameConfig, zenBoard.garden);
+    //cout << "Tiene tunnel: " << hasTunnel << endl;
 
     /*Utils::GetNeighbours(zenBoard);
     int cont = 0;

@@ -26,6 +26,7 @@ using namespace std;
 
 unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::neighbours;
 unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::visited;
+unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::deadlocksTable;
 unordered_map<ZenBoard, ZenBoard, Utils::GetHashCode, Utils::Equals> Utils::map;
 unordered_map<ZenBoard, ZenBoard, Utils::GetHashCode, Utils::Equals> Utils::aStarCache;
 unordered_map<ZenBoard, int, Utils::GetHashCode, Utils::Equals> Utils::transpositionTable;
@@ -35,6 +36,7 @@ unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::CLOSE;
 
 int Utils::showPath = 0; 
 int Utils::DIMENSION = 0;
+GameConfig Utils::gameConfig;
 
 //Get Neighbours from a zenBoard
 void Utils::GetNeighbours(ZenBoard zenBoard){
@@ -588,11 +590,4 @@ bool Utils::IsWin(ZenBoard& zenBoard){
 //Check if index is legal
 bool Utils::IsInside(int index){
     return index >= 0 && index < Utils::GetMax();
-}
-
-bool Utils::IsDeadlock(){
-
-    //Detect tunnels
-
-    return false;
 }

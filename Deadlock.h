@@ -5,15 +5,17 @@
 #include <string>
 #include <boost/dynamic_bitset.hpp>
 #include "GameConfig.h"
+#include "ZenBoard.h"
 
 
 using namespace std;
 
 class Deadlock{
     public:
-        static bool HasTunnel(GameConfig gameConfig);
-        static bool CheckTunnel(GameConfig gameConfig, boost::dynamic_bitset<> bitset, 
-        int iGap, int jGap, int iJump, int jJump, int emptyIndex);
+        static bool HasTunnel(GameConfig& gameConfig, ZenBoard& zenBoard);
+        static bool CheckTunnel(GameConfig& gameConfig, boost::dynamic_bitset<> bitset, 
+        int iGap, int jGap, int iJump, int jJump, int emptyIndex, 
+        ZenBoard& zenBoard);
         static void Reset();
         /*static int totalNodesExpanded;
         static int turn;

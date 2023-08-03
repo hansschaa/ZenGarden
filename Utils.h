@@ -11,6 +11,7 @@
 #include "ZenBoard.h"
 #include "Vector2.h"
 #include "Statistics.h"
+#include "GameConfig.h"
 #define BOOST_DYNAMIC_BITSET_DONT_USE_FRIENDS
 using namespace std;
 
@@ -19,6 +20,7 @@ class Utils {
 public:
     static int DIMENSION;
     static int showPath;
+    static GameConfig gameConfig;
 
     //Colors
     static const string ERROR;
@@ -61,6 +63,7 @@ public:
 
     //Transposition table
     static unordered_map<ZenBoard, int, GetHashCode, Equals> transpositionTable;
+    static unordered_set<ZenBoard, GetHashCode, Equals> deadlocksTable;
 
     static void PrintBoard(ZenBoard zenBoard);
     static void PrintBitset(bitset<36> printBitset);    
@@ -90,8 +93,6 @@ public:
     static int CountSpaces(boost::dynamic_bitset<>& gardenClone, int currentIndex, Vector2<int> direction, int step);
     static void GardenPaint(boost::dynamic_bitset<>& gardenClone, int currentIndex, int max, int step);  
 
-    //Enhancements
-    static bool IsDeadlock();
 };
 
 #endif //ZEN_UTILS_H

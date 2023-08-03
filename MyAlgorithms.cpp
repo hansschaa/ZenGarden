@@ -200,38 +200,6 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
 
     ZenBoard node = path.top();
 
-    //Get node f
-    int f = node.GetF();
-    if (f > bound) return f;
-
-    int min = INT_MAX;
-
-    //Check visited nodes
-    auto it = Utils::visited.find(node);
-    if (it != Utils::visited.end() && it->g+it->h <= f) {
-        return min;
-    }
-
-    //Check if a deadlock state
-    if(Utils::IsDeadlock()){
-        return min;
-    }
-        
-    else {
-        Utils::visited.insert(node);
-    }
-
-    Statistics::totalNodesExpanded++;
-    if(Statistics::totalNodesExpanded%1000==0 && !Statistics::isTimeOut){
-        Statistics::end = std::chrono::high_resolution_clock::now();
-        if( Statistics::IsTimeOut())
-        {
-            Statistics::end = std::chrono::high_resolution_clock::now();
-            Statistics::isTimeOut = true;
-            return INT_MIN;
-        }
-    }
-
     //Check win
     if (Utils::IsWin(node)){
        
@@ -251,6 +219,48 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
         return -1;
     }
 
+    int min = INT_MAX;
+    
+
+   /* auto ite = Utils::deadlocksTable.find(node);
+    if (ite != Utils::deadlocksTable.end()) {
+        return min;
+    }*/
+
+    //Get node f
+    int f = node.GetF();
+    if (f > bound) return f;
+
+    //Check visited nodes
+    auto it = Utils::visited.find(node);
+    if (it != Utils::visited.end() && it->g+it->h <= f) {
+        return min;
+    }
+
+    //Check if a deadlock state
+    /*if(Deadlock::HasTunnel(Utils::gameConfig, node)){
+        //cout << "-> Tiene tunel" << endl;
+        //Utils::PrintBoard(node);
+        //getchar();
+        Utils::deadlocksTable.insert(node);
+        Statistics::tunnels++;
+        return min;
+    }*/
+
+    
+    //Utils::PrintBoard(node);
+
+    Statistics::totalNodesExpanded++;
+    if(Statistics::totalNodesExpanded%1000==0 && !Statistics::isTimeOut){
+        Statistics::end = std::chrono::high_resolution_clock::now();
+        if( Statistics::IsTimeOut())
+        {
+            Statistics::end = std::chrono::high_resolution_clock::now();
+            Statistics::isTimeOut = true;
+            return INT_MIN;
+        }
+    }
+
     //Get neighbours
     Utils::GetNeighbours(node);
     //auto neig = Utils::neighbours;
@@ -259,6 +269,7 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
     std::vector<ZenBoard> nodesVector(Utils::neighbours.begin(), Utils::neighbours.end());
     std::sort(nodesVector.begin(), nodesVector.end(), compareNodes);
     
+    Utils::visited.insert(node);
     for (ZenBoard neighbour : nodesVector) {
 
         //Update g
