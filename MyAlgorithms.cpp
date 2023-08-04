@@ -222,8 +222,8 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
     int min = INT_MAX;
     
 
-    auto ite = Utils::deadlocksTable.find(node);
-    if (ite != Utils::deadlocksTable.end()) {
+    auto it = Utils::deadlocksTable.find(node);
+    if (it != Utils::deadlocksTable.end()) {
         return min;
     }
 
@@ -232,16 +232,13 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
     if (f > bound) return f;
 
     //Check visited nodes
-    auto it = Utils::visited.find(node);
+    it = Utils::visited.find(node);
     if (it != Utils::visited.end() && it->g <= node.g) {
         return min;
     }
 
     //Check if a deadlock state
-    if(Deadlock::HasTunnel(Utils::gameConfig, node)){
-        //cout << "-> Tiene tunel" << endl;
-        //Utils::PrintBoard(node);
-        //getchar();
+    if(Deadend::HasDeadend(Utils::gameConfig, node)){
         Utils::deadlocksTable.insert(node);
         Statistics::tunnels++;
         return min;

@@ -9,7 +9,7 @@
 #include <boost/dynamic_bitset.hpp>
 #include "ZenBoard.h"
 #include "Utils.h"
-#include "Deadlock.h"
+#include "Deadend.h"
 using namespace std;
 
 

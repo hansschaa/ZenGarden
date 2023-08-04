@@ -1,5 +1,5 @@
-#ifndef ZEN_DEADLOCK_H
-#define ZEN_DEADLOCK_H
+#ifndef ZEN_DEADEND_H
+#define ZEN_DEADEND_H
 
 #include <chrono>
 #include <string>
@@ -10,13 +10,12 @@
 
 using namespace std;
 
-class Deadlock{
+class Deadend{
     public:
-        static bool HasTunnel(GameConfig& gameConfig, ZenBoard& zenBoard);
-        static bool CheckTunnel(GameConfig& gameConfig, boost::dynamic_bitset<> bitset, 
+        static bool HasDeadend(GameConfig& gameConfig, ZenBoard& zenBoard);
+        static bool CheckDeadend(GameConfig& gameConfig, boost::dynamic_bitset<> bitset, 
         int iGap, int jGap, int iJump, int jJump, int emptyIndex, 
         ZenBoard& zenBoard);
-        static void Reset();
         /*static int totalNodesExpanded;
         static int turn;
         static int solutionLength;
@@ -38,4 +37,4 @@ class Deadlock{
         static bool IsTimeOut();*/
 };
 
-#endif //ZEN_DEADLOCK_H
+#endif //ZEN_DEADEND_H

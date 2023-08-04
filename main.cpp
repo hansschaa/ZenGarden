@@ -15,7 +15,7 @@
 #include "Vector2.h"
 #include "MyAlgorithms.h"
 #include "GameConfig.h"
-#include "Deadlock.h"
+#include "Deadend.h"
 
 using namespace std;
 

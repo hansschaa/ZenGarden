@@ -1,7 +1,7 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
-#include "Deadlock.h"
+#include "Deadend.h"
 #include "Utils.h"
 
 
@@ -23,11 +23,11 @@ boost::dynamic_bitset<> (string("01000000101000000100000000000000000000000000000
 boost::dynamic_bitset<> x_TunnelHead_6 = 
 boost::dynamic_bitset<> (string("010000101000010000000000000000000000"));
 
-bool Deadlock::HasTunnel(GameConfig& gameConfig, ZenBoard& zenBoard){
+bool Deadend::HasDeadend(GameConfig& gameConfig, ZenBoard& zenBoard){
 
     bool hasTunnel = false;
 
-    hasTunnel = CheckTunnel(gameConfig, x_TunnelHead_8, 2,2,2,1, Utils::GetMax()-(Utils::DIMENSION+2), zenBoard);
+    hasTunnel = CheckDeadend(gameConfig, x_TunnelHead_8, 2,2,2,1, Utils::GetMax()-(Utils::DIMENSION+2), zenBoard);
     if(hasTunnel) return true;
 
     /*hasTunnel = CheckTunnel(gameConfig, r_TunnelHead, 2,1,1,1,  Utils::GetMax()-7, zenBoard);
@@ -60,7 +60,7 @@ bool Deadlock::HasTunnel(GameConfig& gameConfig, ZenBoard& zenBoard){
 }
 
 
-bool Deadlock::CheckTunnel(GameConfig& gameConfig, boost::dynamic_bitset<> bitset, 
+bool Deadend::CheckDeadend(GameConfig& gameConfig, boost::dynamic_bitset<> bitset, 
         int iGap, int jGap, int iJump, int jJump, int emptyIndex, 
         ZenBoard& zenBoard){
             
@@ -93,11 +93,4 @@ bool Deadlock::CheckTunnel(GameConfig& gameConfig, boost::dynamic_bitset<> bitse
         emptyIndex-=iJump;
     }
     return false;
-}
-
-void Deadlock::Reset(){
-    u_TunnelHead = boost::dynamic_bitset<> (string("010000101000000000000000000000000000"));
-    r_TunnelHead = boost::dynamic_bitset<> (string("100000010000100000000000000000000000"));
-    d_TunnelHead = boost::dynamic_bitset<> (string("101000010000000000000000000000000000"));
-    l_TunnelHead = boost::dynamic_bitset<> (string("010000100000010000000000000000000000"));
 }
