@@ -14,6 +14,7 @@ class Statistics{
         static int isTimeOut;
         static int maxMilliseconds;
         static int tunnels;
+        
         static std::chrono::high_resolution_clock::time_point start;
         static std::chrono::high_resolution_clock::time_point end;
 

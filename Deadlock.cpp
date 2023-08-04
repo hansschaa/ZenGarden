@@ -17,21 +17,27 @@ boost::dynamic_bitset<> (string("101000010000000000000000000000000000"));
 boost::dynamic_bitset<> l_TunnelHead = 
 boost::dynamic_bitset<> (string("010000100000010000000000000000000000"));
 
+boost::dynamic_bitset<> x_TunnelHead_8 = 
+boost::dynamic_bitset<> (string("0100000010100000010000000000000000000000000000000000000000000000"));
+
+boost::dynamic_bitset<> x_TunnelHead_6 = 
+boost::dynamic_bitset<> (string("010000101000010000000000000000000000"));
+
 bool Deadlock::HasTunnel(GameConfig& gameConfig, ZenBoard& zenBoard){
 
     bool hasTunnel = false;
 
-    hasTunnel = CheckTunnel(gameConfig, u_TunnelHead, 1,2,2,1, Utils::GetMax()-8, zenBoard);
+    hasTunnel = CheckTunnel(gameConfig, x_TunnelHead_8, 2,2,2,1, Utils::GetMax()-(Utils::DIMENSION+2), zenBoard);
     if(hasTunnel) return true;
 
-    hasTunnel = CheckTunnel(gameConfig, r_TunnelHead, 2,1,1,1,  Utils::GetMax()-7, zenBoard);
+    /*hasTunnel = CheckTunnel(gameConfig, r_TunnelHead, 2,1,1,1,  Utils::GetMax()-7, zenBoard);
     if(hasTunnel) return true;
     
     hasTunnel = CheckTunnel(gameConfig, d_TunnelHead, 1,2,2,1, Utils::GetMax()-2, zenBoard);
     if(hasTunnel) return true;
 
     hasTunnel = CheckTunnel(gameConfig, l_TunnelHead, 2,1,1,1, Utils::GetMax()-8, zenBoard);
-    if(hasTunnel) return true;
+    if(hasTunnel) return true;*/
 
     /*int x =0;
 
@@ -50,8 +56,6 @@ bool Deadlock::HasTunnel(GameConfig& gameConfig, ZenBoard& zenBoard){
           return true;
     }*/
       
-    Reset();
-
     return false;
 }
 
@@ -59,13 +63,17 @@ bool Deadlock::HasTunnel(GameConfig& gameConfig, ZenBoard& zenBoard){
 bool Deadlock::CheckTunnel(GameConfig& gameConfig, boost::dynamic_bitset<> bitset, 
         int iGap, int jGap, int iJump, int jJump, int emptyIndex, 
         ZenBoard& zenBoard){
+            
+
     for(int i = 0 ; i < gameConfig.userLenght-iGap; i++){
         for(int j = 0 ; j < gameConfig.userLenght-jGap; j++){
 
             //bitset.set(emptyIndex,1);
 
             //Check
-            if(zenBoard.GetWholeBoard()[emptyIndex]==0 && (bitset&~zenBoard.garden).none()){
+            if(zenBoard.GetWholeBoard()[emptyIndex]==0 && (bitset&~zenBoard.garden).count() <= 1){
+                
+                
                 return true;
             }
                 

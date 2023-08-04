@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
 
     RunGame(zenBoard, Utils::gameConfig);
 
-    //auto hasTunnel = Deadlock::HasTunnel(Utils::gameConfig, zenBoard.garden);
+    //auto hasTunnel = Deadlock::HasTunnel(Utils::gameConfig, zenBoard);
     //cout << "Tiene tunnel: " << hasTunnel << endl;
 
     /*Utils::GetNeighbours(zenBoard);

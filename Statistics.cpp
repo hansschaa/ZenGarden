@@ -11,6 +11,7 @@ int Statistics::totalNodesExpanded = 0;
 int Statistics::isTimeOut = 0;
 int Statistics::maxMilliseconds = 0;
 int Statistics::tunnels = 0;
+
 std::chrono::high_resolution_clock::time_point Statistics::start;
 std::chrono::high_resolution_clock::time_point Statistics::end;
 
