@@ -27,17 +27,17 @@ bool Deadend::HasDeadend(GameConfig& gameConfig, ZenBoard& zenBoard){
 
     bool hasTunnel = false;
 
-    hasTunnel = CheckDeadend(gameConfig, x_TunnelHead_8, 2,2,2,1, Utils::GetMax()-(Utils::DIMENSION+2), zenBoard);
+    hasTunnel = CheckDeadend(gameConfig, u_TunnelHead, 1,2,2,1, Utils::GetMax()-8, zenBoard);
     if(hasTunnel) return true;
 
-    /*hasTunnel = CheckTunnel(gameConfig, r_TunnelHead, 2,1,1,1,  Utils::GetMax()-7, zenBoard);
+    hasTunnel = CheckDeadend(gameConfig, r_TunnelHead, 2,1,1,1,  Utils::GetMax()-7, zenBoard);
     if(hasTunnel) return true;
     
-    hasTunnel = CheckTunnel(gameConfig, d_TunnelHead, 1,2,2,1, Utils::GetMax()-2, zenBoard);
+    hasTunnel = CheckDeadend(gameConfig, d_TunnelHead, 1,2,2,1, Utils::GetMax()-2, zenBoard);
     if(hasTunnel) return true;
 
-    hasTunnel = CheckTunnel(gameConfig, l_TunnelHead, 2,1,1,1, Utils::GetMax()-8, zenBoard);
-    if(hasTunnel) return true;*/
+    hasTunnel = CheckDeadend(gameConfig, l_TunnelHead, 2,1,1,1, Utils::GetMax()-8, zenBoard);
+    if(hasTunnel) return true;
 
     /*int x =0;
 
@@ -55,7 +55,7 @@ bool Deadend::HasDeadend(GameConfig& gameConfig, ZenBoard& zenBoard){
 
           return true;
     }*/
-      
+
     return false;
 }
 
@@ -63,7 +63,6 @@ bool Deadend::HasDeadend(GameConfig& gameConfig, ZenBoard& zenBoard){
 bool Deadend::CheckDeadend(GameConfig& gameConfig, boost::dynamic_bitset<> bitset, 
         int iGap, int jGap, int iJump, int jJump, int emptyIndex, 
         ZenBoard& zenBoard){
-            
 
     for(int i = 0 ; i < gameConfig.userLenght-iGap; i++){
         for(int j = 0 ; j < gameConfig.userLenght-jGap; j++){
@@ -71,9 +70,7 @@ bool Deadend::CheckDeadend(GameConfig& gameConfig, boost::dynamic_bitset<> bitse
             //bitset.set(emptyIndex,1);
 
             //Check
-            if(zenBoard.GetWholeBoard()[emptyIndex]==0 && (bitset&~zenBoard.garden).count() <= 1){
-                
-                
+            if(zenBoard.GetWholeBoard()[emptyIndex]==0 && (bitset&~zenBoard.garden).none()){
                 return true;
             }
                 
