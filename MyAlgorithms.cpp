@@ -240,7 +240,6 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
     //Check if a deadlock state
     if(Deadend::HasDeadend(node) && node.player.none()){
         Utils::deadlocksTable.insert(node);
-        Statistics::tunnels++;
         return min;
     }
 

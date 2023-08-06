@@ -45,6 +45,8 @@ int main(int argc, char* argv[]) {
 
     RunGame(zenBoard, Utils::gameConfig);
 
+    //Deadend::CheckCorners(zenBoard);
+
     /*auto hasTunnel = Deadend::HasDeadend(zenBoard);
     cout << "Tiene tunnel: " << hasTunnel << endl;*/
 

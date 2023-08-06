@@ -11,6 +11,7 @@ int Statistics::totalNodesExpanded = 0;
 int Statistics::isTimeOut = 0;
 int Statistics::maxMilliseconds = 0;
 int Statistics::tunnels = 0;
+int Statistics::corners = 0;
 
 std::chrono::high_resolution_clock::time_point Statistics::start;
 std::chrono::high_resolution_clock::time_point Statistics::end;
@@ -35,6 +36,7 @@ void Statistics::Print(string algorithmName){
     cout<<"H COMPUTE in "<< h_total <<"ms" << endl;
     cout<<"GENERATE CHILDS in "<< gen_total <<"ms" << endl;
     cout<<"TUNNELS: "<< tunnels << endl;
+    cout<<"CORNERS: "<< corners << endl;
 }
 
 bool Statistics::IsTimeOut(){
