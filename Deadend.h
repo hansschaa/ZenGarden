@@ -4,7 +4,9 @@
 #include <chrono>
 #include <string>
 #include <boost/dynamic_bitset.hpp>
+#include <bitset>
 #include "GameConfig.h"
+#include "TunnelInfo.h"
 #include "ZenBoard.h"
 
 
@@ -12,29 +14,9 @@ using namespace std;
 
 class Deadend{
     public:
-        static bool HasDeadend(GameConfig& gameConfig, ZenBoard& zenBoard);
-        static bool CheckDeadend(GameConfig& gameConfig, boost::dynamic_bitset<> bitset, 
-        int iGap, int jGap, int iJump, int jJump, int emptyIndex, 
-        ZenBoard& zenBoard);
-        /*static int totalNodesExpanded;
-        static int turn;
-        static int solutionLength;
-        static int isTimeOut;
-        static int maxMilliseconds;
-        static std::chrono::high_resolution_clock::time_point start;
-        static std::chrono::high_resolution_clock::time_point end;
-
-        //H Time
-        static std::chrono::high_resolution_clock::time_point h_start;
-        static std::chrono::high_resolution_clock::time_point h_end;
-        static double h_total;
-
-        static std::chrono::high_resolution_clock::time_point gen_start;
-        static std::chrono::high_resolution_clock::time_point gen_end;
-        static double gen_total;
-
-        static void Print(string algorithmName);
-        static bool IsTimeOut();*/
+        static const bitset<36> firstCol, lastCol, firstRow, lastRow;
+        static bool HasDeadend(ZenBoard& zenBoard);
+        static bool CheckTunnels(ZenBoard& zenBoard);
 };
 
 #endif //ZEN_DEADEND_H

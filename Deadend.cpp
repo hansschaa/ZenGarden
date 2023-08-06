@@ -4,90 +4,66 @@
 #include "Deadend.h"
 #include "Utils.h"
 
-
 using namespace std;
 
+const bitset<36> Deadend::firstCol  ("100000100000100000100000100000100000");
+const bitset<36> Deadend::lastCol   ("000001000001000001000001000001000001");
+const bitset<36> Deadend::firstRow  ("111111000000000000000000000000000000");
+const bitset<36> Deadend::lastRow   ("000000000000000000000000000000111111");
 
-boost::dynamic_bitset<> u_TunnelHead = 
-boost::dynamic_bitset<> (string("010000101000000000000000000000000000"));
-boost::dynamic_bitset<> r_TunnelHead = 
-boost::dynamic_bitset<> (string("100000010000100000000000000000000000"));
-boost::dynamic_bitset<> d_TunnelHead = 
-boost::dynamic_bitset<> (string("101000010000000000000000000000000000"));
-boost::dynamic_bitset<> l_TunnelHead = 
-boost::dynamic_bitset<> (string("010000100000010000000000000000000000"));
-
-boost::dynamic_bitset<> x_TunnelHead_8 = 
-boost::dynamic_bitset<> (string("0100000010100000010000000000000000000000000000000000000000000000"));
-
-boost::dynamic_bitset<> x_TunnelHead_6 = 
-boost::dynamic_bitset<> (string("010000101000010000000000000000000000"));
-
-bool Deadend::HasDeadend(GameConfig& gameConfig, ZenBoard& zenBoard){
-
-    bool hasTunnel = false;
-
-    hasTunnel = CheckDeadend(gameConfig, u_TunnelHead, 1,2,2,1, Utils::GetMax()-8, zenBoard);
-    if(hasTunnel) return true;
-
-    hasTunnel = CheckDeadend(gameConfig, r_TunnelHead, 2,1,1,1,  Utils::GetMax()-7, zenBoard);
-    if(hasTunnel) return true;
-    
-    hasTunnel = CheckDeadend(gameConfig, d_TunnelHead, 1,2,2,1, Utils::GetMax()-2, zenBoard);
-    if(hasTunnel) return true;
-
-    hasTunnel = CheckDeadend(gameConfig, l_TunnelHead, 2,1,1,1, Utils::GetMax()-8, zenBoard);
-    if(hasTunnel) return true;
-
-    /*int x =0;
-
-    thread t1(CheckTunnel, gameConfig, u_TunnelHead, 1, 2, 2, 1, Utils::GetMax() - 8, zenBoard,std::ref(x));
-    thread t2(CheckTunnel, gameConfig, r_TunnelHead, 2, 1, 1, 1, Utils::GetMax() - 7, zenBoard,std::ref(x));
-    thread t3(CheckTunnel, gameConfig, d_TunnelHead, 1, 2, 2, 1, Utils::GetMax() - 2, zenBoard,std::ref(x));
-    thread t4(CheckTunnel, gameConfig, l_TunnelHead, 2, 1, 1, 1, Utils::GetMax() - 8, zenBoard,std::ref(x));
-
-    t1.join();
-    t2.join();
-    t3.join();
-    t4.join();
-
-    if(x > 0){
-
-          return true;
-    }*/
-
-    return false;
+bool Deadend::HasDeadend(ZenBoard& zenBoard){
+    return CheckTunnels(zenBoard);
 }
 
+bool Deadend::CheckTunnels(ZenBoard& zenBoard){
 
-bool Deadend::CheckDeadend(GameConfig& gameConfig, boost::dynamic_bitset<> bitset, 
-        int iGap, int jGap, int iJump, int jJump, int emptyIndex, 
-        ZenBoard& zenBoard){
+    int sum = 0;
+    int dimension = Utils::DIMENSION;
+    int max = Utils::GetMax();
+    bitset<36> initBitset("000000000000000000000000000000000001"); 
 
-    for(int i = 0 ; i < gameConfig.userLenght-iGap; i++){
-        for(int j = 0 ; j < gameConfig.userLenght-jGap; j++){
+    for(int i = 0 ; i < max; i++){
 
-            //bitset.set(emptyIndex,1);
-
-            //Check
-            if(zenBoard.GetWholeBoard()[emptyIndex]==0 && (bitset&~zenBoard.garden).none()){
-                return true;
-            }
-                
-
-            //Utils::PrintDynamicBitset(bitset);
-            //bitset.set(emptyIndex,0);
-
-            //next
-            bitset >>= jJump;
-            
-            emptyIndex-=jJump;
-
-            //getchar();
-            
+        if(zenBoard.garden[i] != 0) {
+            initBitset = initBitset<<1;
+            sum = 0;
+            continue;
         }
-        bitset >>= iJump;
-        emptyIndex-=iJump;
+
+        //check up
+        if((initBitset&firstRow).none())
+            if(zenBoard.garden[i+dimension] == 1){
+                //cout << "up" << endl;
+                sum++;
+            }
+
+        //Down
+        if((initBitset&lastRow).none())
+            if(zenBoard.garden[i-dimension] == 1){
+                //cout << "down" << endl;
+                sum++;
+            }
+
+        //Left
+        if((initBitset&firstCol).none())
+            if(zenBoard.garden[i+1] == 1){
+                //cout << "left" << endl;
+                sum++;
+            }
+
+        //Right
+        if((initBitset&lastCol).none())
+            if(zenBoard.garden[i-1] == 1){
+                //cout << "right" << endl;
+                sum++;
+            }
+
+        if(sum >= 3)
+            return true;
+
+        initBitset = initBitset<<1;
+        sum = 0;
     }
+    
     return false;
 }

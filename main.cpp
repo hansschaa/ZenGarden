@@ -45,8 +45,8 @@ int main(int argc, char* argv[]) {
 
     RunGame(zenBoard, Utils::gameConfig);
 
-    //auto hasTunnel = Deadlock::HasTunnel(Utils::gameConfig, zenBoard);
-    //cout << "Tiene tunnel: " << hasTunnel << endl;
+    /*auto hasTunnel = Deadend::HasDeadend(zenBoard);
+    cout << "Tiene tunnel: " << hasTunnel << endl;*/
 
     /*Utils::GetNeighbours(zenBoard);
     int cont = 0;
