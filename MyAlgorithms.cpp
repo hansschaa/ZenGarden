@@ -41,7 +41,7 @@ void MyAlgorithms::BFS(ZenBoard& zenBoard){
         }
 
         // Get neighbours 
-        Utils::GetNeighbours(currentBoard);  
+        Utils::GetNeighbours(currentBoard, 1);  
 
         for (ZenBoard neighbour : Utils::neighbours) {
             Utils::map.insert({neighbour, currentBoard}); 
@@ -112,29 +112,24 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard){
         }
 
         // Obtener los vecinos del estado actual
-        Utils::GetNeighbours(currentBoard);  
+        Utils::GetNeighbours(currentBoard, currentBoard.g+1);  
         for (ZenBoard neighbour : Utils::neighbours) {
 
-            //Considerer
-            int newG = currentBoard.g+1;
 
             //Si está en open o closed y el que habia tiene mejor g,continuar
             //Open es un map de valores g, permite acceder al vlaor ya que la 
             //priority queue no 
             auto entryOpen = Utils::OPEN.find(neighbour);
             if(entryOpen != Utils::OPEN.end()){
-                if(entryOpen->second <= newG)
+                if(entryOpen->second <= neighbour.g)
                     continue;
             }
 
             auto entryClose = Utils::CLOSE.find(neighbour);
             if(entryClose != Utils::CLOSE.end()){
-                if(entryClose->g <= newG)
+                if(entryClose->g <= neighbour.g)
                     continue;
             }
-
-            neighbour.g = newG;
-            neighbour.CompH();
 
             entryClose = Utils::CLOSE.find(neighbour);
             if(entryClose != Utils::CLOSE.end())
@@ -144,7 +139,7 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard){
             openQueue.push(neighbour);
 
             //Update OPEN
-            Utils::OPEN.insert_or_assign(neighbour, newG);
+            Utils::OPEN.insert_or_assign(neighbour, neighbour.g);
 
             //Update path cache
             Utils::aStarCache.insert_or_assign(neighbour, currentBoard);
@@ -191,7 +186,7 @@ void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
     }
 }
 
-// Función de comparación para ordenar los nodos según su variable x
+// Función de comparación para ordenar los nodos según su variable h
 bool compareNodes(const ZenBoard& a, const ZenBoard& b) {
     return a.h < b.h;
 }
@@ -202,7 +197,6 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
 
     //Check win
     if (Utils::IsWin(node)){
-       
         Statistics::end = std::chrono::high_resolution_clock::now();
         if(Utils::showPath){
             int cont = 0;
@@ -221,30 +215,9 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
 
     int min = INT_MAX;
     
-
-    auto it = Utils::deadlocksTable.find(node);
-    if (it != Utils::deadlocksTable.end()) {
-        return min;
-    }
-
     //Get node f
     int f = node.GetF();
     if (f > bound) return f;
-
-    //Check visited nodes
-    it = Utils::visited.find(node);
-    if (it != Utils::visited.end() && it->g <= node.g) {
-        return min;
-    }
-
-    //Check if a deadlock state
-    if(Deadend::HasDeadend(node) && node.player.none()){
-        Utils::deadlocksTable.insert(node);
-        return min;
-    }
-
-    
-    //Utils::PrintBoard(node);
 
     Statistics::totalNodesExpanded++;
     if(Statistics::totalNodesExpanded%1000==0 && !Statistics::isTimeOut){
@@ -258,7 +231,7 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
     }
 
     //Get neighbours
-    Utils::GetNeighbours(node);
+    Utils::GetNeighbours(node, g+1);
     //auto neig = Utils::neighbours;
 
     //Sort neighbours
@@ -267,9 +240,6 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
     
     Utils::visited.insert(node);
     for (ZenBoard neighbour : nodesVector) {
-
-        //Update g
-        neighbour.g = g + 1;
 
         path.push(neighbour);
 

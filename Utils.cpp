@@ -4,6 +4,7 @@
 #include <boost/dynamic_bitset.hpp>
 #include "Utils.h"
 #include "ZenBoard.h"
+#include "Deadend.h"
 
 //Colors
 const string Utils::ERROR = "\033[0;31m";
@@ -39,7 +40,7 @@ int Utils::DIMENSION = 0;
 GameConfig Utils::gameConfig;
 
 //Get Neighbours from a zenBoard
-void Utils::GetNeighbours(ZenBoard zenBoard){
+void Utils::GetNeighbours(ZenBoard zenBoard, int newG){
 
     Statistics::gen_start = std::chrono::high_resolution_clock::now();
 
@@ -53,22 +54,22 @@ void Utils::GetNeighbours(ZenBoard zenBoard){
         
         //Check up
         if(CanMove(zenBoard, currentIndex, up, Utils::DIMENSION, true)){
-            PaintChild(zenBoard, currentIndex, up, Utils::DIMENSION);
+            PaintChild(zenBoard, currentIndex, up, Utils::DIMENSION, newG);
         }
 
         //Check down
         if(CanMove(zenBoard, currentIndex, down, Utils::DIMENSION, true)){
-            PaintChild(zenBoard, currentIndex, down, Utils::DIMENSION);
+            PaintChild(zenBoard, currentIndex, down, Utils::DIMENSION, newG);
         }
         
         //check right
         if(CanMove(zenBoard, currentIndex, left, 1, true)){
-            PaintChild(zenBoard, currentIndex, left, 1);
+            PaintChild(zenBoard, currentIndex, left, 1, newG);
         }
         
         //Check left
         if(CanMove(zenBoard, currentIndex, right, 1, true)){
-            PaintChild(zenBoard, currentIndex, right, 1);
+            PaintChild(zenBoard, currentIndex, right, 1, newG);
         }
     }
 
@@ -79,7 +80,7 @@ void Utils::GetNeighbours(ZenBoard zenBoard){
             Vector2<int> initialPoint = GetInitialIndex(i);
             int currentIndex = (Utils::GetMax()-1) - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, up, Utils::DIMENSION, false)){
-                PaintChild(zenBoard, currentIndex, up, Utils::DIMENSION);
+                PaintChild(zenBoard, currentIndex, up, Utils::DIMENSION, newG);
             }
         }
 
@@ -88,7 +89,7 @@ void Utils::GetNeighbours(ZenBoard zenBoard){
             Vector2<int> initialPoint = GetInitialIndex(i);
             int currentIndex = (Utils::GetMax()-1)  - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, down, Utils::DIMENSION, false)){
-                PaintChild(zenBoard, currentIndex, down, Utils::DIMENSION);
+                PaintChild(zenBoard, currentIndex, down, Utils::DIMENSION, newG);
             }
         }
         
@@ -97,7 +98,7 @@ void Utils::GetNeighbours(ZenBoard zenBoard){
             Vector2<int> initialPoint = GetInitialIndex(i);
             int currentIndex = (Utils::GetMax()-1)  - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, right, 1, false)){
-                PaintChild(zenBoard, currentIndex, right, 1);
+                PaintChild(zenBoard, currentIndex, right, 1, newG);
             }
         }
         
@@ -106,7 +107,7 @@ void Utils::GetNeighbours(ZenBoard zenBoard){
             Vector2<int> initialPoint = GetInitialIndex(i);
             int currentIndex = (Utils::GetMax()-1) - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, left, 1, false)){
-                PaintChild(zenBoard, currentIndex, left, 1);
+                PaintChild(zenBoard, currentIndex, left, 1, newG);
             }
         }
     }
@@ -116,10 +117,30 @@ void Utils::GetNeighbours(ZenBoard zenBoard){
 }
 
 //Create a new succesor from zenBoard whit the new move
-void Utils::PaintChild(const ZenBoard& zenBoard, int currentIndex, Vector2<int> dir, int step) {
+void Utils::PaintChild(const ZenBoard& zenBoard, int currentIndex, Vector2<int> dir, int step, int newG) {
+    
     ZenBoard child = zenBoard;
     IAPaint(child, currentIndex, dir, step);
+
+    child.g = newG;
+
+    //Check visited nodes
+    auto it = Utils::visited.find(child);
+    if (it != Utils::visited.end() && it->g <= newG) return;
+
+    //Check if a deadlock state
+    it = Utils::deadlocksTable.find(child);
+    if (it != Utils::deadlocksTable.end()) return;
+
+    if(Deadend::HasDeadend(child) && child.player.none()){
+        Utils::deadlocksTable.insert(child);
+        return;
+    }
+
+    //Update H
     child.CompH();
+    
+    //Insert in neig
     Utils::neighbours.insert(child);
 }
 
@@ -276,8 +297,6 @@ bool Utils::CanMove(ZenBoard& zenBoard, int currentIndex, Vector2<int> direction
 
         if(currentIndex < 0 || currentIndex >= Utils::GetMax())
             return false;
-
-     
 
         if(zenBoard.garden[currentIndex] == 1) {
             return false;

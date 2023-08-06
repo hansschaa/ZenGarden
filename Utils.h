@@ -74,14 +74,14 @@ public:
     static int GetCorrectIndex(int index);
     static int GetCorrectIndex(Vector2<int> entry);
     static int GetMax();
-    static void GetNeighbours(ZenBoard zenBoard);
+    static void GetNeighbours(ZenBoard zenBoard, int newG);
     static bool IsInside(int index);
 
     static void DoManualMove(ZenBoard& zenBoard, int currentIndex, Vector2<int> dir);
 
     static void ManualPaint(ZenBoard& zenBoard, int currentIndex, Vector2<int> direction, int step);
     static void IAPaint(ZenBoard& zenBoard, int currentIndex, Vector2<int> direction, int step);  
-    static void PaintChild(const ZenBoard& zenBoard, int currentIndex, Vector2<int> dir, int step);
+    static void PaintChild(const ZenBoard& zenBoard, int currentIndex, Vector2<int> dir, int step, int newG);
     static bool GetEndPaintCondition(Vector2<int> direction, int index, int step, int dirFactor);
     static bool ManualGetEndPaintCondition(Vector2<int> direction, int index);
     static bool CanMove(ZenBoard& zenBoard,int currentIndex, Vector2<int> direction, int step, bool isPlayerInsideBoard);

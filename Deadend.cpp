@@ -6,10 +6,24 @@
 
 using namespace std;
 
+/*HINT: Uncomment for 4 dimension level
+const bitset<16> Deadend::firstCol  ("1000100010001000");
+const bitset<16> Deadend::lastCol   ("0001000100010001");
+const bitset<16> Deadend::firstRow  ("1111000000000000");
+const bitset<16> Deadend::lastRow   ("0000000000111111");*/
+
+/*HINT: Uncomment for 6 dimension level
 const bitset<36> Deadend::firstCol  ("100000100000100000100000100000100000");
 const bitset<36> Deadend::lastCol   ("000001000001000001000001000001000001");
 const bitset<36> Deadend::firstRow  ("111111000000000000000000000000000000");
-const bitset<36> Deadend::lastRow   ("000000000000000000000000000000111111");
+const bitset<36> Deadend::lastRow   ("000000000000000000000000000000111111");*/
+
+//HINT: Uncomment for 8 dimension level
+const bitset<64> Deadend::firstCol  ("1000000010000000100000001000000010000000100000001000000010000000");
+const bitset<64> Deadend::lastCol   ("0000000100000001000000010000000100000001000000010000000100000001");
+const bitset<64> Deadend::firstRow  ("1111111100000000000000000000000000000000000000000000000000000000");
+const bitset<64> Deadend::lastRow   ("0000000000000000000000000000000000000000000000000000000011111111");
+
 
 /*bitset<36> Deadend::u_Corner     ("000100000100001100111100000000000000");
 bitset<36> Deadend::u_FreeCorner ("111000111000110000000000000000000000");
@@ -85,8 +99,12 @@ bool Deadend::CheckTunnels(ZenBoard& zenBoard){
     int dimension = Utils::DIMENSION;
     int max = Utils::GetMax();
 
-    //HACK
-    bitset<36> initBitset("000000000000000000000000000000000001"); 
+    //HINT: Uncomment for 4 dimension level
+    //bitset<16> initBitset("0000000000000001"); 
+    //HINT: Uncomment for 6 dimension level
+    //bitset<36> initBitset("000000000000000000000000000000000001"); 
+    //HINT: Uncomment for 8 dimension level
+    bitset<64> initBitset("0000000000000000000000000000000000000000000000000000000000000001"); 
 
     for(int i = 0 ; i < max; i++){
 
@@ -98,31 +116,23 @@ bool Deadend::CheckTunnels(ZenBoard& zenBoard){
 
         //check up
         if((initBitset&firstRow).none())
-            if(zenBoard.garden[i+dimension] == 1){
-                //cout << "up" << endl;
+            if(zenBoard.garden[i+dimension] == 1)
                 sum++;
-            }
 
         //Down
         if((initBitset&lastRow).none())
-            if(zenBoard.garden[i-dimension] == 1){
-                //cout << "down" << endl;
+            if(zenBoard.garden[i-dimension] == 1)
                 sum++;
-            }
 
         //Left
         if((initBitset&firstCol).none())
-            if(zenBoard.garden[i+1] == 1){
-                //cout << "left" << endl;
+            if(zenBoard.garden[i+1] == 1)
                 sum++;
-            }
 
         //Right
         if((initBitset&lastCol).none())
-            if(zenBoard.garden[i-1] == 1){
-                //cout << "right" << endl;
+            if(zenBoard.garden[i-1] == 1)
                 sum++;
-            }
 
         if(sum >= 3)
             return true;
