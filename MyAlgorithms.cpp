@@ -199,6 +199,7 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
     if (Utils::IsWin(node)){
         Statistics::end = std::chrono::high_resolution_clock::now();
         if(Utils::showPath){
+
             int cont = 0;
             while (!path.empty()) {
                 ZenBoard topElement = path.top();
@@ -264,6 +265,7 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
 
 //Show moves for A* and BFS
 void MyAlgorithms::ShowMoves(ZenBoard zenBoard, unordered_map<ZenBoard, ZenBoard, Utils::GetHashCode, Utils::Equals>& map){
+
 
     cout << Utils::BUSY << "-> Show moves" << Utils::NORMAL<< endl;
 

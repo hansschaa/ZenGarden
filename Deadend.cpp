@@ -46,8 +46,8 @@ bitset<64> Deadend::copyBitset;
 
 bool Deadend::HasDeadend(ZenBoard& zenBoard){
     
-    if(CheckTunnels(zenBoard)){
-        Statistics::tunnels++;
+    if(CheckAlleys(zenBoard)){
+        Statistics::alleys++;
         return true;
     }
 
@@ -102,7 +102,7 @@ bool Deadend::CheckCorners(ZenBoard& zenBoard){
 }
 
 
-bool Deadend::CheckTunnels(ZenBoard& zenBoard){
+bool Deadend::CheckAlleys(ZenBoard& zenBoard){
 
     int sum = 0;
     int dimension = Utils::DIMENSION;

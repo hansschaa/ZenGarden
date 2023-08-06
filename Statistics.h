@@ -13,7 +13,7 @@ class Statistics{
         static int solutionLength;
         static int isTimeOut;
         static int maxMilliseconds;
-        static int tunnels;
+        static int alleys;
         static int corners;
         
         static std::chrono::high_resolution_clock::time_point start;
