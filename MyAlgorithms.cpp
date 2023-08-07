@@ -182,7 +182,8 @@ void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
         }
 
         bound = t;
-        Utils::visited.clear();
+        
+        //Utils::visited.clear();
     }
 }
 
@@ -233,14 +234,14 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
 
     //Get neighbours
     Utils::GetNeighbours(node, g+1);
-    //auto neig = Utils::neighbours;
+    auto neig = Utils::neighbours;
 
     //Sort neighbours
-    std::vector<ZenBoard> nodesVector(Utils::neighbours.begin(), Utils::neighbours.end());
-    std::sort(nodesVector.begin(), nodesVector.end(), compareNodes);
+    //std::vector<ZenBoard> nodesVector(Utils::neighbours.begin(), Utils::neighbours.end());
+    //std::sort(nodesVector.begin(), nodesVector.end(), compareNodes);
     
-    Utils::visited.insert(node);
-    for (ZenBoard neighbour : nodesVector) {
+    //Utils::visited.insert(node);
+    for (ZenBoard neighbour : neig) {
 
         path.push(neighbour);
 

@@ -15,9 +15,11 @@ using namespace std;
 class Deadend{
     public:
         //static const bitset<16> firstCol, lastCol, firstRow, lastRow;
-        //static const bitset<36> firstCol, lastCol, firstRow, lastRow;
-        static const bitset<64> firstCol, lastCol, firstRow, lastRow;
-        static bitset<64> r_Corner, r_FreeCorner, u_Corner, u_FreeCorner, d_Corner, d_FreeCorner,l_Corner, l_FreeCorner,copyBitset;
+        static const bitset<36> firstCol, lastCol, firstRow, lastRow;
+        static bitset<36> r_Corner, r_FreeCorner, u_Corner, u_FreeCorner, d_Corner, d_FreeCorner,l_Corner, l_FreeCorner,copyBitset;
+
+        //static const bitset<64> firstCol, lastCol, firstRow, lastRow;
+        //static bitset<64> r_Corner, r_FreeCorner, u_Corner, u_FreeCorner, d_Corner, d_FreeCorner,l_Corner, l_FreeCorner,copyBitset;
         static bool HasDeadend(ZenBoard& zenBoard);
         static bool CheckAlleys(ZenBoard& zenBoard);
         static bool CheckCorners(ZenBoard& zenBoard);
