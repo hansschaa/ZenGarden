@@ -125,18 +125,18 @@ void Utils::PaintChild(const ZenBoard& zenBoard, int currentIndex, Vector2<int> 
     child.g = newG;
 
     //Check visited nodes
-    auto it = Utils::visited.find(child);
-    if (it != Utils::visited.end() && it->g <= newG) return;
+    /*auto it = Utils::visited.find(child);
+    if (it != Utils::visited.end() && it->g <= newG) return;*/
     
     
     //Check if a deadlock state
-    it = Utils::deadlocksTable.find(child);
+    /*auto it = Utils::deadlocksTable.find(child);
     if (it != Utils::deadlocksTable.end()) return;
 
     if(Deadend::HasDeadend(child) && child.player.none()){
         Utils::deadlocksTable.insert(child);
         return;
-    }
+    }*/
 
     //Update H
     child.CompH();
