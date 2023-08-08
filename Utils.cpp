@@ -128,6 +128,7 @@ void Utils::PaintChild(const ZenBoard& zenBoard, int currentIndex, Vector2<int> 
     auto it = Utils::visited.find(child);
     if (it != Utils::visited.end() && it->g <= newG) return;
     
+    
     //Check if a deadlock state
     it = Utils::deadlocksTable.find(child);
     if (it != Utils::deadlocksTable.end()) return;
