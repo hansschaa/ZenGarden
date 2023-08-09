@@ -30,13 +30,16 @@ void Statistics::Print(string algorithmName){
     cout << Utils::INFO << endl;
 
     cout<<"ALGORITHM: "<< algorithmName<<endl;
-    cout<<"VISITED: "<<totalNodesExpanded<< endl;
-    cout<<"LENGTH: "<<solutionLength<< endl;
-    cout<<"FOUND in "<<((end-start).count()/1000000.0)<<"ms" << endl;
-    cout<<"H COMPUTE in "<< h_total <<"ms" << endl;
-    cout<<"GENERATE CHILDS in "<< gen_total <<"ms" << endl;
     cout<<"Alleys: "<< alleys << endl;
     cout<<"CORNERS: "<< corners << endl;
+    cout<<"VISITED: "<<totalNodesExpanded<< endl;
+    cout<<"H COMPUTE in "<< h_total <<"ms" << endl;
+    cout<<"GENERATE CHILDS in "<< gen_total <<"ms" << endl;
+    cout<<"FOUND in "<<((end-start).count()/1000000.0)<<"ms" << endl;
+     cout<<"LENGTH: "<<solutionLength<< endl;
+   
+    /*cout << corners << "," << alleys << ",0," << totalNodesExpanded 
+    << "," << h_total << "," << gen_total << "," << ((end-start).count()/1000000.0) << endl;*/
 }
 
 bool Statistics::IsTimeOut(){

@@ -27,10 +27,8 @@ bitset<36> Deadend::l_Corner        ("111100001100000100000100000000000000");
 bitset<36> Deadend::l_FreeCorner    ("000000110000111000111000000000000000");
 bitset<36> Deadend::copyBitset;
 
-
 //HINT: Uncomment for 8 dimension level
-/*
-const bitset<64> Deadend::firstCol  ("1000000010000000100000001000000010000000100000001000000010000000");
+/*const bitset<64> Deadend::firstCol  ("1000000010000000100000001000000010000000100000001000000010000000");
 const bitset<64> Deadend::lastCol   ("0000000100000001000000010000000100000001000000010000000100000001");
 const bitset<64> Deadend::firstRow  ("1111111100000000000000000000000000000000000000000000000000000000");
 const bitset<64> Deadend::lastRow   ("0000000000000000000000000000000000000000000000000000000011111111");
@@ -63,12 +61,12 @@ bool Deadend::HasDeadend(ZenBoard& zenBoard){
 
 bool Deadend::CheckCorners(ZenBoard& zenBoard){
     
-    /*HINT: Uncomment for 4 dimension level
-    bitset<16> copyBitset(zenBoard.garden.to_ulong());*/
-    /*HINT: Uncomment for 6 dimension level*/
+    //HINT: Uncomment for 4 dimension level
+    //bitset<16> copyBitset(zenBoard.garden.to_ulong());*/
+    //HINT: Uncomment for 6 dimension level
     bitset<36> copyBitset(zenBoard.garden.to_ulong());
-    /*HINT: Uncomment for 8 dimension level
-    bitset<64> copyBitset(zenBoard.garden.to_ulong());*/
+    /*HINT: Uncomment for 8 dimension level*/
+    //bitset<64> copyBitset(zenBoard.garden.to_ulong());
 
     int max = Utils::DIMENSION-3;
     int val;
