@@ -61,8 +61,10 @@ public:
     //TT
     static TTEntry TT[1000];
     static TTEntry TTLookup(ZenBoard* hashcode);
-    static void TTSave(int hashcode, int bound);
+    static void TTSave(ZenBoard zenBoard, int bound);
     static stack<boost::dynamic_bitset<>> path;
+    static void PrintTT();
+
     //A*
     //static unordered_map<ZenBoard, ZenBoard, GetHashCode, Equals> map;
     //static unordered_map<ZenBoard,int, GetHashCode, Equals> OPEN;

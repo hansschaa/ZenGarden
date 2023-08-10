@@ -164,9 +164,11 @@ void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
     Utils::path.push((root)->garden);
 
     int t = 0;
-
+    //cout << "Bound inicial: " << bound << endl;
+  
     while (true) {
-
+        //cout << "Bound: " << bound << endl;
+        //getchar();
         t = Search(root, 0, bound);
 
         if (t == -1) {
@@ -177,14 +179,13 @@ void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
             cout << Utils::ERROR  << "Not solution..."<< Utils::NORMAL << endl;
             break;
         }
-        if(t == INT_MIN){
+        /*if(t == INT_MIN){
             cout<<Utils::ERROR << "\nTime out!"<<Utils::NORMAL << endl;
             break;
-        }
-
-        bound = t;
+        }*/
         
-        //Utils::visited.clear();
+        bound = t;
+
     }
 }
 
@@ -192,82 +193,50 @@ void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
 
 int MyAlgorithms::Search(ZenBoard* s, int g, int bound) {
 
-
     //Check win
-    if (Utils::IsWin(*s)){
+    /*if (Utils::IsWin(*s)){
         Statistics::end = std::chrono::high_resolution_clock::now();
         if(Utils::showPath){
 
             int cont = 0;
             Utils::PrintBoard(*s);
             cout << "is win" << endl;
+            getchar();
             while (!Utils::path.empty()) {
                 auto topElement = Utils::path.top();
                 cont++;
                 Utils::PrintDynamicBitset(topElement);
                 Utils::path.pop();
             }
-            getchar();
+           
 
             Statistics::solutionLength = cont-1;
         }
 
         return -1;
-    }
+    }*/
     
-    //Get node f
-    //El IDA mejorado no tiene esto??
-    /*int f = s->GetF();
-    if (f > bound) return f;*/
-    
-
-    Statistics::totalNodesExpanded++;
-    if(Statistics::totalNodesExpanded%1000==0 && !Statistics::isTimeOut){
-        Statistics::end = std::chrono::high_resolution_clock::now();
-        if( Statistics::IsTimeOut())
-        {
-            Statistics::end = std::chrono::high_resolution_clock::now();
-            Statistics::isTimeOut = true;
-            return INT_MIN;
-        }
-    }
-
     //Get neighbours
     Utils::GetNeighbours(*s, g+1);
     auto neig = Utils::neighbours;
+    /*for (auto it=neig.begin(); it!=neig.end();it++) { 
+        cout << "H!: " <<  (*it)->h<< endl;
+        cout << "G!: " <<  (*it)->g<< endl;
+        Utils::PrintBoard(*(*it));
+    }*/
 
-    //Compute H
-    //cout << "Compute H" << endl;
+    //Check
     for (auto it=neig.begin(); it!=neig.end();it++) { 
         auto entry=Utils::TTLookup(*it);
-
-        /*cout << "Entry hashcode: "<<entry._hashcode << endl;
-        cout << "(*it)->GetHashCode(): "<<(*it)->GetHashCode()<< endl;
-        getchar();*/
-        if (entry._hashcode==(*it)->GetHashCode()){
+        
+        if (entry._bound != -1 && entry._zenBoard == *(*it)){
             auto newH=entry._bound;
-            if(newH > (*it)->h){
-                if(g<bound){
-                    bound=g;
-                }
-            }
-
-            /*
-            //Stats??
-            if(depth>cutMax){
-                    cutMax=depth;
-                }
-            cutTotal+=depth;
-            cutCount++;*/
-            
             (*it)->h = newH;
         } 
-        //HANS
-        //Agregado para calcular el h
-        /*else{
+
+        else{
             (*it)->CompH();
-            //cout << "No entra | H: "<<(*it)->h << endl;
-        }*/
+        }
     }
 
 
@@ -276,64 +245,31 @@ int MyAlgorithms::Search(ZenBoard* s, int g, int bound) {
     //Nuevo
     for (auto it=neig.begin(); it!=neig.end();it++){
 
-        Utils::path.push((*it)->garden);
         int t;
-        if ((*it)->h <= bound) {
-			t = 1 + Search(*it, g+1, bound - 1);
+        if ((*it)->h <= bound-1) {
+			t = 1 + Search(*it, g+1, bound-1);
 		} else {
 			t = 1 + (*it)->h;
 		}
 		delete (*it);
-        Utils::path.pop();
-
-        //Time Out
-        if(Statistics::isTimeOut==1)
-            return INT_MIN;
 
         //Has a solution
         if (t == -1){
             cout << "Return 1" << endl;
-            getchar();
             return -1;
         }
            
-
         //Update min if is minor than t
         if (t < min) {
-            //cout << "t: " << t << " | -> Min: " << min << endl;
 			min = t ; // better lower bound
 		}
     }
 
-    /*cout << "MIN: " << min << endl;
-    getchar();*/
-    Utils::TTSave(s->GetHashCode(), min);
+    if(min != INT_MIN && min != INT_MAX){
+         Utils::TTSave(*s, min);
+    }
+   
     return min;
-
-    //Antiguo
-    /*for (auto it=nodesVector.begin(); it!=nodesVector.end();it++) {
-
-        path.push((*it));
-
-        int t = Search(path, (*it)->g, bound);
-
-        if(Statistics::isTimeOut==1)
-            return INT_MIN;
-
-        //Has a solution
-        if (t == -1)
-            return -1;
-
-        //Update min val
-        if (t < min)
-            min = t; 
-        
-        delete (*it);
-        path.pop();
-
-    }*/
-
-
 }
 
 //Show moves for A* and BFS

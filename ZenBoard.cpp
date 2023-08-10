@@ -47,6 +47,7 @@ void ZenBoard::CompH(){
             }
         }
     }
+    
 
     //PrintBitset(garden);
     //PrintBitset(player);
@@ -88,7 +89,7 @@ size_t ZenBoard::GetHashCode(){
 
     std::hash<boost::dynamic_bitset<>> hash_fn81;
 
-    return ((hash_fn81(garden) ^ hash_fn81(player))%1000);
+    return ((hash_fn81(garden) ^ hash_fn81(player)));
 }
 
 

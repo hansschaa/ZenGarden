@@ -122,23 +122,41 @@ void Utils::GetNeighbours(ZenBoard zenBoard, int newG){
 //Create a new succesor from zenBoard whit the new move
 void Utils::PaintChild(const ZenBoard& zenBoard, int currentIndex, Vector2<int> dir, int step, int newG) {
     
-    ZenBoard* child = new ZenBoard(zenBoard);
-    IAPaint(*child, currentIndex, dir, step);
-    child->g = newG;
+    ZenBoard child = zenBoard;
+    auto ptr = &child;
+
+    if(child.h < 0){
+        cout << "Antes:" << endl;
+        Utils::PrintBoard(child);
+    }
     
-    //Check if a deadlock state
-    /*auto it = Utils::deadlocksTable.find(child);
-    if (it != Utils::deadlocksTable.end()) return;
+    IAPaint(child, currentIndex, dir, step);
+    if(zenBoard.h < 0){
+        cout << "Despues:" << endl;
+        Utils::PrintBoard(child);
+        cout << "H Parent" << endl;
+        cout << zenBoard.h << endl;
 
-    if(Deadend::HasDeadend(child) && child->player.none()){
-        Utils::deadlocksTable.insert(child);
-        return;
-    }*/
+        //Imprimir TT
+        Utils::PrintTT();
 
-    child->CompH();
+        getchar();
+    }
+
+    child.g = newG;
 
     //Insert in neig
-    Utils::neighbours.insert(child);
+    Utils::neighbours.insert(ptr);
+}
+
+void Utils::PrintTT(){
+    // Imprimir los datos del array
+    for (int i = 0; i < 1000; ++i) {
+        auto board = Utils::TT[i];
+        cout << "Tablero: " << i << endl;
+        cout << "Bound: " <<  board._bound << endl;
+        Utils::PrintBoard(board._zenBoard);
+    }
 }
 
 //Move for not move player
@@ -380,6 +398,8 @@ void Utils::PrintBoard(ZenBoard zenBoard)
         cout << endl;
     }
 
+    cout << Utils::NORMAL;
+
     cout << "\n";
 }
 
@@ -610,19 +630,30 @@ bool Utils::IsInside(int index){
 }
 
 //TT Methods
-
 TTEntry Utils::TTLookup(ZenBoard* zenBoard)
 {
-    //cout << "TTLookup" << endl;
+    //Debug
+    /*cout << "-> Revisando: " << endl;
+    cout << "Hashcode: " << zenBoard->GetHashCode() << endl;
+    cout << "H: " << zenBoard->h << endl;
+    Utils::PrintBoard(*zenBoard);
+    if(zenBoard->h < 0){
+        zenBoard->CompH();
+        cout << "->" << zenBoard->h << endl;
+        getchar();
+    }*/
 
-    int hashcode = zenBoard->GetHashCode();
-    return Utils::TT[hashcode];
 
-    //oo usar TT.find()???
+
+    return Utils::TT[zenBoard->GetHashCode() % 1000];
 }
 
-void Utils::TTSave(int hashcode, int bound)
+void Utils::TTSave(ZenBoard zenBoard, int bound)
 {
-    //cout << "Save: " << hashcode << " Bound: " << bound << endl;
-    TT[hashcode] = TTEntry(hashcode, bound);
+    if(bound == INT_MIN || bound == INT_MAX){
+        cout << "A" << endl;
+        getchar();
+    }
+
+    TT[zenBoard.GetHashCode()%1000] = TTEntry(zenBoard, bound);
 }

@@ -11,8 +11,8 @@ using namespace std;
 class ZenBoard {
 public:
     
-    boost::dynamic_bitset<> garden = boost::dynamic_bitset<> (string("01"));
-    boost::dynamic_bitset<> player = boost::dynamic_bitset<> (string("01"));
+    boost::dynamic_bitset<> garden = boost::dynamic_bitset<> (string("00"));
+    boost::dynamic_bitset<> player = boost::dynamic_bitset<> (string("00"));
 
     int h = 0,g = 0;
     Vector2<int> lastDir = Vector2<int>(0,0);

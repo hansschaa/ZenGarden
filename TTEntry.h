@@ -6,16 +6,14 @@ using namespace std;
 class TTEntry {
 
 public:
+    ZenBoard _zenBoard;
     int _bound;
-    size_t _hashcode;
-
+    
     TTEntry(){
-        _hashcode = -1;
+        _bound = -1;
     }
 
-    TTEntry(size_t hashcode, int bound){
-        _hashcode = hashcode;
-        _bound = bound;
+    TTEntry(ZenBoard zenBoard, int bound): _zenBoard(zenBoard), _bound(bound){
     }
 };
 
