@@ -6,7 +6,7 @@
 #include "Utils.h"
 #include "Statistics.h"
 
-boost::dynamic_bitset<> ZenBoard::GetWholeBoard(){
+bitset<36> ZenBoard::GetWholeBoard(){
     return garden | player;
 }
 
@@ -17,7 +17,7 @@ void ZenBoard::CompH(){
 
     h = 0;
 
-    boost::dynamic_bitset<> gardenClone = garden;
+    bitset<36> gardenClone = garden;
     int index;
     //Count how many lines i can draw in the map
     for (int row = Utils::DIMENSION - 1; row >= 0; row--) {
@@ -87,16 +87,15 @@ void ZenBoard::PrintBitset() {
 
 size_t ZenBoard::GetHashCode(){
 
-    std::hash<boost::dynamic_bitset<>> hash_fn81;
-
-    return ((hash_fn81(garden) ^ hash_fn81(player)));
+    std::hash<std::bitset<36>> hash_fn36;
+    return hash_fn36(garden) ^ hash_fn36(player);
 }
 
 
 //Print board
 void ZenBoard::Print() {
 
-    boost::dynamic_bitset<> board(garden | player); 
+    bitset<36> board(garden | player); 
 
     for (int row = Utils::DIMENSION - 1; row >= 0; row--) {
         for (int col = Utils::DIMENSION - 1; col >= 0; col--) {

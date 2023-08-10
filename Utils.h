@@ -43,8 +43,13 @@ public:
     // Get hashcode from ZenBoard
     struct GetHashCode {
         size_t operator()(const ZenBoard* x) const {
-            std::hash<boost::dynamic_bitset<>> hash_fn81;
-            return hash_fn81(x->garden) ^ hash_fn81(x->player);
+           //std::hash<std::bitset<36>> hash_fn36;
+            //return hash_fn36(x->garden) ^ hash_fn36(x->player);
+            return operator()(*x);
+            }
+        size_t operator()(const ZenBoard x) const {
+            std::hash<std::bitset<36>> hash_fn36;
+            return hash_fn36(x.garden) ^ hash_fn36(x.player);
         }
     };
 
@@ -53,16 +58,20 @@ public:
         bool operator()(const ZenBoard* x, const ZenBoard* y) const {
             return (x->garden == y->garden) && (x->player == y->player);
         }
+        bool operator()(const ZenBoard x, const ZenBoard y) const {
+            return (x.garden == y.garden) && (x.player == y.player);
+        }
     };
+
 
     static unordered_set<ZenBoard*, GetHashCode, Equals> neighbours;
     static unordered_set<ZenBoard*, GetHashCode, Equals> deadlocksTable;
 
     //TT
-    static TTEntry TT[1000];
+    static TTEntry TT[1000000];
     static TTEntry TTLookup(ZenBoard* hashcode);
     static void TTSave(ZenBoard zenBoard, int bound);
-    static stack<boost::dynamic_bitset<>> path;
+    static stack<bitset<36>> path;
     static void PrintTT();
 
     //A*
@@ -99,8 +108,8 @@ public:
     static Vector2<int> GetDirection(ZenBoard zenBoard);
     static Vector2<int> GetDirectionFromEntry(int id);
     static Vector2<int> GetInitialIndex(int id);
-    static int CountSpaces(boost::dynamic_bitset<>& gardenClone, int currentIndex, Vector2<int> direction, int step);
-    static void GardenPaint(boost::dynamic_bitset<>& gardenClone, int currentIndex, int max, int step);  
+    static int CountSpaces(bitset<36>& gardenClone, int currentIndex, Vector2<int> direction, int step);
+    static void GardenPaint(bitset<36>& gardenClone, int currentIndex, int max, int step);  
 
 };
 

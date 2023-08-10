@@ -118,7 +118,7 @@ void ManualPlay(ZenBoard& zenBoard){
 
     else{
 
-        int index = zenBoard.player.find_first();
+        int index = zenBoard.player._Find_first();
 
         direction = Utils::GetDirection(zenBoard);
         if(MoveIsOut(index, direction))
@@ -228,8 +228,8 @@ bool ProcessCommands(int argc, char* argv[], ZenBoard& zenBoard, GameConfig& gam
     boost::dynamic_bitset<> newGarden(gardenstr); 
     boost::dynamic_bitset<> newPlayer(playerstr); 
 
-    zenBoard.garden = boost::dynamic_bitset<> (gardenstr);
-    zenBoard.player = boost::dynamic_bitset<> (playerstr);
+    zenBoard.garden = bitset<36> (gardenstr);
+    zenBoard.player = bitset<36> (playerstr);
 
     //Others
     gameConfig.gameMode = stoi(args[1]);

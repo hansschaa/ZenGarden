@@ -28,10 +28,10 @@ using namespace std;
 
 unordered_set<ZenBoard*, Utils::GetHashCode,  Utils::Equals> Utils::neighbours;
 unordered_set<ZenBoard*, Utils::GetHashCode,  Utils::Equals> Utils::deadlocksTable;
-stack<boost::dynamic_bitset<>> Utils::path;
+stack<bitset<36>> Utils::path;
 
 //TT
-TTEntry Utils::TT[1000];
+TTEntry Utils::TT[1000000];
 
 //unordered_map<ZenBoard, ZenBoard, Utils::GetHashCode, Utils::Equals> Utils::map;
 //unordered_map<ZenBoard, ZenBoard, Utils::GetHashCode, Utils::Equals> Utils::aStarCache;
@@ -53,7 +53,7 @@ void Utils::GetNeighbours(ZenBoard zenBoard, int newG){
     //Player is on board
     if(zenBoard.player.any()){
 
-        int currentIndex = zenBoard.player.find_first();
+        int currentIndex = zenBoard.player._Find_first();
         
         //Check up
         if(CanMove(zenBoard, currentIndex, up, Utils::DIMENSION, true)){
@@ -122,18 +122,21 @@ void Utils::GetNeighbours(ZenBoard zenBoard, int newG){
 //Create a new succesor from zenBoard whit the new move
 void Utils::PaintChild(const ZenBoard& zenBoard, int currentIndex, Vector2<int> dir, int step, int newG) {
     
-    ZenBoard child = zenBoard;
-    auto ptr = &child;
+    ZenBoard* child = new ZenBoard(zenBoard);
 
-    if(child.h < 0){
+
+    if(child->h < 0){
         cout << "Antes:" << endl;
-        Utils::PrintBoard(child);
+        Utils::PrintBoard(*child);
     }
     
-    IAPaint(child, currentIndex, dir, step);
+    IAPaint(*child, currentIndex, dir, step);
+
+    
+    
     if(zenBoard.h < 0){
         cout << "Despues:" << endl;
-        Utils::PrintBoard(child);
+        Utils::PrintBoard(*child);
         cout << "H Parent" << endl;
         cout << zenBoard.h << endl;
 
@@ -143,10 +146,11 @@ void Utils::PaintChild(const ZenBoard& zenBoard, int currentIndex, Vector2<int> 
         getchar();
     }
 
-    child.g = newG;
+    child->g = newG;
+    //child->CompH();
 
     //Insert in neig
-    Utils::neighbours.insert(ptr);
+    Utils::neighbours.insert(child);
 }
 
 void Utils::PrintTT(){
@@ -257,7 +261,7 @@ void Utils::IAPaint(ZenBoard& zenBoard, int currentIndex, Vector2<int> direction
 }
 
 //For ZenBoard heuristic
-int Utils::CountSpaces(boost::dynamic_bitset<>& gardenClone, int currentIndex, Vector2<int> direction, int step){
+int Utils::CountSpaces(bitset<36>& gardenClone, int currentIndex, Vector2<int> direction, int step){
     
     int index = currentIndex;
     int dirFactor = 1;
@@ -280,7 +284,7 @@ int Utils::CountSpaces(boost::dynamic_bitset<>& gardenClone, int currentIndex, V
 }
 
 //Garden paint for heuristic
-void Utils::GardenPaint(boost::dynamic_bitset<>& gardenClone, int currentIndex, int max, int step) {
+void Utils::GardenPaint(bitset<36>& gardenClone, int currentIndex, int max, int step) {
 
     int index = currentIndex;
     int count = 0;
@@ -375,7 +379,7 @@ bool Utils::ManualGetEndPaintCondition(Vector2<int> direction, int index){
 void Utils::PrintBoard(ZenBoard zenBoard)
 {
 
-    boost::dynamic_bitset<> board(zenBoard.garden | zenBoard.player); 
+    bitset<36> board(zenBoard.garden | zenBoard.player); 
 
     for (int row = Utils::DIMENSION - 1; row >= 0; row--) {
         for (int col = Utils::DIMENSION - 1; col >= 0; col--) {
@@ -459,7 +463,7 @@ void Utils::PrintDynamicBitset(boost::dynamic_bitset<> board) {
 
 void Utils::PrintBoardWIndexs(ZenBoard zenBoard) {
 
-    boost::dynamic_bitset<> board(zenBoard.garden | zenBoard.player); 
+    bitset<36> board(zenBoard.garden | zenBoard.player); 
 
     int cont = 1;
     int cont2 = Utils::DIMENSION+1;
@@ -643,17 +647,16 @@ TTEntry Utils::TTLookup(ZenBoard* zenBoard)
         getchar();
     }*/
 
-
-
-    return Utils::TT[zenBoard->GetHashCode() % 1000];
+    return Utils::TT[zenBoard->GetHashCode() % 1000000];
 }
 
 void Utils::TTSave(ZenBoard zenBoard, int bound)
 {
     if(bound == INT_MIN || bound == INT_MAX){
-        cout << "A" << endl;
+        Utils::PrintBoard(zenBoard);
+        cout << "A: " << bound << endl;
         getchar();
     }
 
-    TT[zenBoard.GetHashCode()%1000] = TTEntry(zenBoard, bound);
+    TT[zenBoard.GetHashCode()%1000000] = TTEntry(zenBoard, bound);
 }

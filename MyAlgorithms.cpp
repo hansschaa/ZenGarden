@@ -175,7 +175,7 @@ void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
             cout << Utils::FREE << "Solution found..." << Utils::NORMAL << endl;
             break;
         }
-        if (t == INT_MAX) {
+        if (t >= 1000) {
             cout << Utils::ERROR  << "Not solution..."<< Utils::NORMAL << endl;
             break;
         }
@@ -194,28 +194,30 @@ void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
 int MyAlgorithms::Search(ZenBoard* s, int g, int bound) {
 
     //Check win
-    /*if (Utils::IsWin(*s)){
+    if (Utils::IsWin(*s)){
         Statistics::end = std::chrono::high_resolution_clock::now();
         if(Utils::showPath){
 
             int cont = 0;
             Utils::PrintBoard(*s);
             cout << "is win" << endl;
-            getchar();
-            while (!Utils::path.empty()) {
+      
+            /*while (!Utils::path.empty()) {
                 auto topElement = Utils::path.top();
                 cont++;
                 Utils::PrintDynamicBitset(topElement);
                 Utils::path.pop();
-            }
+            }*/
            
 
             Statistics::solutionLength = cont-1;
         }
 
         return -1;
-    }*/
+    }
     
+    Statistics::totalNodesExpanded++;
+
     //Get neighbours
     Utils::GetNeighbours(*s, g+1);
     auto neig = Utils::neighbours;
@@ -231,6 +233,11 @@ int MyAlgorithms::Search(ZenBoard* s, int g, int bound) {
         
         if (entry._bound != -1 && entry._zenBoard == *(*it)){
             auto newH=entry._bound;
+            /*if(newH == INT_MAX || newH == INT_MIN){
+                cout << "Guardando: " << newH << endl;
+                getchar();
+            }*/
+
             (*it)->h = newH;
         } 
 
@@ -240,35 +247,43 @@ int MyAlgorithms::Search(ZenBoard* s, int g, int bound) {
     }
 
 
-    int min = INT_MAX;
+    int min = 1000;
+
+    /*if(neig.size() == 0){
+        cout << "Tiene 0 sucesores" << endl;
+        Utils::PrintBoard(*s);
+        getchar();
+    }*/
 
     //Nuevo
+
     for (auto it=neig.begin(); it!=neig.end();it++){
 
         int t;
         if ((*it)->h <= bound-1) {
-			t = 1 + Search(*it, g+1, bound-1);
+            auto result = Search(*it, g+1, bound-1);
+            //Has a solution
+            if (result == -1){
+                cout << "Return 1" << endl;
+                for (; it!=neig.end();it++){
+                    delete (*it);
+                }
+                return -1;
+            }
+
+			t = 1 + result;
 		} else {
 			t = 1 + (*it)->h;
 		}
 		delete (*it);
 
-        //Has a solution
-        if (t == -1){
-            cout << "Return 1" << endl;
-            return -1;
-        }
-           
         //Update min if is minor than t
         if (t < min) {
 			min = t ; // better lower bound
 		}
     }
-
-    if(min != INT_MIN && min != INT_MAX){
-         Utils::TTSave(*s, min);
-    }
-   
+    
+    Utils::TTSave(*s, min);
     return min;
 }
 
