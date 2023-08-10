@@ -17,7 +17,6 @@ std::chrono::high_resolution_clock::time_point Statistics::start;
 std::chrono::high_resolution_clock::time_point Statistics::end;
 
 std::chrono::high_resolution_clock::time_point Statistics::h_start;
-std::chrono::high_resolution_clock::time_point Statistics::h_end;
 double Statistics::h_total = 0;
 
 std::chrono::high_resolution_clock::time_point Statistics::gen_start;

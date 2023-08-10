@@ -28,7 +28,6 @@ using namespace std;
 
 unordered_set<ZenBoard*, Utils::GetHashCode,  Utils::Equals> Utils::neighbours;
 unordered_set<ZenBoard*, Utils::GetHashCode,  Utils::Equals> Utils::deadlocksTable;
-stack<bitset<36>> Utils::path;
 
 //TT
 TTEntry Utils::TT[1000000];
@@ -124,31 +123,9 @@ void Utils::PaintChild(const ZenBoard& zenBoard, int currentIndex, Vector2<int> 
     
     ZenBoard* child = new ZenBoard(zenBoard);
 
-
-    if(child->h < 0){
-        cout << "Antes:" << endl;
-        Utils::PrintBoard(*child);
-    }
-    
     IAPaint(*child, currentIndex, dir, step);
-
-    
-    
-    if(zenBoard.h < 0){
-        cout << "Despues:" << endl;
-        Utils::PrintBoard(*child);
-        cout << "H Parent" << endl;
-        cout << zenBoard.h << endl;
-
-        //Imprimir TT
-        Utils::PrintTT();
-
-        getchar();
-    }
-
     child->g = newG;
-    //child->CompH();
-
+ 
     //Insert in neig
     Utils::neighbours.insert(child);
 }
@@ -636,27 +613,10 @@ bool Utils::IsInside(int index){
 //TT Methods
 TTEntry Utils::TTLookup(ZenBoard* zenBoard)
 {
-    //Debug
-    /*cout << "-> Revisando: " << endl;
-    cout << "Hashcode: " << zenBoard->GetHashCode() << endl;
-    cout << "H: " << zenBoard->h << endl;
-    Utils::PrintBoard(*zenBoard);
-    if(zenBoard->h < 0){
-        zenBoard->CompH();
-        cout << "->" << zenBoard->h << endl;
-        getchar();
-    }*/
-
     return Utils::TT[zenBoard->GetHashCode() % 1000000];
 }
 
 void Utils::TTSave(ZenBoard zenBoard, int bound)
 {
-    if(bound == INT_MIN || bound == INT_MAX){
-        Utils::PrintBoard(zenBoard);
-        cout << "A: " << bound << endl;
-        getchar();
-    }
-
     TT[zenBoard.GetHashCode()%1000000] = TTEntry(zenBoard, bound);
 }

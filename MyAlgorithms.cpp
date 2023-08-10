@@ -157,19 +157,20 @@ void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
     cout << "-> Empezando IDAStar.." << endl;
     Statistics::start = std::chrono::high_resolution_clock::now();
 
+    //Store root
+    stack<ZenBoard> path;
+    path.push(zenBoard);
+
     ZenBoard* root = &zenBoard;
     root->CompH();
     int bound = zenBoard.h;
-    
-    Utils::path.push((root)->garden);
 
     int t = 0;
-    //cout << "Bound inicial: " << bound << endl;
   
     while (true) {
         //cout << "Bound: " << bound << endl;
         //getchar();
-        t = Search(root, 0, bound);
+        t = Search(path,0, bound);
 
         if (t == -1) {
             cout << Utils::FREE << "Solution found..." << Utils::NORMAL << endl;
@@ -191,25 +192,23 @@ void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
 
 
 
-int MyAlgorithms::Search(ZenBoard* s, int g, int bound) {
+int MyAlgorithms::Search(stack<ZenBoard> path, int g, int bound) {
+
+    ZenBoard s = path.top(); 
 
     //Check win
-    if (Utils::IsWin(*s)){
+    if (Utils::IsWin(s)){
         Statistics::end = std::chrono::high_resolution_clock::now();
         if(Utils::showPath){
-
+            
             int cont = 0;
-            Utils::PrintBoard(*s);
-            cout << "is win" << endl;
-      
-            /*while (!Utils::path.empty()) {
-                auto topElement = Utils::path.top();
+            while (!path.empty()) {
+                auto topElement = path.top();
                 cont++;
-                Utils::PrintDynamicBitset(topElement);
-                Utils::path.pop();
-            }*/
+                Utils::PrintBoard(topElement);
+                path.pop();
+            }
            
-
             Statistics::solutionLength = cont-1;
         }
 
@@ -219,13 +218,8 @@ int MyAlgorithms::Search(ZenBoard* s, int g, int bound) {
     Statistics::totalNodesExpanded++;
 
     //Get neighbours
-    Utils::GetNeighbours(*s, g+1);
+    Utils::GetNeighbours(s, g+1);
     auto neig = Utils::neighbours;
-    /*for (auto it=neig.begin(); it!=neig.end();it++) { 
-        cout << "H!: " <<  (*it)->h<< endl;
-        cout << "G!: " <<  (*it)->g<< endl;
-        Utils::PrintBoard(*(*it));
-    }*/
 
     //Check
     for (auto it=neig.begin(); it!=neig.end();it++) { 
@@ -233,48 +227,36 @@ int MyAlgorithms::Search(ZenBoard* s, int g, int bound) {
         
         if (entry._bound != -1 && entry._zenBoard == *(*it)){
             auto newH=entry._bound;
-            /*if(newH == INT_MAX || newH == INT_MIN){
-                cout << "Guardando: " << newH << endl;
-                getchar();
-            }*/
-
             (*it)->h = newH;
         } 
 
-        else{
+        else
             (*it)->CompH();
-        }
     }
 
 
     int min = 1000;
 
-    /*if(neig.size() == 0){
-        cout << "Tiene 0 sucesores" << endl;
-        Utils::PrintBoard(*s);
-        getchar();
-    }*/
-
-    //Nuevo
-
+    //Recursive
     for (auto it=neig.begin(); it!=neig.end();it++){
 
         int t;
         if ((*it)->h <= bound-1) {
-            auto result = Search(*it, g+1, bound-1);
+            path.push(*(*it));
+            auto result = Search(path, g+1, bound-1);
             //Has a solution
             if (result == -1){
-                cout << "Return 1" << endl;
                 for (; it!=neig.end();it++){
                     delete (*it);
                 }
                 return -1;
             }
-
+            path.pop();
 			t = 1 + result;
 		} else {
 			t = 1 + (*it)->h;
 		}
+
 		delete (*it);
 
         //Update min if is minor than t
@@ -283,7 +265,7 @@ int MyAlgorithms::Search(ZenBoard* s, int g, int bound) {
 		}
     }
     
-    Utils::TTSave(*s, min);
+    Utils::TTSave(s, min);
     return min;
 }
 

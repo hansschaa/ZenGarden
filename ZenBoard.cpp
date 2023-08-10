@@ -48,13 +48,7 @@ void ZenBoard::CompH(){
         }
     }
     
-
-    //PrintBitset(garden);
-    //PrintBitset(player);
-    //getchar();
-    Statistics::h_end = std::chrono::high_resolution_clock::now();
-    Statistics::h_total += ((Statistics::h_end-Statistics::h_start).count()/1000000.0);
-
+    Statistics::h_total += ((std::chrono::high_resolution_clock::now()-Statistics::h_start).count()/1000000.0);
 }
 
 void ZenBoard::PrintBitset() {

@@ -71,7 +71,6 @@ public:
     static TTEntry TT[1000000];
     static TTEntry TTLookup(ZenBoard* hashcode);
     static void TTSave(ZenBoard zenBoard, int bound);
-    static stack<bitset<36>> path;
     static void PrintTT();
 
     //A*
