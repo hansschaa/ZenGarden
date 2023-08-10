@@ -39,31 +39,34 @@ public:
 
     // Get hashcode from ZenBoard
     struct GetHashCode {
-        size_t operator()(const ZenBoard& x) const {
+        size_t operator()(const ZenBoard* x) const {
             std::hash<boost::dynamic_bitset<>> hash_fn81;
-            return hash_fn81(x.garden) ^ hash_fn81(x.player);
+            return hash_fn81(x->garden) ^ hash_fn81(x->player);
         }
     };
 
     //  Get equals value between two ZenBoards
     struct Equals {
-        bool operator()(const ZenBoard& x, const ZenBoard& y) const {
-            return (x.garden == y.garden) && (x.player == y.player);
+        bool operator()(const ZenBoard* x, const ZenBoard* y) const {
+            return (x->garden == y->garden) && (x->player == y->player);
         }
     };
 
-    static unordered_set<ZenBoard, GetHashCode, Equals> neighbours;
-    static unordered_set<ZenBoard, GetHashCode, Equals> visited;
-    static unordered_map<ZenBoard, ZenBoard, GetHashCode, Equals> map;
+    static unordered_set<ZenBoard*, GetHashCode, Equals> neighbours;
+    static unordered_set<ZenBoard*, GetHashCode, Equals> deadlocksTable;
+
+    //TT
+    static ZenBoard TT[1000];
+    static ZenBoard* TTLookup(const ZenBoard* hashcode);
     
     //A*
-    static unordered_map<ZenBoard,int, GetHashCode, Equals> OPEN;
-    static unordered_set<ZenBoard, GetHashCode, Equals> CLOSE;
-    static unordered_map<ZenBoard, ZenBoard, GetHashCode, Equals> aStarCache;
+    //static unordered_map<ZenBoard, ZenBoard, GetHashCode, Equals> map;
+    //static unordered_map<ZenBoard,int, GetHashCode, Equals> OPEN;
+    //static unordered_set<ZenBoard, GetHashCode, Equals> CLOSE;
+    //static unordered_map<ZenBoard, ZenBoard, GetHashCode, Equals> aStarCache;
 
     //Transposition table
-    static unordered_map<ZenBoard, int, GetHashCode, Equals> transpositionTable;
-    static unordered_set<ZenBoard, GetHashCode, Equals> deadlocksTable;
+    
 
     static void PrintBoard(ZenBoard zenBoard);
     static void PrintBitset(bitset<36> printBitset);    

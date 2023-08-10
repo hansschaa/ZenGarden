@@ -12,7 +12,7 @@ using namespace std;
 //BFS Algorithm
 void MyAlgorithms::BFS(ZenBoard& zenBoard){
     
-    cout << "-> Empezando BFS..." << endl;
+    /*cout << "-> Empezando BFS..." << endl;
     Statistics::start = std::chrono::high_resolution_clock::now();
     queue<ZenBoard> queue;     
     queue.push(zenBoard);    
@@ -54,12 +54,12 @@ void MyAlgorithms::BFS(ZenBoard& zenBoard){
         Statistics::totalNodesExpanded++;
     }
 
-    cout << Utils::ERROR << "Not solution..." << Utils::NORMAL << endl;
+    cout << Utils::ERROR << "Not solution..." << Utils::NORMAL << endl;*/
 }
 
 //AStar algorithm
 void MyAlgorithms::AStar(ZenBoard& zenBoard){
-    
+    /*
     cout << "-> Empezando AStar.." << endl;
     Statistics::start = std::chrono::high_resolution_clock::now();
 
@@ -146,7 +146,7 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard){
         }
 
         Utils::CLOSE.insert(currentBoard);
-    }
+    }*/
 
     cout << "Not solution" << endl;
 }
@@ -157,10 +157,11 @@ void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
     cout << "-> Empezando IDAStar.." << endl;
     Statistics::start = std::chrono::high_resolution_clock::now();
 
-    zenBoard.CompH();
+    ZenBoard* root = &zenBoard;
+    root->CompH();
     int bound = zenBoard.h;
-    stack<ZenBoard> path;
-    path.push(zenBoard);
+    stack<ZenBoard*> path;
+    path.push(root);
 
     int t = 0;
 
@@ -183,29 +184,29 @@ void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
 
         bound = t;
         
-        Utils::visited.clear();
+        //Utils::visited.clear();
     }
 }
 
 // Función de comparación para ordenar los nodos según su variable h
-bool compareNodes(const ZenBoard& a, const ZenBoard& b) {
-    return a.h < b.h;
+bool compareNodes(const ZenBoard* a, const ZenBoard* b) {
+    return a->h < b->h;
 }
 
-int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
+int MyAlgorithms::Search(stack<ZenBoard*>& path, int g, int bound) {
 
-    ZenBoard node = path.top();
+    ZenBoard* node = path.top();
 
     //Check win
-    if (Utils::IsWin(node)){
+    if (Utils::IsWin(*node)){
         Statistics::end = std::chrono::high_resolution_clock::now();
         if(Utils::showPath){
 
             int cont = 0;
             while (!path.empty()) {
-                ZenBoard topElement = path.top();
+                ZenBoard* topElement = path.top();
                 cont++;
-                Utils::PrintBoard(topElement);
+                Utils::PrintBoard(*topElement);
                 path.pop();
             }
 
@@ -214,12 +215,11 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
 
         return -1;
     }
-
-    int min = INT_MAX;
     
     //Get node f
-    int f = node.GetF();
+    int f = node->GetF();
     if (f > bound) return f;
+    
 
     Statistics::totalNodesExpanded++;
     if(Statistics::totalNodesExpanded%1000==0 && !Statistics::isTimeOut){
@@ -233,19 +233,44 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
     }
 
     //Get neighbours
-    Utils::GetNeighbours(node, g+1);
-    auto neig = Utils::neighbours;
+    Utils::GetNeighbours(*node, g+1);
+    //auto neig = Utils::neighbours;
 
+    //Compute H
+    /*for (ZenBoard& neighbour : neig) { 
+        auto entry=Utils::TTLookup(neighbour);
+        if (entry->GetHashCode()==neighbour.GetHashCode()){
+            auto newH=entry->h;
+            if(newH>neighbour.h){
+                if(g<bound){
+                    bound=g;
+                }
+            }
+
+            /*
+            if(depth>cutMax){
+                    cutMax=depth;
+                }
+            cutTotal+=depth;
+            cutCount++;
+
+            neighbour.h = newH;
+
+        }
+    }*/
+
+
+    int min = INT_MAX;
     //Sort neighbours
-    /*std::vector<ZenBoard> nodesVector(Utils::neighbours.begin(), Utils::neighbours.end());
-    std::sort(nodesVector.begin(), nodesVector.end(), compareNodes);*/
+    std::vector<ZenBoard*> nodesVector(Utils::neighbours.begin(), 
+    Utils::neighbours.end());
+    std::sort(nodesVector.begin(), nodesVector.end(), compareNodes);
 
-    //Utils::visited.insert(node);
-    for (ZenBoard neighbour : neig) {
+    for (auto it=nodesVector.begin(); it!=nodesVector.end();it++) {
 
-        path.push(neighbour);
+        path.push((*it));
 
-        int t = Search(path, neighbour.g, bound);
+        int t = Search(path, (*it)->g, bound);
 
         if(Statistics::isTimeOut==1)
             return INT_MIN;
@@ -257,8 +282,10 @@ int MyAlgorithms::Search(stack<ZenBoard>& path, int g, int bound) {
         //Update min val
         if (t < min)
             min = t; 
-
+        
+        delete (*it);
         path.pop();
+
     }
 
     return min;
@@ -270,7 +297,7 @@ void MyAlgorithms::ShowMoves(ZenBoard zenBoard, unordered_map<ZenBoard, ZenBoard
 
     cout << Utils::BUSY << "-> Show moves" << Utils::NORMAL<< endl;
 
-    stack<ZenBoard> stack;
+    /*stack<ZenBoard> stack;
     ZenBoard currentZenBoard = zenBoard;
 
     //Push solution
@@ -290,7 +317,7 @@ void MyAlgorithms::ShowMoves(ZenBoard zenBoard, unordered_map<ZenBoard, ZenBoard
         ZenBoard topElement = stack.top();
         Utils::PrintBoard(topElement);
         stack.pop();
-    }
+    }*/
 }
 
 

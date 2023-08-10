@@ -1,5 +1,6 @@
 #include <bitset>
 #include <boost/dynamic_bitset.hpp>
+#include <boost/functional/hash.hpp>
 #include "ZenBoard.h"
 #include "Vector2.h"
 #include "Utils.h"
@@ -82,6 +83,13 @@ void ZenBoard::PrintBitset() {
 
     cout << Utils::NORMAL;
     cout << "\n";
+}
+
+
+size_t ZenBoard::GetHashCode(){
+
+    std::hash<boost::dynamic_bitset<>> hash_fn81;
+    return hash_fn81(garden) ^ hash_fn81(player);
 }
 
 

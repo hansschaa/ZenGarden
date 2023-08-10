@@ -29,6 +29,8 @@ public:
     bool operator==(const ZenBoard& other) const {
         return garden == other.garden && player == other.player;
     }
+
+    size_t GetHashCode();
 };
 
 #endif //ZEN_ZENBOARD_H

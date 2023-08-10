@@ -25,15 +25,16 @@ const Vector2<int> Utils::left = Vector2<int>(0,-1);
 
 using namespace std;
 
-unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::neighbours;
-unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::visited;
-unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::deadlocksTable;
-unordered_map<ZenBoard, ZenBoard, Utils::GetHashCode, Utils::Equals> Utils::map;
-unordered_map<ZenBoard, ZenBoard, Utils::GetHashCode, Utils::Equals> Utils::aStarCache;
-unordered_map<ZenBoard, int, Utils::GetHashCode, Utils::Equals> Utils::transpositionTable;
+unordered_set<ZenBoard*, Utils::GetHashCode,  Utils::Equals> Utils::neighbours;
+unordered_set<ZenBoard*, Utils::GetHashCode,  Utils::Equals> Utils::deadlocksTable;
 
-unordered_map<ZenBoard, int, Utils::GetHashCode,  Utils::Equals> Utils::OPEN;
-unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::CLOSE;
+//TT
+ZenBoard Utils::TT[1000];
+
+//unordered_map<ZenBoard, ZenBoard, Utils::GetHashCode, Utils::Equals> Utils::map;
+//unordered_map<ZenBoard, ZenBoard, Utils::GetHashCode, Utils::Equals> Utils::aStarCache;
+//unordered_map<ZenBoard, int, Utils::GetHashCode,  Utils::Equals> Utils::OPEN;
+//unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::CLOSE;
 
 int Utils::showPath = 0; 
 int Utils::DIMENSION = 0;
@@ -119,27 +120,21 @@ void Utils::GetNeighbours(ZenBoard zenBoard, int newG){
 //Create a new succesor from zenBoard whit the new move
 void Utils::PaintChild(const ZenBoard& zenBoard, int currentIndex, Vector2<int> dir, int step, int newG) {
     
-    ZenBoard child = zenBoard;
-    IAPaint(child, currentIndex, dir, step);
-
-    child.g = newG;
-
-    //Check visited nodes
-    auto it = Utils::visited.find(child);
-    if (it != Utils::visited.end() && it->g <= newG) return;
+    ZenBoard* child = new ZenBoard(zenBoard);
+    IAPaint(*child, currentIndex, dir, step);
+    child->g = newG;
     
     //Check if a deadlock state
     auto it = Utils::deadlocksTable.find(child);
     if (it != Utils::deadlocksTable.end()) return;
 
-    if(Deadend::HasDeadend(child) && child.player.none()){
+    if(Deadend::HasDeadend(child) && child->player.none()){
         Utils::deadlocksTable.insert(child);
         return;
     }
 
-    //Update H
-    child.CompH();
-    
+    child->CompH();
+
     //Insert in neig
     Utils::neighbours.insert(child);
 }
@@ -357,7 +352,8 @@ bool Utils::ManualGetEndPaintCondition(Vector2<int> direction, int index){
         return index %Utils::DIMENSION != 0;
 }
 
-void Utils::PrintBoard(ZenBoard zenBoard) {
+void Utils::PrintBoard(ZenBoard zenBoard)
+{
 
     boost::dynamic_bitset<> board(zenBoard.garden | zenBoard.player); 
 
@@ -609,4 +605,16 @@ bool Utils::IsWin(ZenBoard& zenBoard){
 //Check if index is legal
 bool Utils::IsInside(int index){
     return index >= 0 && index < Utils::GetMax();
+}
+
+
+ZenBoard* Utils::TTLookup(const ZenBoard* zenBoard)
+{
+    size_t hash = 1;//zenBoard.GetHashCode()%1000;
+    if(hash < 1000 && hash >= 0){
+        return &Utils::TT[hash];
+    }
+    else{
+        return nullptr;
+    }
 }
