@@ -58,8 +58,6 @@ void ZenBoard::CompH(){
 
 void ZenBoard::PrintBitset() {
 
-   
-
     for (int row = Utils::DIMENSION - 1; row >= 0; row--) {
         for (int col = Utils::DIMENSION - 1; col >= 0; col--) {
             int index = row * Utils::DIMENSION + col;
@@ -89,7 +87,8 @@ void ZenBoard::PrintBitset() {
 size_t ZenBoard::GetHashCode(){
 
     std::hash<boost::dynamic_bitset<>> hash_fn81;
-    return hash_fn81(garden) ^ hash_fn81(player);
+
+    return ((hash_fn81(garden) ^ hash_fn81(player))%1000);
 }
 
 

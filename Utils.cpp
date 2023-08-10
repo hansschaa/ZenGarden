@@ -1,6 +1,7 @@
 #include <iostream>
 #include <bitset>
 #include <vector>
+
 #include <boost/dynamic_bitset.hpp>
 #include "Utils.h"
 #include "ZenBoard.h"
@@ -27,9 +28,10 @@ using namespace std;
 
 unordered_set<ZenBoard*, Utils::GetHashCode,  Utils::Equals> Utils::neighbours;
 unordered_set<ZenBoard*, Utils::GetHashCode,  Utils::Equals> Utils::deadlocksTable;
+stack<boost::dynamic_bitset<>> Utils::path;
 
 //TT
-ZenBoard Utils::TT[1000];
+TTEntry Utils::TT[1000];
 
 //unordered_map<ZenBoard, ZenBoard, Utils::GetHashCode, Utils::Equals> Utils::map;
 //unordered_map<ZenBoard, ZenBoard, Utils::GetHashCode, Utils::Equals> Utils::aStarCache;
@@ -125,13 +127,13 @@ void Utils::PaintChild(const ZenBoard& zenBoard, int currentIndex, Vector2<int> 
     child->g = newG;
     
     //Check if a deadlock state
-    auto it = Utils::deadlocksTable.find(child);
+    /*auto it = Utils::deadlocksTable.find(child);
     if (it != Utils::deadlocksTable.end()) return;
 
     if(Deadend::HasDeadend(child) && child->player.none()){
         Utils::deadlocksTable.insert(child);
         return;
-    }
+    }*/
 
     child->CompH();
 
@@ -607,14 +609,20 @@ bool Utils::IsInside(int index){
     return index >= 0 && index < Utils::GetMax();
 }
 
+//TT Methods
 
-ZenBoard* Utils::TTLookup(const ZenBoard* zenBoard)
+TTEntry Utils::TTLookup(ZenBoard* zenBoard)
 {
-    size_t hash = 1;//zenBoard.GetHashCode()%1000;
-    if(hash < 1000 && hash >= 0){
-        return &Utils::TT[hash];
-    }
-    else{
-        return nullptr;
-    }
+    //cout << "TTLookup" << endl;
+
+    int hashcode = zenBoard->GetHashCode();
+    return Utils::TT[hashcode];
+
+    //oo usar TT.find()???
+}
+
+void Utils::TTSave(int hashcode, int bound)
+{
+    //cout << "Save: " << hashcode << " Bound: " << bound << endl;
+    TT[hashcode] = TTEntry(hashcode, bound);
 }

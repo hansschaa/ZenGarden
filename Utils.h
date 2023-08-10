@@ -5,6 +5,7 @@
 #include <functional>
 #include <unordered_set>
 #include <fstream>
+#include <stack>
 #include <bitset>
 #include <boost/dynamic_bitset.hpp>
 #include <boost/functional/hash.hpp>
@@ -12,6 +13,8 @@
 #include "Vector2.h"
 #include "Statistics.h"
 #include "GameConfig.h"
+#include "TTEntry.h"
+
 #define BOOST_DYNAMIC_BITSET_DONT_USE_FRIENDS
 using namespace std;
 
@@ -56,9 +59,10 @@ public:
     static unordered_set<ZenBoard*, GetHashCode, Equals> deadlocksTable;
 
     //TT
-    static ZenBoard TT[1000];
-    static ZenBoard* TTLookup(const ZenBoard* hashcode);
-    
+    static TTEntry TT[1000];
+    static TTEntry TTLookup(ZenBoard* hashcode);
+    static void TTSave(int hashcode, int bound);
+    static stack<boost::dynamic_bitset<>> path;
     //A*
     //static unordered_map<ZenBoard, ZenBoard, GetHashCode, Equals> map;
     //static unordered_map<ZenBoard,int, GetHashCode, Equals> OPEN;
