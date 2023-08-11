@@ -215,49 +215,46 @@ int MyAlgorithms::Search(stack<ZenBoard> path, int g, int bound) {
         return -1;
     }
     
+    
     Statistics::totalNodesExpanded++;
-
+    
     //Get neighbours
-    Utils::GetNeighbours(s, g+1);
-    auto neig = Utils::neighbours;
+    auto& neighbours = Utils::GetNeighbours(s, g+1);
+    std::vector<ZenBoard> nodesVector(neighbours.begin(), neighbours.end());
 
-    //Check
-    for (auto it=neig.begin(); it!=neig.end();it++) { 
-        auto entry=Utils::TTLookup(*it);
-        
-        if (entry._bound != -1 && entry._zenBoard == *(*it)){
-            auto newH=entry._bound;
-            (*it)->h = newH;
-        } 
+    //Check H
+    for (auto it=nodesVector.begin(); it!=nodesVector.end();it++) { 
+
+        //Save state
+        ZenBoard zenBoard = ZenBoard((*it));
+
+        auto entry=Utils::TTLookup(zenBoard);
+
+        if (entry._bound != -1 && entry._zenBoard == (*it))
+            (*it).h = entry._bound;
 
         else
-            (*it)->CompH();
+            (*it).CompH();
     }
-
 
     int min = 1000;
 
     //Recursive
-    for (auto it=neig.begin(); it!=neig.end();it++){
+    for (auto it=nodesVector.begin(); it!=nodesVector.end();it++){
 
         int t;
-        if ((*it)->h <= bound-1) {
-            path.push(*(*it));
+        if ((it)->h <= bound-1) {
+            path.push(*it);
             auto result = Search(path, g+1, bound-1);
             //Has a solution
             if (result == -1){
-                for (; it!=neig.end();it++){
-                    delete (*it);
-                }
                 return -1;
             }
             path.pop();
 			t = 1 + result;
 		} else {
-			t = 1 + (*it)->h;
+			t = 1 + it->h;
 		}
-
-		delete (*it);
 
         //Update min if is minor than t
         if (t < min) {

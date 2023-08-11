@@ -20,7 +20,6 @@ std::chrono::high_resolution_clock::time_point Statistics::h_start;
 double Statistics::h_total = 0;
 
 std::chrono::high_resolution_clock::time_point Statistics::gen_start;
-std::chrono::high_resolution_clock::time_point Statistics::gen_end;
 double Statistics::gen_total = 0;
 
 
