@@ -60,28 +60,28 @@ unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::GetNeighbours
         //Check up
         if(CanMove(zenBoard, currentIndex, up, Utils::DIMENSION, true)){
             auto child = PaintChild(zenBoard, currentIndex, up, Utils::DIMENSION, newG);
-            //if(!IsDeadlock(child))
+            if(!IsDeadlock(child))
                 neighbours.insert(child);
         }
 
         //Check down
         if(CanMove(zenBoard, currentIndex, down, Utils::DIMENSION, true)){
             auto child = PaintChild(zenBoard, currentIndex, down, Utils::DIMENSION, newG);
-            //if(!IsDeadlock(child))
+            if(!IsDeadlock(child))
                 neighbours.insert(child);
         }
         
         //check right
         if(CanMove(zenBoard, currentIndex, left, 1, true)){
             auto child = PaintChild(zenBoard, currentIndex, left, 1, newG);
-            //if(!IsDeadlock(child))
+            if(!IsDeadlock(child))
                 neighbours.insert(child);
         }
         
         //Check left
         if(CanMove(zenBoard, currentIndex, right, 1, true)){
             auto child = PaintChild(zenBoard, currentIndex, right, 1, newG);
-            //if(!IsDeadlock(child))
+            if(!IsDeadlock(child))
                 neighbours.insert(child);
         }
     }
@@ -94,7 +94,7 @@ unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::GetNeighbours
             int currentIndex = (Utils::GetMax()-1) - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, up, Utils::DIMENSION, false)){
                 auto child = PaintChild(zenBoard, currentIndex, up, Utils::DIMENSION, newG);
-                //if(!IsDeadlock(child))
+                if(!IsDeadlock(child))
                     neighbours.insert(child);
             }
         }
@@ -105,7 +105,7 @@ unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::GetNeighbours
             int currentIndex = (Utils::GetMax()-1)  - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, down, Utils::DIMENSION, false)){
                 auto child = PaintChild(zenBoard, currentIndex, down, Utils::DIMENSION, newG);
-                //if(!IsDeadlock(child))
+                if(!IsDeadlock(child))
                     neighbours.insert(child);
             }
         }
@@ -116,7 +116,7 @@ unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::GetNeighbours
             int currentIndex = (Utils::GetMax()-1)  - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, right, 1, false)){
                 auto child = PaintChild(zenBoard, currentIndex, right, 1, newG);
-                //if(!IsDeadlock(child))
+                if(!IsDeadlock(child))
                     neighbours.insert(child);
             }
         }
@@ -127,7 +127,7 @@ unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::GetNeighbours
             int currentIndex = (Utils::GetMax()-1) - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, left, 1, false)){
                 auto child = PaintChild(zenBoard, currentIndex, left, 1, newG);
-                //if(!IsDeadlock(child))
+                if(!IsDeadlock(child))
                     neighbours.insert(child);
             }
         }

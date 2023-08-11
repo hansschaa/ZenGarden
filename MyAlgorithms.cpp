@@ -104,7 +104,7 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard){
             cout << Utils::FREE  << "Solution found..." << Utils::NORMAL << endl;
 
             Statistics::totalNodesExpanded = Utils::CLOSE.size();
-            getchar();
+            
             if(Utils::showPath)
                 ShowMoves(currentBoard, Utils::aStarCache);
 
@@ -177,7 +177,7 @@ void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
     while (true) {
 
         //cout << "Bound: " << bound << endl;
-        t = TTInnerSearch(path,0, bound);
+        t = InnerSearch(path, 0, bound);
 
         if (t == -1) {
             cout << Utils::FREE << "Solution found..." << Utils::NORMAL << endl;
@@ -202,8 +202,6 @@ int MyAlgorithms::InnerSearch(stack<ZenBoard> path, int g, int bound) {
 
     ZenBoard node = path.top();
 
-   // Utils::PrintBoard(node);
-
     //Check win
     if (Utils::IsWin(node)){
         Statistics::end = std::chrono::high_resolution_clock::now();
@@ -213,7 +211,7 @@ int MyAlgorithms::InnerSearch(stack<ZenBoard> path, int g, int bound) {
             while (!path.empty()) {
                 ZenBoard topElement = path.top();
                 cont++;
-                Utils::PrintBoard(topElement);
+                //Utils::PrintBoard(topElement);
                 path.pop();
             }
 
@@ -235,8 +233,8 @@ int MyAlgorithms::InnerSearch(stack<ZenBoard> path, int g, int bound) {
     auto neighbours = Utils::GetNeighbours(node, g+1);
 
     //Sort neighbours
-    /*std::vector<ZenBoard> nodesVector(Utils::neighbours.begin(), Utils::neighbours.end());
-    std::sort(nodesVector.begin(), nodesVector.end(), compareNodes);*/
+    //std::vector<ZenBoard> nodesVector(neighbours.begin(), neighbours.end());
+    //std::sort(nodesVector.begin(), nodesVector.end(), compareNodes);
 
     for (ZenBoard neighbour : neighbours) {
 
@@ -274,7 +272,7 @@ int MyAlgorithms::TTInnerSearch(stack<ZenBoard> path, int g, int bound) {
             while (!path.empty()) {
                 auto topElement = path.top();
                 cont++;
-                Utils::PrintBoard(topElement);
+                //Utils::PrintBoard(topElement);
                 path.pop();
             }
            
@@ -359,7 +357,7 @@ void MyAlgorithms::ShowMoves(ZenBoard zenBoard, unordered_map<ZenBoard, ZenBoard
 
     while (!stack.empty()) {
         ZenBoard topElement = stack.top();
-        Utils::PrintBoard(topElement);
+        //Utils::PrintBoard(topElement);
         stack.pop();
     }
 }
