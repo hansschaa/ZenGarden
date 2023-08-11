@@ -18,8 +18,10 @@ class MyAlgorithms{
         static void BFS(ZenBoard& zenBoard);
         static void AStar(ZenBoard& zenBoard);
         static void IDAStar(ZenBoard& zenBoard);
+        static int InnerSearch(stack<ZenBoard> path, int g, int bound);  
+        static int TTInnerSearch(stack<ZenBoard> path, int g, int bound);  
         static void ShowMoves(ZenBoard zenBoard, unordered_map<ZenBoard, ZenBoard, Utils::GetHashCode, Utils::Equals>& map);
-        static int Search(stack<ZenBoard> path, int g, int bound);  
+        
 };
 
 

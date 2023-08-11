@@ -169,9 +169,9 @@ void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
     int t = 0;
   
     while (true) {
-        //cout << "Bound: " << bound << endl;
-        //getchar();
-        t = Search(path,0, bound);
+
+        cout << "Bound: " << bound << endl;
+        t = InnerSearch(path,0, bound);
 
         if (t == -1) {
             cout << Utils::FREE << "Solution found..." << Utils::NORMAL << endl;
@@ -191,9 +191,70 @@ void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
     }
 }
 
+int MyAlgorithms::InnerSearch(stack<ZenBoard> path, int g, int bound) {
+
+    ZenBoard node = path.top();
+
+   // Utils::PrintBoard(node);
+
+    //Check win
+    if (Utils::IsWin(node)){
+        Statistics::end = std::chrono::high_resolution_clock::now();
+        if(Utils::showPath){
+
+            int cont = 0;
+            while (!path.empty()) {
+                ZenBoard topElement = path.top();
+                cont++;
+                Utils::PrintBoard(topElement);
+                path.pop();
+            }
+
+            Statistics::solutionLength = cont-1;
+        }
+
+        return -1;
+    }
+
+    int min = INT_MAX;
+    
+    //Get node f
+    int f = node.GetF();
+    if (f > bound) return f;
+
+    Statistics::totalNodesExpanded++;
+
+    //Get neighbours
+    auto& neighbours = Utils::GetNeighbours(node, g+1);
+
+    //Sort neighbours
+    /*std::vector<ZenBoard> nodesVector(Utils::neighbours.begin(), Utils::neighbours.end());
+    std::sort(nodesVector.begin(), nodesVector.end(), compareNodes);*/
+
+    for (ZenBoard neighbour : neighbours) {
+
+        neighbour.CompH();
+
+        path.push(neighbour);
+
+        int t = InnerSearch(path, neighbour.g, bound);
+
+        //Has a solution
+        if (t == -1)
+            return -1;
+
+        //Update min val
+        if (t < min)
+            min = t; 
+
+        path.pop();
+    }
+
+    return min;
+}
 
 
-int MyAlgorithms::Search(stack<ZenBoard> path, int g, int bound) {
+int MyAlgorithms::TTInnerSearch(stack<ZenBoard> path, int g, int bound) {
 
     ZenBoard s = path.top(); 
 
@@ -223,7 +284,7 @@ int MyAlgorithms::Search(stack<ZenBoard> path, int g, int bound) {
     auto& neighbours = Utils::GetNeighbours(s, g+1);
     std::vector<ZenBoard> nodesVector(neighbours.begin(), neighbours.end());
 
-    //Check H
+    //ENHANCEMENT 1: TT
     for (auto it=nodesVector.begin(); it!=nodesVector.end();it++) { 
 
         //Save state
@@ -240,13 +301,16 @@ int MyAlgorithms::Search(stack<ZenBoard> path, int g, int bound) {
 
     int min = 1000;
 
+    //ENHANCEMENT 2: Move ordering
+    /*std::sort(nodesVector.begin(), nodesVector.end(), compareNodes);*/
+
     //Recursive
     for (auto it=nodesVector.begin(); it!=nodesVector.end();it++){
 
         int t;
         if ((it)->h <= bound-1) {
             path.push(*it);
-            auto result = Search(path, g+1, bound-1);
+            auto result = TTInnerSearch(path, g+1, bound-1);
             //Has a solution
             if (result == -1){
                 return -1;
@@ -263,7 +327,9 @@ int MyAlgorithms::Search(stack<ZenBoard> path, int g, int bound) {
 		}
     }
     
+    //ENHANCEMENT 1: TT
     Utils::TTSave(s, min);
+
     return min;
 }
 
