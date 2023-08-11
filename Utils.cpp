@@ -44,14 +44,13 @@ int Utils::DIMENSION = 0;
 GameConfig Utils::gameConfig;
 
 //Get Neighbours from a zenBoard
-unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals>& Utils::GetNeighbours(ZenBoard zenBoard, int newG){
+unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::GetNeighbours(ZenBoard zenBoard, int newG){
 
 
     Statistics::gen_start = std::chrono::high_resolution_clock::now();
 
     //Reset neigbords
-    unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals>& neighbours  = 
-    *(new std::unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals>());
+    unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> neighbours;
 
     //Player is on board
     if(zenBoard.player.any()){
@@ -60,25 +59,28 @@ unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals>& Utils::GetNeighbour
         
         //Check up
         if(CanMove(zenBoard, currentIndex, up, Utils::DIMENSION, true)){
-            auto& child = PaintChild(zenBoard, currentIndex, up, Utils::DIMENSION, newG);
+            auto child = PaintChild(zenBoard, currentIndex, up, Utils::DIMENSION, newG);
+
+            
+
             neighbours.insert(child);
         }
 
         //Check down
         if(CanMove(zenBoard, currentIndex, down, Utils::DIMENSION, true)){
-            auto& child = PaintChild(zenBoard, currentIndex, down, Utils::DIMENSION, newG);
+            auto child = PaintChild(zenBoard, currentIndex, down, Utils::DIMENSION, newG);
             neighbours.insert(child);
         }
         
         //check right
         if(CanMove(zenBoard, currentIndex, left, 1, true)){
-            auto& child = PaintChild(zenBoard, currentIndex, left, 1, newG);
+            auto child = PaintChild(zenBoard, currentIndex, left, 1, newG);
             neighbours.insert(child);
         }
         
         //Check left
         if(CanMove(zenBoard, currentIndex, right, 1, true)){
-            auto& child = PaintChild(zenBoard, currentIndex, right, 1, newG);
+            auto child = PaintChild(zenBoard, currentIndex, right, 1, newG);
             neighbours.insert(child);
         }
     }
@@ -90,7 +92,7 @@ unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals>& Utils::GetNeighbour
             Vector2<int> initialPoint = GetInitialIndex(i);
             int currentIndex = (Utils::GetMax()-1) - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, up, Utils::DIMENSION, false)){
-                auto& child = PaintChild(zenBoard, currentIndex, up, Utils::DIMENSION, newG);
+                auto child = PaintChild(zenBoard, currentIndex, up, Utils::DIMENSION, newG);
                 neighbours.insert(child);
             }
         }
@@ -100,7 +102,7 @@ unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals>& Utils::GetNeighbour
             Vector2<int> initialPoint = GetInitialIndex(i);
             int currentIndex = (Utils::GetMax()-1)  - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, down, Utils::DIMENSION, false)){
-                auto& child = PaintChild(zenBoard, currentIndex, down, Utils::DIMENSION, newG);
+                auto child = PaintChild(zenBoard, currentIndex, down, Utils::DIMENSION, newG);
                 neighbours.insert(child);
             }
         }
@@ -110,7 +112,7 @@ unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals>& Utils::GetNeighbour
             Vector2<int> initialPoint = GetInitialIndex(i);
             int currentIndex = (Utils::GetMax()-1)  - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, right, 1, false)){
-                auto& child = PaintChild(zenBoard, currentIndex, right, 1, newG);
+                auto child = PaintChild(zenBoard, currentIndex, right, 1, newG);
                 neighbours.insert(child);
             }
         }
@@ -120,7 +122,7 @@ unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals>& Utils::GetNeighbour
             Vector2<int> initialPoint = GetInitialIndex(i);
             int currentIndex = (Utils::GetMax()-1) - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, left, 1, false)){
-                auto& child = PaintChild(zenBoard, currentIndex, left, 1, newG);
+                auto child = PaintChild(zenBoard, currentIndex, left, 1, newG);
                 neighbours.insert(child);
             }
         }
@@ -132,9 +134,9 @@ unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals>& Utils::GetNeighbour
 }
 
 //Create a new succesor from zenBoard whit the new move
-ZenBoard& Utils::PaintChild(ZenBoard& zenBoard, int currentIndex, Vector2<int> dir, int step, int newG) {
+ZenBoard Utils::PaintChild(ZenBoard& zenBoard, int currentIndex, Vector2<int> dir, int step, int newG) {
     
-    ZenBoard& child = *(new ZenBoard(zenBoard));
+    ZenBoard child = ZenBoard(zenBoard);
 
     IAPaint(child, currentIndex, dir, step);
     child.g = newG;

@@ -41,7 +41,7 @@ void MyAlgorithms::BFS(ZenBoard& zenBoard){
         }
 
         // Get neighbours 
-        auto& neighbours = Utils::GetNeighbours(currentBoard, 1);  
+        auto neighbours = Utils::GetNeighbours(currentBoard, 1);  
 
         for (ZenBoard neighbour : neighbours) {
             Utils::map.insert({neighbour, currentBoard}); 
@@ -112,7 +112,7 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard){
         }
 
         // Obtener los vecinos del estado actual
-        auto& neighbours = Utils::GetNeighbours(currentBoard, currentBoard.g+1);  
+        auto neighbours = Utils::GetNeighbours(currentBoard, currentBoard.g+1);  
         for (ZenBoard neighbour : neighbours) {
 
             neighbour.CompH();
@@ -171,7 +171,7 @@ void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
     while (true) {
 
         cout << "Bound: " << bound << endl;
-        t = InnerSearch(path,0, bound);
+        t = TTInnerSearch(path,0, bound);
 
         if (t == -1) {
             cout << Utils::FREE << "Solution found..." << Utils::NORMAL << endl;
@@ -191,6 +191,7 @@ void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
     }
 }
 
+//IDA Search whitout TT
 int MyAlgorithms::InnerSearch(stack<ZenBoard> path, int g, int bound) {
 
     ZenBoard node = path.top();
@@ -225,7 +226,7 @@ int MyAlgorithms::InnerSearch(stack<ZenBoard> path, int g, int bound) {
     Statistics::totalNodesExpanded++;
 
     //Get neighbours
-    auto& neighbours = Utils::GetNeighbours(node, g+1);
+    auto neighbours = Utils::GetNeighbours(node, g+1);
 
     //Sort neighbours
     /*std::vector<ZenBoard> nodesVector(Utils::neighbours.begin(), Utils::neighbours.end());
@@ -253,7 +254,7 @@ int MyAlgorithms::InnerSearch(stack<ZenBoard> path, int g, int bound) {
     return min;
 }
 
-
+//IDA Search whit TT
 int MyAlgorithms::TTInnerSearch(stack<ZenBoard> path, int g, int bound) {
 
     ZenBoard s = path.top(); 
@@ -281,16 +282,13 @@ int MyAlgorithms::TTInnerSearch(stack<ZenBoard> path, int g, int bound) {
     Statistics::totalNodesExpanded++;
     
     //Get neighbours
-    auto& neighbours = Utils::GetNeighbours(s, g+1);
+    auto neighbours = Utils::GetNeighbours(s, g+1);
     std::vector<ZenBoard> nodesVector(neighbours.begin(), neighbours.end());
 
     //ENHANCEMENT 1: TT
     for (auto it=nodesVector.begin(); it!=nodesVector.end();it++) { 
 
-        //Save state
-        ZenBoard zenBoard = ZenBoard((*it));
-
-        auto entry=Utils::TTLookup(zenBoard);
+        auto entry=Utils::TTLookup((*it));
 
         if (entry._bound != -1 && entry._zenBoard == (*it))
             (*it).h = entry._bound;
@@ -335,8 +333,6 @@ int MyAlgorithms::TTInnerSearch(stack<ZenBoard> path, int g, int bound) {
 
 //Show moves for A* and BFS
 void MyAlgorithms::ShowMoves(ZenBoard zenBoard, unordered_map<ZenBoard, ZenBoard, Utils::GetHashCode, Utils::Equals>& map){
-
-
     cout << Utils::BUSY << "-> Show moves" << Utils::NORMAL<< endl;
 
     stack<ZenBoard> stack;
