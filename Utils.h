@@ -43,8 +43,6 @@ public:
     // Get hashcode from ZenBoard
     struct GetHashCode {
         size_t operator()(const ZenBoard* x) const {
-           //std::hash<std::bitset<36>> hash_fn36;
-            //return hash_fn36(x->garden) ^ hash_fn36(x->player);
             return operator()(*x);
             }
         size_t operator()(const ZenBoard x) const {
@@ -64,7 +62,7 @@ public:
     };
 
 
-
+    //Deadlock table
     static unordered_set<ZenBoard*, GetHashCode, Equals> deadlocksTable;
 
     //TT
@@ -73,15 +71,16 @@ public:
     static void TTSave(ZenBoard zenBoard, int bound);
     static void PrintTT();
 
+    //BFS
+    static unordered_set<ZenBoard, Utils::GetHashCode, Utils::Equals> visited;
+
     //A*
-    //static unordered_map<ZenBoard, ZenBoard, GetHashCode, Equals> map;
-    //static unordered_map<ZenBoard,int, GetHashCode, Equals> OPEN;
-    //static unordered_set<ZenBoard, GetHashCode, Equals> CLOSE;
-    //static unordered_map<ZenBoard, ZenBoard, GetHashCode, Equals> aStarCache;
+    static unordered_map<ZenBoard, ZenBoard, GetHashCode, Equals> map;
+    static unordered_map<ZenBoard,int, GetHashCode, Equals> OPEN;
+    static unordered_set<ZenBoard, GetHashCode, Equals> CLOSE;
+    static unordered_map<ZenBoard, ZenBoard, GetHashCode, Equals> aStarCache;
 
-    //Transposition table
-    
-
+    //Methods
     static void PrintBoard(ZenBoard zenBoard);
     static void PrintBitset(bitset<36> printBitset);    
     static void PrintDynamicBitset(boost::dynamic_bitset<> printBitset);

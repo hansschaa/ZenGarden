@@ -31,10 +31,13 @@ unordered_set<ZenBoard*, Utils::GetHashCode,  Utils::Equals> Utils::deadlocksTab
 //TT
 TTEntry Utils::TT[1000000];
 
-//unordered_map<ZenBoard, ZenBoard, Utils::GetHashCode, Utils::Equals> Utils::map;
-//unordered_map<ZenBoard, ZenBoard, Utils::GetHashCode, Utils::Equals> Utils::aStarCache;
-//unordered_map<ZenBoard, int, Utils::GetHashCode,  Utils::Equals> Utils::OPEN;
-//unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::CLOSE;
+unordered_map<ZenBoard, ZenBoard, Utils::GetHashCode, Utils::Equals> Utils::map;
+unordered_map<ZenBoard, ZenBoard, Utils::GetHashCode, Utils::Equals> Utils::aStarCache;
+unordered_map<ZenBoard, int, Utils::GetHashCode,  Utils::Equals> Utils::OPEN;
+unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::CLOSE;
+
+//BFS
+unordered_set<ZenBoard, Utils::GetHashCode, Utils::Equals> Utils::visited;
 
 int Utils::showPath = 0; 
 int Utils::DIMENSION = 0;

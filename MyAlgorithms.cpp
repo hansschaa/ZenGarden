@@ -12,7 +12,7 @@ using namespace std;
 //BFS Algorithm
 void MyAlgorithms::BFS(ZenBoard& zenBoard){
     
-    /*cout << "-> Empezando BFS..." << endl;
+    cout << "-> Empezando BFS..." << endl;
     Statistics::start = std::chrono::high_resolution_clock::now();
     queue<ZenBoard> queue;     
     queue.push(zenBoard);    
@@ -41,9 +41,9 @@ void MyAlgorithms::BFS(ZenBoard& zenBoard){
         }
 
         // Get neighbours 
-        Utils::GetNeighbours(currentBoard, 1);  
+        auto& neighbours = Utils::GetNeighbours(currentBoard, 1);  
 
-        for (ZenBoard neighbour : Utils::neighbours) {
+        for (ZenBoard neighbour : neighbours) {
             Utils::map.insert({neighbour, currentBoard}); 
             if (Utils::visited.find(neighbour) == Utils::visited.end()) {
                 queue.push(neighbour);                               
@@ -54,12 +54,12 @@ void MyAlgorithms::BFS(ZenBoard& zenBoard){
         Statistics::totalNodesExpanded++;
     }
 
-    cout << Utils::ERROR << "Not solution..." << Utils::NORMAL << endl;*/
+    cout << Utils::ERROR << "Not solution..." << Utils::NORMAL << endl;
 }
 
 //AStar algorithm
 void MyAlgorithms::AStar(ZenBoard& zenBoard){
-    /*
+    
     cout << "-> Empezando AStar.." << endl;
     Statistics::start = std::chrono::high_resolution_clock::now();
 
@@ -104,7 +104,7 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard){
             cout << Utils::FREE  << "Solution found..." << Utils::NORMAL << endl;
 
             Statistics::totalNodesExpanded = Utils::CLOSE.size();
-
+            getchar();
             if(Utils::showPath)
                 ShowMoves(currentBoard, Utils::aStarCache);
 
@@ -112,9 +112,10 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard){
         }
 
         // Obtener los vecinos del estado actual
-        Utils::GetNeighbours(currentBoard, currentBoard.g+1);  
-        for (ZenBoard neighbour : Utils::neighbours) {
+        auto& neighbours = Utils::GetNeighbours(currentBoard, currentBoard.g+1);  
+        for (ZenBoard neighbour : neighbours) {
 
+            neighbour.CompH();
 
             //Si está en open o closed y el que habia tiene mejor g,continuar
             //Open es un map de valores g, permite acceder al vlaor ya que la 
@@ -146,7 +147,7 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard){
         }
 
         Utils::CLOSE.insert(currentBoard);
-    }*/
+    }
 
     cout << "Not solution" << endl;
 }
@@ -272,7 +273,7 @@ void MyAlgorithms::ShowMoves(ZenBoard zenBoard, unordered_map<ZenBoard, ZenBoard
 
     cout << Utils::BUSY << "-> Show moves" << Utils::NORMAL<< endl;
 
-    /*stack<ZenBoard> stack;
+    stack<ZenBoard> stack;
     ZenBoard currentZenBoard = zenBoard;
 
     //Push solution
@@ -292,7 +293,7 @@ void MyAlgorithms::ShowMoves(ZenBoard zenBoard, unordered_map<ZenBoard, ZenBoard
         ZenBoard topElement = stack.top();
         Utils::PrintBoard(topElement);
         stack.pop();
-    }*/
+    }
 }
 
 // Función de comparación para ordenar los nodos según su variable h
