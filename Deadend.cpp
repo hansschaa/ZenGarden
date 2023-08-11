@@ -43,7 +43,7 @@ bitset<64> Deadend::l_FreeCorner ("000000001100000011100000111000000000000000000
 bitset<64> Deadend::copyBitset;*/
 
 
-bool Deadend::HasDeadend(ZenBoard* zenBoard){
+bool Deadend::HasDeadend(ZenBoard zenBoard){
     
     if(CheckAlleys(zenBoard)){
         Statistics::alleys++;
@@ -59,12 +59,12 @@ bool Deadend::HasDeadend(ZenBoard* zenBoard){
     return false;
 }
 
-bool Deadend::CheckCorners(ZenBoard* zenBoard){
+bool Deadend::CheckCorners(ZenBoard zenBoard){
     
     //HINT: Uncomment for 4 dimension level
     //bitset<16> copyBitset(zenBoard->garden.to_ulong());*/
     //HINT: Uncomment for 6 dimension level
-    bitset<36> copyBitset(zenBoard->garden.to_ulong());
+    bitset<36> copyBitset(zenBoard.garden.to_ulong());
     /*HINT: Uncomment for 8 dimension level*/
     //bitset<64> copyBitset(zenBoard->garden.to_ulong());
 
@@ -101,7 +101,7 @@ bool Deadend::CheckCorners(ZenBoard* zenBoard){
 }
 
 
-bool Deadend::CheckAlleys(ZenBoard* zenBoard){
+bool Deadend::CheckAlleys(ZenBoard zenBoard){
 
     int sum = 0;
     int dimension = Utils::DIMENSION;
@@ -116,7 +116,7 @@ bool Deadend::CheckAlleys(ZenBoard* zenBoard){
 
     for(int i = 0 ; i < max; i++){
 
-        if(zenBoard->garden[i] != 0) {
+        if(zenBoard.garden[i] != 0) {
             initBitset = initBitset<<1;
             sum = 0;
             continue;
@@ -124,22 +124,22 @@ bool Deadend::CheckAlleys(ZenBoard* zenBoard){
 
         //check up
         if((initBitset&firstRow).none())
-            if(zenBoard->garden[i+dimension] == 1)
+            if(zenBoard.garden[i+dimension] == 1)
                 sum++;
 
         //Down
         if((initBitset&lastRow).none())
-            if(zenBoard->garden[i-dimension] == 1)
+            if(zenBoard.garden[i-dimension] == 1)
                 sum++;
 
         //Left
         if((initBitset&firstCol).none())
-            if(zenBoard->garden[i+1] == 1)
+            if(zenBoard.garden[i+1] == 1)
                 sum++;
 
         //Right
         if((initBitset&lastCol).none())
-            if(zenBoard->garden[i-1] == 1)
+            if(zenBoard.garden[i-1] == 1)
                 sum++;
 
         if(sum >= 3)

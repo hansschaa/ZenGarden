@@ -26,7 +26,7 @@ const Vector2<int> Utils::left = Vector2<int>(0,-1);
 
 using namespace std;
 
-unordered_set<ZenBoard*, Utils::GetHashCode,  Utils::Equals> Utils::deadlocksTable;
+unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::deadlocksTable;
 
 //TT
 TTEntry Utils::TT[1000000];
@@ -60,28 +60,29 @@ unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::GetNeighbours
         //Check up
         if(CanMove(zenBoard, currentIndex, up, Utils::DIMENSION, true)){
             auto child = PaintChild(zenBoard, currentIndex, up, Utils::DIMENSION, newG);
-
-            
-
-            neighbours.insert(child);
+            //if(!IsDeadlock(child))
+                neighbours.insert(child);
         }
 
         //Check down
         if(CanMove(zenBoard, currentIndex, down, Utils::DIMENSION, true)){
             auto child = PaintChild(zenBoard, currentIndex, down, Utils::DIMENSION, newG);
-            neighbours.insert(child);
+            //if(!IsDeadlock(child))
+                neighbours.insert(child);
         }
         
         //check right
         if(CanMove(zenBoard, currentIndex, left, 1, true)){
             auto child = PaintChild(zenBoard, currentIndex, left, 1, newG);
-            neighbours.insert(child);
+            //if(!IsDeadlock(child))
+                neighbours.insert(child);
         }
         
         //Check left
         if(CanMove(zenBoard, currentIndex, right, 1, true)){
             auto child = PaintChild(zenBoard, currentIndex, right, 1, newG);
-            neighbours.insert(child);
+            //if(!IsDeadlock(child))
+                neighbours.insert(child);
         }
     }
 
@@ -93,7 +94,8 @@ unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::GetNeighbours
             int currentIndex = (Utils::GetMax()-1) - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, up, Utils::DIMENSION, false)){
                 auto child = PaintChild(zenBoard, currentIndex, up, Utils::DIMENSION, newG);
-                neighbours.insert(child);
+                //if(!IsDeadlock(child))
+                    neighbours.insert(child);
             }
         }
 
@@ -103,7 +105,8 @@ unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::GetNeighbours
             int currentIndex = (Utils::GetMax()-1)  - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, down, Utils::DIMENSION, false)){
                 auto child = PaintChild(zenBoard, currentIndex, down, Utils::DIMENSION, newG);
-                neighbours.insert(child);
+                //if(!IsDeadlock(child))
+                    neighbours.insert(child);
             }
         }
         
@@ -113,7 +116,8 @@ unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::GetNeighbours
             int currentIndex = (Utils::GetMax()-1)  - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, right, 1, false)){
                 auto child = PaintChild(zenBoard, currentIndex, right, 1, newG);
-                neighbours.insert(child);
+                //if(!IsDeadlock(child))
+                    neighbours.insert(child);
             }
         }
         
@@ -123,7 +127,8 @@ unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::GetNeighbours
             int currentIndex = (Utils::GetMax()-1) - (initialPoint.i* Utils::DIMENSION + initialPoint.j); 
             if(CanMove(zenBoard, currentIndex, left, 1, false)){
                 auto child = PaintChild(zenBoard, currentIndex, left, 1, newG);
-                neighbours.insert(child);
+                //if(!IsDeadlock(child))
+                    neighbours.insert(child);
             }
         }
     }
@@ -132,6 +137,21 @@ unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> Utils::GetNeighbours
     
     return neighbours;
 }
+
+bool Utils::IsDeadlock(ZenBoard& zenBoard){
+
+    //Check if a deadlock state
+    auto it = Utils::deadlocksTable.find(zenBoard);
+    if (it != Utils::deadlocksTable.end()) return true;
+
+    if(Deadend::HasDeadend(zenBoard) && zenBoard.player.none()){
+        Utils::deadlocksTable.insert(zenBoard);
+        return true;
+    }
+
+    return false;
+}
+
 
 //Create a new succesor from zenBoard whit the new move
 ZenBoard Utils::PaintChild(ZenBoard& zenBoard, int currentIndex, Vector2<int> dir, int step, int newG) {

@@ -22,9 +22,9 @@ class Deadend{
         //static bitset<64> r_Corner, r_FreeCorner, u_Corner, u_FreeCorner, d_Corner, d_FreeCorner,l_Corner, l_FreeCorner,copyBitset;
         
         
-        static bool HasDeadend(ZenBoard* zenBoard);
-        static bool CheckAlleys(ZenBoard* zenBoard);
-        static bool CheckCorners(ZenBoard* zenBoard);
+        static bool HasDeadend(ZenBoard zenBoard);
+        static bool CheckAlleys(ZenBoard zenBoard);
+        static bool CheckCorners(ZenBoard zenBoard);
 };
 
 #endif //ZEN_DEADEND_H

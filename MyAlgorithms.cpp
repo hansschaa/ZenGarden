@@ -152,6 +152,12 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard){
     cout << "Not solution" << endl;
 }
 
+// Función de comparación para ordenar los nodos según su variable h
+bool compareNodes(const ZenBoard a, const ZenBoard b) {
+    return a.h < b.h;
+}
+
+
 //IDASTar
 void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
 
@@ -170,7 +176,7 @@ void MyAlgorithms::IDAStar(ZenBoard& zenBoard){
   
     while (true) {
 
-        cout << "Bound: " << bound << endl;
+        //cout << "Bound: " << bound << endl;
         t = TTInnerSearch(path,0, bound);
 
         if (t == -1) {
@@ -300,7 +306,7 @@ int MyAlgorithms::TTInnerSearch(stack<ZenBoard> path, int g, int bound) {
     int min = 1000;
 
     //ENHANCEMENT 2: Move ordering
-    /*std::sort(nodesVector.begin(), nodesVector.end(), compareNodes);*/
+    //std::sort(nodesVector.begin(), nodesVector.end(), compareNodes);
 
     //Recursive
     for (auto it=nodesVector.begin(); it!=nodesVector.end();it++){
@@ -358,8 +364,4 @@ void MyAlgorithms::ShowMoves(ZenBoard zenBoard, unordered_map<ZenBoard, ZenBoard
     }
 }
 
-// Función de comparación para ordenar los nodos según su variable h
-bool compareNodes(const ZenBoard* a, const ZenBoard* b) {
-    return a->h < b->h;
-}
 

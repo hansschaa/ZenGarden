@@ -63,7 +63,7 @@ public:
 
 
     //Deadlock table
-    static unordered_set<ZenBoard*, GetHashCode, Equals> deadlocksTable;
+    static unordered_set<ZenBoard, GetHashCode, Equals> deadlocksTable;
 
     //TT
     static TTEntry TT[1000000];
@@ -92,6 +92,7 @@ public:
     static int GetMax();
     static unordered_set<ZenBoard, Utils::GetHashCode,  Utils::Equals> GetNeighbours(ZenBoard zenBoard, int newG);
     static bool IsInside(int index);
+    static bool IsDeadlock(ZenBoard& zenBoard);
 
     static void DoManualMove(ZenBoard& zenBoard, int currentIndex, Vector2<int> dir);
 
