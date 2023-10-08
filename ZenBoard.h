@@ -21,6 +21,7 @@ public:
     void Print();
     void PrintBitset();
     bitset<36> GetWholeBoard();
+    void Reset();
 
     int GetF(){
         return h+g;

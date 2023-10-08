@@ -10,10 +10,22 @@ bitset<36> ZenBoard::GetWholeBoard(){
     return garden | player;
 }
 
+void ZenBoard::Reset()
+{
+    h = 0;
+    g = 0;
+
+    garden = bitset<36> ("000000000000000000000000000000000000");
+    player = bitset<36> ("000000000000000000000000000000000000");
+}
+
+
 //Compute H, compute the minimum lines contained in the board
 void ZenBoard::CompH(){
 
-    Statistics::h_start = std::chrono::high_resolution_clock::now();
+    h = garden.count();
+
+    /*Statistics::h_start = std::chrono::high_resolution_clock::now();
 
     h = 0;
 
@@ -48,7 +60,7 @@ void ZenBoard::CompH(){
         }
     }
     
-    Statistics::h_total += ((std::chrono::high_resolution_clock::now()-Statistics::h_start).count()/1000000.0);
+    Statistics::h_total += ((std::chrono::high_resolution_clock::now()-Statistics::h_start).count()/1000000.0);*/
 }
 
 void ZenBoard::PrintBitset() {

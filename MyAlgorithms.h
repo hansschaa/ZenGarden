@@ -16,7 +16,7 @@ using namespace std;
 class MyAlgorithms{
     public:
         static void BFS(ZenBoard& zenBoard);
-        static void AStar(ZenBoard& zenBoard);
+        static bool AStar(ZenBoard& zenBoard);
         static void IDAStar(ZenBoard& zenBoard);
         static int InnerSearch(stack<ZenBoard> path, int g, int bound);  
         static int TTInnerSearch(stack<ZenBoard> path, int g, int bound);  

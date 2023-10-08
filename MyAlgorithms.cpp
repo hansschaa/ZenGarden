@@ -58,9 +58,10 @@ void MyAlgorithms::BFS(ZenBoard& zenBoard){
 }
 
 //AStar algorithm
-void MyAlgorithms::AStar(ZenBoard& zenBoard){
+bool MyAlgorithms::AStar(ZenBoard& zenBoard){
     
     cout << "-> Empezando AStar.." << endl;
+    Utils::PrintBoard(zenBoard);
     Statistics::start = std::chrono::high_resolution_clock::now();
 
     //Sort ascendent
@@ -108,7 +109,10 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard){
             if(Utils::showPath)
                 ShowMoves(currentBoard, Utils::aStarCache);
 
-            return;
+            Utils::aStarCache.clear();
+            Utils::CLOSE.clear();
+            Utils::OPEN.clear();
+            return true;
         }
 
         // Obtener los vecinos del estado actual
@@ -150,6 +154,12 @@ void MyAlgorithms::AStar(ZenBoard& zenBoard){
     }
 
     cout << "Not solution" << endl;
+
+    Utils::aStarCache.clear();
+    Utils::CLOSE.clear();
+    Utils::OPEN.clear();
+
+    return false;
 }
 
 // Función de comparación para ordenar los nodos según su variable h
@@ -357,7 +367,7 @@ void MyAlgorithms::ShowMoves(ZenBoard zenBoard, unordered_map<ZenBoard, ZenBoard
 
     while (!stack.empty()) {
         ZenBoard topElement = stack.top();
-        //Utils::PrintBoard(topElement);
+        Utils::PrintBoard(topElement);
         stack.pop();
     }
 }

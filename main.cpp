@@ -16,6 +16,7 @@
 #include "MyAlgorithms.h"
 #include "GameConfig.h"
 #include "Deadend.h"
+#include "BoardGenerator.h"
 
 using namespace std;
 
@@ -36,14 +37,19 @@ bool MoveIsOut(int index, Vector2<int> direction);
 int main(int argc, char* argv[]) {
 
     ZenBoard zenBoard;
-    
+    BoardGenerator boardGenerator;
 
-    if(!ProcessCommands(argc, argv, zenBoard, Utils::gameConfig)){
+    Utils::DIMENSION = 6;
+
+
+    boardGenerator.Run();
+
+    /*if(!ProcessCommands(argc, argv, zenBoard, Utils::gameConfig)){
         cout << Utils::ERROR << "Problemas con el ingreso de parámetros!" << Utils::NORMAL << endl;
         return 0;
     }
 
-    RunGame(zenBoard, Utils::gameConfig);
+    RunGame(zenBoard, Utils::gameConfig);*/
 
     //Deadend::CheckCorners(zenBoard);
 
