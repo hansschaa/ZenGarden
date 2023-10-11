@@ -12,7 +12,7 @@ bool MyIndividual::Mutate()
     if(percent <= moveMutation)
         return MoveMutation();
 
-    else if(percent > moveMutation && percent <= 70)
+    else if(percent > moveMutation && percent <= 85)
         return AddMutation();
 
     else
