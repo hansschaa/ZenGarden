@@ -146,7 +146,7 @@ void IAPlay(ZenBoard& zenBoard, GameConfig gameConfig){
             Statistics::Print("BFS");
             break;
         case 1:
-            MyAlgorithms::AStar(zenBoard);
+            //MyAlgorithms::AStar(zenBoard);
             Statistics::Print("AStar");
             break;
         case 2:

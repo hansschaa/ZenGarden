@@ -10,6 +10,7 @@
 #include "TunnelInfo.h"
 #include "ZenBoard.h"
 #include "MyAlgorithms.h"
+#include "MyIndividual.h"
 
 
 using namespace std;
@@ -24,7 +25,7 @@ class BoardGenerator{
         // std::bitset<36> pointTemplate;
 
         void Run();
-        vector<std::bitset<36>> GetInitialPopulation();
+        vector<MyIndividual> GetInitialPopulation();
 };
 
 #endif //ZEN_BOARDGENERATOR_H

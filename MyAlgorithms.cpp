@@ -58,9 +58,115 @@ void MyAlgorithms::BFS(ZenBoard& zenBoard){
 }
 
 //AStar algorithm
+int MyAlgorithms::AStar(MyIndividual& myIndividual){
+    
+    cout << "-> Empezando AStar.." << endl;
+
+    Utils::aStarCache.clear();
+    Utils::CLOSE.clear();
+    Utils::OPEN.clear();
+
+    ZenBoard zenBoard = myIndividual.zenBoard;
+
+    Utils::PrintBoard(zenBoard);
+    Statistics::start = std::chrono::high_resolution_clock::now();
+
+    //Sort ascendent
+    struct ZenBoardComparator {
+        bool operator()(const ZenBoard& zenBoard1, const ZenBoard& zenBoard2) const {
+
+            // Orden ascendente basado en la variable f
+            return zenBoard1.g + zenBoard1.h > zenBoard2.g + zenBoard2.h;
+        }
+    };
+
+    priority_queue<ZenBoard, vector<ZenBoard>, ZenBoardComparator> openQueue;
+    
+    zenBoard.g = 0;
+    zenBoard.CompH();
+
+    //For parents
+    Utils::aStarCache.insert({zenBoard, zenBoard}); 
+
+    //Insert root node in open priority queue
+    openQueue.push(zenBoard);
+
+    while(!openQueue.empty()){
+
+        //Get the min value in priority queue
+        ZenBoard currentBoard = openQueue.top();
+		openQueue.pop();
+
+        // Si el nodo estaba en la lista cerrada con un f menor me lo salto
+        auto entry = Utils::CLOSE.find(currentBoard);
+        if(entry != Utils::CLOSE.end()){
+            if((entry->g + entry->h) < currentBoard.GetF())
+                continue;
+        }
+
+        //Check if current board is a win board
+        if(Utils::IsWin(currentBoard)){
+
+            Statistics::end = std::chrono::high_resolution_clock::now();
+
+            cout << Utils::FREE  << "Solution found..." << Utils::NORMAL << endl;
+
+            Statistics::totalNodesExpanded = Utils::CLOSE.size();
+            
+            if(Utils::showPath)
+                ShowMoves(currentBoard, Utils::aStarCache);
+
+            return GetLenght(currentBoard, Utils::aStarCache);
+            //clearreturn Utils::CLOSE.size();
+        }
+
+        // Obtener los vecinos del estado actual
+        auto neighbours = Utils::GetNeighbours(currentBoard, currentBoard.g+1);  
+        for (ZenBoard neighbour : neighbours) {
+
+            neighbour.CompH();
+
+            //Si está en open o closed y el que habia tiene mejor g,continuar
+            //Open es un map de valores g, permite acceder al vlaor ya que la 
+            //priority queue no 
+            auto entryOpen = Utils::OPEN.find(neighbour);
+            if(entryOpen != Utils::OPEN.end()){
+                if(entryOpen->second <= neighbour.g)
+                    continue;
+            }
+
+            auto entryClose = Utils::CLOSE.find(neighbour);
+            if(entryClose != Utils::CLOSE.end()){
+                if(entryClose->g <= neighbour.g)
+                    continue;
+            }
+
+            entryClose = Utils::CLOSE.find(neighbour);
+            if(entryClose != Utils::CLOSE.end())
+                Utils::CLOSE.erase(neighbour);
+
+            //Fast, duplicates?
+            openQueue.push(neighbour);
+
+            //Update OPEN
+            Utils::OPEN.insert_or_assign(neighbour, neighbour.g);
+
+            //Update path cache
+            Utils::aStarCache.insert_or_assign(neighbour, currentBoard);
+        }
+
+        Utils::CLOSE.insert(currentBoard);
+    }
+
+    cout << "Not solution" << endl;
+
+    return -1;
+}
+
 bool MyAlgorithms::AStar(ZenBoard& zenBoard){
     
     cout << "-> Empezando AStar.." << endl;
+
     Utils::PrintBoard(zenBoard);
     Statistics::start = std::chrono::high_resolution_clock::now();
 
@@ -370,6 +476,27 @@ void MyAlgorithms::ShowMoves(ZenBoard zenBoard, unordered_map<ZenBoard, ZenBoard
         Utils::PrintBoard(topElement);
         stack.pop();
     }
+}
+
+//Show moves for A* and BFS
+int MyAlgorithms::GetLenght(ZenBoard zenBoard, unordered_map<ZenBoard, ZenBoard, Utils::GetHashCode, Utils::Equals>& map){
+    stack<ZenBoard> stack;
+    ZenBoard currentZenBoard = zenBoard;
+
+    //Push solution
+    auto element = map.find(currentZenBoard);
+    stack.push(element->first);
+
+    do{
+        stack.push(element->second);
+        currentZenBoard = map[currentZenBoard];
+        element = map.find(currentZenBoard);
+    }while(((element->first.player == element->second.player) && 
+            (element->first.garden == element->second.garden)) != 1);
+
+    Statistics::solutionLength = stack.size()-1;
+
+    return stack.size()-1;
 }
 
 

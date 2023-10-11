@@ -1,61 +1,95 @@
+#include <algorithm> // Asegúrate de incluir la cabecera algorithm
 #include "BoardGenerator.h"
+
 
 int BoardGenerator::mu = 10;
 int BoardGenerator::lambda = 10;
-int BoardGenerator::iterations = 100;
+int BoardGenerator::iterations = 50;
 
-//Templates
-// bitset<36> pointTemplate("100000000000000000000000000000000000"); 
-// bitset<36> twopointHorizontalTemplate("110000000000000000000000000000000000"); 
-// bitset<36> twopointVerticalTemplate("100000100000000000000000000000000000");
+// Definición de la función de comparación
+bool compareByFitness(const MyIndividual& a, const MyIndividual& b) {
+    return a.fitness < b.fitness;
+};
+
+// Definición de la función de comparación
+bool betters(const MyIndividual& a, const MyIndividual& b) {
+    return a.fitness > b.fitness;
+};
+
 
 void BoardGenerator::Run()
 {
-    cout << "Run" << endl;
+    cout << "-----> Run" << endl;
 
-    vector<std::bitset<36>> initialPopultation = GetInitialPopulation();
-
-    // Recorriendo el vector
-    for (const std::bitset<36>& bitsetElement : initialPopultation) {
-        Utils::PrintBitset(bitsetElement);
-    }
-
+    vector<MyIndividual> population = GetInitialPopulation();
+    bool mutationSuccess = false;
     int cont = 0;
     while(cont < iterations){
+        cout << "-----> Iteration: " << cont << endl;
+        // Llamada a std::sort
+        std::sort(population.begin(), population.end(), compareByFitness);
+        // Eliminar los primeros 5 elementos
+        population.erase(population.begin(), population.begin() + mu);
 
+        for (size_t i = 0; i < mu; ++i) {
+            MyIndividual duplicate;
+            duplicate.zenBoard.garden = population[i].zenBoard.garden; 
         
-        
+            duplicate.fitness = population[i].fitness; 
+
+            do{
+                mutationSuccess = duplicate.Mutate();
+            }while(!mutationSuccess);
+
+            population.push_back(duplicate);
+        }
+
         cont++;
-
     }
-    cout << "fin" << endl;
 
+    //Results
+    std::sort(population.begin(), population.end(), betters);
+
+    cont = 1;
+    // Recorriendo el vector
+    for (MyIndividual bitsetElement : population) {
+        cout << "Index: " << cont << "| Fitness: " << bitsetElement.fitness << endl;
+        Utils::PrintBoard(bitsetElement.zenBoard);
+        cont++;
+    }
+
+    cout << "fin" << endl;
 }
 
-vector<std::bitset<36>> BoardGenerator::GetInitialPopulation()
+vector<MyIndividual> BoardGenerator::GetInitialPopulation()
 {
     srand (time(NULL));
     
-    vector<std::bitset<36>> initialPopulation;
+    vector<MyIndividual> initialPopulation;
     unordered_set<ZenBoard, Utils::GetHashCode, Utils::Equals> stored;
 
-    ZenBoard zenBoard;
+    MyIndividual myIndividual;
     std::unordered_set<ZenBoard, Utils::GetHashCode, Utils::Equals>::iterator it;
     bitset<36> individual("000000000000000000000000000000000000");
-
+    int fitness = 0;
     for(int i = 0 ; i < lambda+mu ; i++){
         do{
             individual.reset();
-            zenBoard.Reset();
+            myIndividual.zenBoard.Reset();
+
             int randomIndex = rand() % 36;
             individual.flip(randomIndex);
-            zenBoard.garden = bitset<36> (individual);
-            it = stored.find(zenBoard);
+            myIndividual.zenBoard.garden = bitset<36> (individual);
+            myIndividual.fitness = 0;
+            it = stored.find(myIndividual.zenBoard);
 
-        }while(!MyAlgorithms::AStar(zenBoard) || it != stored.end());
+            fitness = MyAlgorithms::AStar(myIndividual);
 
-        stored.insert(zenBoard);
-        initialPopulation.push_back(individual);
+        }while(fitness == -1 || it != stored.end());
+
+        myIndividual.fitness = fitness;
+        stored.insert(myIndividual.zenBoard);
+        initialPopulation.push_back(myIndividual);
         cout << "Lenght: " << initialPopulation.size() << endl;
     }
 
