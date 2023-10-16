@@ -9,9 +9,6 @@ using namespace std;
 
 class MyIndividual{
     public:
-        int moveMutation = 50;
-        float addMutation = 95;
-        int removeMutation = 100;
         int maxRocks = 6;
 
         ZenBoard zenBoard;

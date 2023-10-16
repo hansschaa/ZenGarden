@@ -9,10 +9,10 @@ bool MyIndividual::Mutate()
     srand (time(NULL));
     int percent = (rand() % 100);
 
-    if(percent <= moveMutation)
+    if(percent <= 50)
         return MoveMutation();
 
-    else if(percent > moveMutation && percent <= 85)
+    else if(percent > 50 && percent <= 85)
         return AddMutation();
 
     else
@@ -88,7 +88,7 @@ bool MyIndividual::AddMutation()
 
     copy.set(newIndex, 1);
 
-     //Try resolve
+    //Try resolve
     MyIndividual myAuxIndividual;
     myAuxIndividual.zenBoard.garden = copy;
     int newFitness = MyAlgorithms::AStar(myAuxIndividual);
@@ -100,7 +100,7 @@ bool MyIndividual::AddMutation()
         return true;
     }
 
-     return false;
+    return false;
 }
 
 bool MyIndividual::RemoveMutation()

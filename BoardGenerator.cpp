@@ -1,8 +1,8 @@
-#include <algorithm> // Asegúrate de incluir la cabecera algorithm
+#include <algorithm>
 #include "BoardGenerator.h"
 
 
-int BoardGenerator::mu = 10;
+int BoardGenerator::mu = 12;
 int BoardGenerator::lambda = 10;
 int BoardGenerator::iterations = 50;
 
@@ -31,7 +31,7 @@ void BoardGenerator::Run()
         // Eliminar los primeros 5 elementos
         population.erase(population.begin(), population.begin() + mu);
 
-        for (size_t i = 0; i < mu; ++i) {
+        for (int i = 0; population.size() != (mu+lambda); i++) {
             MyIndividual duplicate;
             duplicate.zenBoard.garden = population[i].zenBoard.garden; 
         
@@ -42,6 +42,9 @@ void BoardGenerator::Run()
             }while(!mutationSuccess);
 
             population.push_back(duplicate);
+
+            if(i == lambda-1)
+                i =0;
         }
 
         cont++;
